@@ -50,8 +50,11 @@ def guardar_pdf(page: Page, carpeta: Path) -> Path:
         })
         cdp.detach()
     finally:
-        page.emulate_media(media=None)
+        # OJO: media=None NO quita la emulacion (Playwright no envia el parametro) y la pagina
+        # queda en modo impresion, donde Enketo oculta el pie con el boton ENVIAR. "null" la quita.
+        page.emulate_media(media="null")
         page.evaluate("() => window.dispatchEvent(new Event('afterprint'))")
+        page.wait_for_timeout(500)
 
     if destino.exists():
         print(f"   (se reemplaza el PDF anterior: {destino.name})")

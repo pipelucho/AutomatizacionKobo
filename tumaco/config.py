@@ -20,6 +20,8 @@ PROFILE_DIR = ROOT / ".browser_profile"
 EXCEL_PATH = ROOT / os.getenv("EXCEL_PATH", "USUARIOS.xlsx")
 KOBO_COLUMNA_USUARIO = os.getenv("KOBO_COLUMNA_USUARIO", "persona atendida+usuario")
 DEBUG_DIR = OUTPUT_DIR / "debug"
+# Capturas de pantalla de la tabla en cada intento de busqueda (lentas); los JSON siempre se guardan
+DEBUG_CAPTURAS = os.getenv("DEBUG_CAPTURAS", "0") == "1"
 
 # Formularios a revisar por cliente, en orden (se buscan por el inicio del nombre del proyecto)
 FORMULARIOS = [

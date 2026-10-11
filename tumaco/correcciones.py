@@ -5,6 +5,7 @@ from playwright.sync_api import Locator, Page, TimeoutError
 
 from . import config
 from .humano import clic, escribir, pausa
+from .texto import norm
 
 FORM = "body > div.main > article > form"
 
@@ -12,12 +13,34 @@ FORM = "body > div.main > article > form"
 MAYUSCULAS = {
     1: [
         f"{FORM} > section:nth-child(4) > label:nth-child(8)",
-        f"{FORM} > section:nth-child(5) > label:nth-child(2)",
         f"{FORM} > section:nth-child(5) > label:nth-child(5)",
         f"{FORM} > section:nth-child(5) > label:nth-child(6)",
         f"{FORM} > section:nth-child(10) > section.or-group.or-branch.or-appearance-field-list > label:nth-child(2)",
-        f"{FORM} > section:nth-child(10) > section:nth-child(4) > label:nth-child(2)",
     ],
+}
+
+# Campos que siempre llevan el mismo valor, por formulario
+VALORES_FIJOS = {
+    1: [
+        # RESPONSABLE CONTRATISTA: nombre y documento
+        (f"{FORM} > section:nth-child(10) > section:nth-child(4) > label:nth-child(2)", "ADRIANA MUÑOZ"),
+        (f"{FORM} > section:nth-child(10) > section:nth-child(4) > label:nth-child(3)", "59122110"),
+    ],
+}
+
+# Campos que se reemplazan con el dato del Excel de usuarios (viene corregido), por formulario.
+# El segundo valor es el atributo de excel.Usuario que se escribe.
+VALORES_DEL_EXCEL = {
+    1: [
+        # PERSONA ATENDIDA: nombre
+        (f"{FORM} > section:nth-child(5) > label:nth-child(2)", "nombre"),
+    ],
+}
+
+# VERIFICACION DEL USUARIO, "la persona que atiende la visita manifiesta ser": si esta marcada
+# la opcion "Otro", el usuario no se corrige ni se envia (se anota en el Excel)
+OPCION_OTRO = {
+    1: f"{FORM} > section:nth-child(6) > fieldset:nth-child(2) > fieldset > div > label:nth-child(9)",
 }
 
 # Seccion donde se cargan los documentos anexos, por formulario
@@ -36,13 +59,31 @@ CONFIRMAR_ELIMINAR = (
 )
 
 
-def aplicar(page: Page, numero_formulario: int) -> list[str]:
-    """Aplica las correcciones del formulario y devuelve un resumen de lo que cambio."""
+def aplicar(page: Page, numero_formulario: int, usuario=None) -> list[str]:
+    """Aplica las correcciones del formulario y devuelve un resumen de lo que cambio.
+
+    `usuario` (excel.Usuario) aporta los datos corregidos que se escriben tal cual en Kobo.
+    """
     cambios = []
+    if usuario is not None:
+        for selector, atributo in VALORES_DEL_EXCEL.get(numero_formulario, []):
+            valor = " ".join(str(getattr(usuario, atributo, "") or "").split()).upper()
+            if not valor:
+                print(f"   [!] El Excel no tiene {atributo} para este usuario; se deja el de Kobo")
+                continue
+            cambio = poner_valor(page, selector, valor)
+            if cambio:
+                cambios.append(cambio)
     for selector in MAYUSCULAS.get(numero_formulario, []):
         cambio = poner_mayusculas(page, selector)
         if cambio:
             cambios.append(cambio)
+    if numero_formulario in VALORES_FIJOS:
+        print("\nResponsable contratista:")
+        for selector, valor in VALORES_FIJOS[numero_formulario]:
+            cambio = poner_valor(page, selector, valor)
+            if cambio:
+                cambios.append(cambio)
     if numero_formulario in FIRMAS:
         firma = FIRMAS[numero_formulario]
         print("\nFirma del responsable contratista:")
@@ -55,9 +96,46 @@ def aplicar(page: Page, numero_formulario: int) -> list[str]:
     return cambios
 
 
-# ---------- Mayusculas ----------
+# ---------- Verificaciones previas ----------
+
+def marco_opcion_otro(page: Page, numero_formulario: int) -> bool | None:
+    """True si en 'la persona que atiende la visita manifiesta ser' esta marcada la opcion 'Otro'.
+
+    None si no se pudo verificar (la opcion no esta o el selector apunta a otra respuesta):
+    en ese caso el usuario queda pendiente para revisarlo a mano.
+    """
+    selector = OPCION_OTRO.get(numero_formulario)
+    if not selector:
+        return False
+    opcion = page.locator(selector).first
+    if not opcion.count():
+        print(f"   [!] No encontre la opcion 'Otro': {selector}")
+        return None
+    texto = " ".join(opcion.inner_text().split())
+    if not norm(texto).startswith("otro"):
+        print(f"   [!] La opcion encontrada no es 'Otro' (dice: '{texto}'); revisa el selector")
+        return None
+    entrada = opcion.locator("input[type=radio], input[type=checkbox]").first
+    if not entrada.count():
+        print(f"   [!] La opcion '{texto}' no tiene casilla para verificar")
+        return None
+    marcado = entrada.is_checked()
+    print(f"   - Opcion '{texto}': {'MARCADA' if marcado else 'no marcada'}")
+    return marcado
+
+
+# ---------- Campos de texto ----------
 
 def poner_mayusculas(page: Page, selector: str) -> str | None:
+    return _corregir_texto(page, selector, lambda actual: actual.strip().upper(), "ya esta en mayuscula")
+
+
+def poner_valor(page: Page, selector: str, valor: str) -> str | None:
+    return _corregir_texto(page, selector, lambda _: valor, "ya tiene el valor correcto")
+
+
+def _corregir_texto(page: Page, selector: str, transformar, msg_sin_cambio: str) -> str | None:
+    """Reescribe el campo con transformar(valor_actual) si el resultado es distinto."""
     pregunta = page.locator(selector)
     if not pregunta.count():
         print(f"   [!] No encontre el campo: {selector}")
@@ -70,9 +148,9 @@ def poner_mayusculas(page: Page, selector: str) -> str | None:
         return None
 
     actual = campo.input_value()
-    nuevo = actual.strip().upper()
+    nuevo = transformar(actual)
     if actual == nuevo:
-        print(f"   - {nombre}: ya esta en mayuscula ({actual or 'vacio'})")
+        print(f"   - {nombre}: {msg_sin_cambio} ({actual or 'vacio'})")
         return None
 
     campo.scroll_into_view_if_needed()

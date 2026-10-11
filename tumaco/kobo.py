@@ -1,8 +1,9 @@
 import json
 import re
+import time
 from dataclasses import dataclass
 
-from playwright.sync_api import Page, TimeoutError
+from playwright.sync_api import Error, Page, TimeoutError
 
 from . import config
 from .humano import clic, escribir, pausa
@@ -27,6 +28,7 @@ class Kobo:
         self.base = config.KOBO_URL
         self.formulario = ""
         self._mapa_columnas = _cargar_mapa_columnas()
+        self._url_datos: dict[str, str] = {}  # formulario -> URL de su pestana DATOS (para no navegar desde el inicio)
 
     # ---------- Sesion ----------
 
@@ -56,6 +58,37 @@ class Kobo:
 
     # ---------- Navegacion por formulario ----------
 
+    def abrir_datos(self, nombre: str):
+        """Abre la tabla DATOS del formulario.
+
+        La primera vez entra por 'Mis proyectos' y recuerda la URL; con los siguientes
+        usuarios va directo a esa URL (mucho mas rapido que repetir toda la navegacion).
+        """
+        self.page.bring_to_front()  # Chrome no dibuja las pestanas en segundo plano
+        url = self._url_datos.get(nombre)
+        if not url:
+            self.abrir_formulario(nombre)
+            self.ir_a_datos()
+            self._url_datos[nombre] = self.page.url
+            return
+        self.formulario = nombre
+        print(f"Abriendo datos de: {nombre}")
+        if self.page.url == url:
+            self.page.reload()  # misma URL: recargar para empezar sin el filtro del usuario anterior
+        else:
+            self.page.goto(url)
+        self.page.locator(".rt-tbody .rt-tr-group").first.wait_for(timeout=60_000)
+        print("Esperando que cargue la tabla de datos...")
+        self._esperar_red()
+        self._esperar_tabla_estable()
+
+    def cerrar_pestanas_extra(self):
+        """Cierra las pestanas que no son la principal de Kobo (ej. ediciones que quedaron abiertas)."""
+        for pagina in self.page.context.pages:
+            if pagina is not self.page and not pagina.is_closed():
+                pagina.close()
+        self.page.bring_to_front()
+
     def abrir_formulario(self, nombre: str):
         """Desde 'Mis proyectos' da clic en el proyecto cuyo nombre empieza por `nombre`."""
         self.formulario = nombre
@@ -75,8 +108,8 @@ class Kobo:
         self.page.wait_for_url(re.compile(r"/data"), timeout=30_000)
         self.page.locator(".rt-tbody .rt-tr-group").first.wait_for(timeout=60_000)
         print("Esperando que cargue la tabla de datos...")
-        self.page.wait_for_load_state("networkidle")
-        self.page.wait_for_timeout(4000)
+        self._esperar_red()
+        self._esperar_tabla_estable()
 
     # ---------- Busqueda del usuario ----------
 
@@ -197,7 +230,19 @@ class Kobo:
         """
         while True:
             print("Enviando formulario a Kobo...")
-            clic(edicion.locator("#submit-form"))
+            edicion.bring_to_front()
+            # Tras generar el PDF (modo impresion), Enketo puede dejar oculto el boton ENVIAR:
+            # Playwright no puede hacer clic en algo que no se ve, asi que se usa un clic por JavaScript
+            boton = edicion.locator("#submit-form")
+            try:
+                boton.wait_for(state="visible", timeout=5_000)
+                clic(boton)
+            except TimeoutError:
+                if not boton.count():
+                    print("   No encontre el boton ENVIAR en el formulario.")
+                    return False
+                print("   (el boton ENVIAR esta oculto: se presiona por JavaScript)")
+                boton.evaluate("b => b.click()")
             estado, mensaje = _esperar_resultado_envio(edicion)
 
             if estado == "ok":
@@ -228,14 +273,36 @@ class Kobo:
             print("   No encontre la caja de filtro de esa columna.")
             return False
         filtro = self.page.locator("[data-tumaco-filtro]")
+        antes = _firma_tabla(self.leer_tabla())
         if valor:
             escribir(filtro, valor)
         else:
             filtro.fill("")
         filtro.press("Enter")
-        self.page.wait_for_load_state("networkidle")
-        self.page.wait_for_timeout(3000)
+        self._esperar_red()
+        self._esperar_tabla_estable(antes)
         return True
+
+    def _esperar_red(self, timeout_ms: int = 15_000):
+        try:
+            self.page.wait_for_load_state("networkidle", timeout=timeout_ms)
+        except TimeoutError:
+            pass  # Kobo a veces mantiene conexiones abiertas; la tabla estable es lo que importa
+
+    def _esperar_tabla_estable(self, antes: str | None = None, maximo_s: float = 10):
+        """Espera a que la tabla termine de actualizarse en vez de una pausa fija.
+
+        Termina cuando dos lecturas seguidas son iguales y (si se indica) distintas de `antes`;
+        si la tabla no cambia (el filtro dio lo mismo), acepta que este estable tras ~2.5 s.
+        """
+        inicio = time.monotonic()
+        ultima = None
+        while time.monotonic() - inicio < maximo_s:
+            self.page.wait_for_timeout(400)
+            actual = _firma_tabla(self.leer_tabla())
+            if actual == ultima and (antes is None or actual != antes or time.monotonic() - inicio > 2.5):
+                return
+            ultima = actual
 
     def _columna(self, encabezados: list[str], campo: str, clave: str, preguntar: bool = True) -> int | None:
         """Indice de la columna para `campo`.
@@ -275,7 +342,16 @@ class Kobo:
         (config.DEBUG_DIR / f"{etiqueta}.json").write_text(
             json.dumps(tabla, ensure_ascii=False, indent=1), encoding="utf-8"
         )
-        self.page.screenshot(path=str(config.DEBUG_DIR / f"{etiqueta}.png"), full_page=True)
+        if not config.DEBUG_CAPTURAS:
+            return  # las capturas de pantalla completa son lentas; activar con DEBUG_CAPTURAS=1
+        try:
+            self.page.screenshot(path=str(config.DEBUG_DIR / f"{etiqueta}.png"), timeout=10_000)
+        except TimeoutError:
+            print("   (no se pudo tomar la captura de depuracion; se continua)")
+
+
+def _firma_tabla(tabla: dict) -> str:
+    return json.dumps(tabla.get("filas", []), ensure_ascii=False)
 
 
 def _cargar_mapa_columnas() -> dict:
@@ -289,24 +365,36 @@ def _esperar_resultado_envio(edicion: Page, limite_s: int = 120):
 
     Devuelve ("ok", texto), ("errores", [campos]) o ("desconocido", texto).
     """
-    exito = ("exito", "éxito", "exitosamente", "enviado", "submitted", "success", "guardado")
+    exito = ("exito", "éxito", "exitosamente", "enviado", "submitted", "success", "guardado",
+             "gracias por participar", "thank you")
+    # Aviso intermedio de Kobo antes de redirigir a /thanks: el envio sigue en curso, no es la respuesta final
+    en_curso = ("redirigido", "redirected", "enviando", "submitting")
     for _ in range(limite_s * 2):
-        if edicion.is_closed():
-            return "ok", "(Kobo cerro la pestaña de edicion)"
-        dialogo = edicion.locator(".vex-dialog-message")
-        if dialogo.count() and dialogo.first.is_visible():
-            texto = " ".join(dialogo.first.inner_text().split())
-            aceptar = edicion.locator(".vex-dialog-buttons .btn-primary")
-            if aceptar.count():
-                pausa(edicion, 0.5, 1.0)
-                clic(aceptar.first)
-            return ("ok" if any(p in norm(texto) for p in map(norm, exito)) else "desconocido"), texto
-        errores = edicion.evaluate(_JS_CAMPOS_CON_ERROR)
-        if errores:
-            return "errores", errores
-        if "/edit/" not in edicion.url:
-            return "ok", f"(redirigio a {edicion.url})"
-        edicion.wait_for_timeout(500)
+        try:
+            if edicion.is_closed():
+                return "ok", "(Kobo cerro la pestaña de edicion)"
+            if "/thanks" in edicion.url or "/edit/" not in edicion.url:
+                return "ok", f"(Kobo confirmo el envio: {edicion.url})"
+            dialogo = edicion.locator(".vex-dialog-message")
+            if dialogo.count() and dialogo.first.is_visible():
+                texto = " ".join(dialogo.first.inner_text().split())
+                aceptar = edicion.locator(".vex-dialog-buttons .btn-primary")
+                if aceptar.count() and aceptar.first.is_visible():
+                    pausa(edicion, 0.5, 1.0)
+                    clic(aceptar.first)
+                if any(p in norm(texto) for p in map(norm, en_curso)):
+                    edicion.wait_for_timeout(500)
+                    continue  # esperar la redireccion a /thanks
+                return ("ok" if any(p in norm(texto) for p in map(norm, exito)) else "desconocido"), texto
+            errores = edicion.evaluate(_JS_CAMPOS_CON_ERROR)
+            if errores:
+                return "errores", errores
+            edicion.wait_for_timeout(500)
+        except Error as e:
+            # La pagina se esta redirigiendo (contexto destruido): se revisa de nuevo en la siguiente vuelta
+            if "closed" in str(e).lower():
+                return "ok", "(Kobo cerro la pestaña de edicion)"
+            edicion.wait_for_timeout(500)
     return "desconocido", f"No hubo respuesta en {limite_s} s"
 
 
