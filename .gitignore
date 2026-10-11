@@ -1,0 +1,8 @@
+.venv/
+.env
+.browser_profile/
+salida/
+__pycache__/
+columnas.json
+USUARIOS.xlsx
+~$*.xlsx
