@@ -35,3 +35,6 @@ KOBO_COLUMNA_NOMBRE = os.getenv("KOBO_COLUMNA_NOMBRE", "persona atendida+nombre"
 
 # Columnas elegidas a mano por formulario (se recuerdan entre ejecuciones)
 COLUMNAS_PATH = ROOT / "columnas.json"
+
+# Trazos de firmas (generados con herramientas/firma_desde_imagen.py)
+FIRMAS_DIR = ROOT / "firmas"

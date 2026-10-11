@@ -1,6 +1,9 @@
 """Correcciones que se aplican dentro del formulario de edicion (Enketo) de cada formulario."""
-from playwright.sync_api import Locator, Page
+import json
 
+from playwright.sync_api import Locator, Page, TimeoutError
+
+from . import config
 from .humano import clic, escribir, pausa
 
 FORM = "body > div.main > article > form"
@@ -22,6 +25,11 @@ DOCUMENTOS = {
     1: f"{FORM} > section:nth-child(11)",
 }
 
+# Firma que se borra y se vuelve a dibujar: seccion del formulario y trazos guardados en firmas/
+FIRMAS = {
+    1: {"seccion": f"{FORM} > section:nth-child(10) > section:nth-child(4)", "trazos": "contratista.json"},
+}
+
 CONFIRMAR_ELIMINAR = (
     "body > div.vex.vex-theme-plain > div > form > div.vex-dialog-buttons"
     " > button.btn.btn-primary.small.vex-dialog-button.vex-first"
@@ -35,6 +43,11 @@ def aplicar(page: Page, numero_formulario: int) -> list[str]:
         cambio = poner_mayusculas(page, selector)
         if cambio:
             cambios.append(cambio)
+    if numero_formulario in FIRMAS:
+        firma = FIRMAS[numero_formulario]
+        print("\nFirma del responsable contratista:")
+        if rehacer_firma(page, firma["seccion"], firma["trazos"]):
+            cambios.append("Firma responsable contratista: redibujada")
     if numero_formulario in DOCUMENTOS:
         print("\nDocumentos anexos:")
         for doc in revisar_documentos(page, DOCUMENTOS[numero_formulario]):
@@ -68,6 +81,59 @@ def poner_mayusculas(page: Page, selector: str) -> str | None:
     campo.dispatch_event("change")  # Enketo guarda el valor al detectar el cambio
     print(f"   * {nombre}: '{actual}' -> '{nuevo}'")
     return f"{nombre}: {actual} -> {nuevo}"
+
+
+# ---------- Firma ----------
+
+def rehacer_firma(page: Page, selector_seccion: str, archivo_trazos: str) -> bool:
+    """Borra la firma del lienzo (boton del pie + Aceptar) y la dibuja de nuevo con el mouse."""
+    ruta = config.FIRMAS_DIR / archivo_trazos
+    if not ruta.exists():
+        print(f"   [!] No existe {ruta}; crea los trazos con herramientas/firma_desde_imagen.py")
+        return False
+    firma = json.loads(ruta.read_text(encoding="utf-8"))
+
+    pregunta = page.locator(f"{selector_seccion} > label.or-appearance-signature").first
+    if not pregunta.count():
+        print(f"   [!] No encontre el campo de firma en {selector_seccion}")
+        return False
+    lienzo = pregunta.locator("canvas").first
+    lienzo.evaluate("el => el.scrollIntoView({block: 'center'})")
+    pausa(page, 0.5, 1.0)
+
+    # 1. Borrar la firma actual
+    clic(pregunta.locator("div.draw-widget__footer > button").first)
+    confirmar = page.locator(CONFIRMAR_ELIMINAR)
+    try:
+        confirmar.wait_for(timeout=5_000)
+        pausa(page, 0.3, 0.7)
+        clic(confirmar)
+        confirmar.wait_for(state="detached", timeout=10_000)
+        print("   - Firma anterior borrada")
+    except TimeoutError:
+        print("   - No habia firma para borrar")
+
+    # 2. Dibujarla centrada en el lienzo, ocupando hasta el 80% del espacio
+    lienzo.evaluate("el => el.scrollIntoView({block: 'center'})")
+    pausa(page, 0.4, 0.8)
+    caja = lienzo.bounding_box()
+    escala = min(0.8 * caja["width"] / firma["ancho"], 0.8 * caja["height"] / firma["alto"])
+    x0 = caja["x"] + (caja["width"] - firma["ancho"] * escala) / 2
+    y0 = caja["y"] + (caja["height"] - firma["alto"] * escala) / 2
+
+    def punto(p):
+        return x0 + p[0] * firma["ancho"] * escala, y0 + p[1] * firma["alto"] * escala
+
+    for trazo in firma["trazos"]:
+        page.mouse.move(*punto(trazo[0]))
+        page.mouse.down()
+        for p in trazo[1:]:
+            page.mouse.move(*punto(p), steps=3)
+        page.mouse.up()
+        pausa(page, 0.05, 0.2)
+    pausa(page, 0.8, 1.2)
+    print(f"   * Firma dibujada ({len(firma['trazos'])} trazos)")
+    return True
 
 
 # ---------- Documentos anexos ----------
