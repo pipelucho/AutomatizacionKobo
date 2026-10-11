@@ -5,6 +5,7 @@ import openpyxl
 from . import config
 
 COL_NOMBRE, COL_USUARIO, COL_CASA, COL_REALIZADO = 1, 2, 3, 4  # A, B, C, D
+MARCA_REALIZADO = "Si"
 
 
 @dataclass
@@ -23,10 +24,12 @@ def _texto(valor) -> str:
     return str(valor).strip()
 
 
-def siguiente_pendiente() -> Usuario | None:
-    """Primer usuario con la columna REALIZADO (D) vacia."""
+def siguiente_pendiente(omitir: set[int] = frozenset()) -> Usuario | None:
+    """Primer usuario con la columna REALIZADO (D) vacia, sin contar las filas en `omitir`."""
     ws = openpyxl.load_workbook(config.EXCEL_PATH).active
     for fila in range(2, ws.max_row + 1):
+        if fila in omitir:
+            continue
         usuario = _texto(ws.cell(fila, COL_USUARIO).value)
         if usuario and not _texto(ws.cell(fila, COL_REALIZADO).value):
             return Usuario(
@@ -43,7 +46,7 @@ def marcar_realizado(fila: int):
     ws = wb.active
     if not _texto(ws.cell(1, COL_REALIZADO).value):
         ws.cell(1, COL_REALIZADO).value = "REALIZADO:"
-    ws.cell(fila, COL_REALIZADO).value = "SI"
+    ws.cell(fila, COL_REALIZADO).value = MARCA_REALIZADO
     while True:
         try:
             wb.save(config.EXCEL_PATH)

@@ -38,3 +38,8 @@ COLUMNAS_PATH = ROOT / "columnas.json"
 
 # Trazos de firmas (generados con herramientas/firma_desde_imagen.py)
 FIRMAS_DIR = ROOT / "firmas"
+
+# Carpeta base donde se crea una subcarpeta por usuario (USUARIO_NOMBRE) con los PDF
+CONTINGENCIAL_DIR = ROOT / os.getenv("CONTINGENCIAL_DIR", "CONTINGENCIAL")
+# Fecha/titulo arriba y direccion/pagina abajo en el PDF, como Ctrl+P en Chrome (1 = si, 0 = no)
+PDF_ENCABEZADOS = os.getenv("PDF_ENCABEZADOS", "1") == "1"

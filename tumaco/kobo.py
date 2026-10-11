@@ -18,6 +18,7 @@ class Coincidencia:
     datos: dict  # {encabezado: valor}
     sim_nombre: float
     casa_ok: bool
+    nombre: str = ""  # nombre de la persona atendida segun Kobo
 
 
 class Kobo:
@@ -134,6 +135,7 @@ class Kobo:
                 datos=dict(zip(encabezados, celdas)),
                 sim_nombre=similitud_nombre(usuario.nombre, nombre_kobo),
                 casa_ok=bool(usuario.casa) and digitos(usuario.casa) in digitos(casa_kobo, todos=True),
+                nombre=nombre_kobo.strip(),
             ))
 
         total = len(tabla["filas"])
@@ -186,6 +188,30 @@ class Kobo:
         edicion.locator("form.or").first.wait_for(timeout=90_000)
         edicion.wait_for_timeout(2000)
         return edicion
+
+    def enviar_edicion(self, edicion: Page) -> bool:
+        """Clic en ENVIAR (#submit-form) para actualizar el registro en Kobo.
+
+        Si el formulario tiene campos con error, los muestra y espera a que se corrijan a mano.
+        Devuelve True si Kobo confirmo el envio.
+        """
+        while True:
+            print("Enviando formulario a Kobo...")
+            clic(edicion.locator("#submit-form"))
+            estado, mensaje = _esperar_resultado_envio(edicion)
+
+            if estado == "ok":
+                print(f"   Formulario actualizado en Kobo. {mensaje}".rstrip())
+                return True
+            if estado == "errores":
+                print("   El formulario no se envio porque tiene campos con error:")
+                for campo in mensaje:
+                    print(f"     - {campo}")
+            else:
+                print(f"   Kobo respondio: {mensaje or 'sin respuesta'}")
+            resp = input("   Corrige en el navegador y presiona Enter para reintentar (o escribe n para no enviar): ")
+            if resp.strip().lower() == "n":
+                return False
 
     # ---------- Tabla ----------
 
@@ -256,6 +282,40 @@ def _cargar_mapa_columnas() -> dict:
     if config.COLUMNAS_PATH.exists():
         return json.loads(config.COLUMNAS_PATH.read_text(encoding="utf-8"))
     return {}
+
+
+def _esperar_resultado_envio(edicion: Page, limite_s: int = 120):
+    """Espera la respuesta de Kobo tras ENVIAR.
+
+    Devuelve ("ok", texto), ("errores", [campos]) o ("desconocido", texto).
+    """
+    exito = ("exito", "éxito", "exitosamente", "enviado", "submitted", "success", "guardado")
+    for _ in range(limite_s * 2):
+        if edicion.is_closed():
+            return "ok", "(Kobo cerro la pestaña de edicion)"
+        dialogo = edicion.locator(".vex-dialog-message")
+        if dialogo.count() and dialogo.first.is_visible():
+            texto = " ".join(dialogo.first.inner_text().split())
+            aceptar = edicion.locator(".vex-dialog-buttons .btn-primary")
+            if aceptar.count():
+                pausa(edicion, 0.5, 1.0)
+                clic(aceptar.first)
+            return ("ok" if any(p in norm(texto) for p in map(norm, exito)) else "desconocido"), texto
+        errores = edicion.evaluate(_JS_CAMPOS_CON_ERROR)
+        if errores:
+            return "errores", errores
+        if "/edit/" not in edicion.url:
+            return "ok", f"(redirigio a {edicion.url})"
+        edicion.wait_for_timeout(500)
+    return "desconocido", f"No hubo respuesta en {limite_s} s"
+
+
+# Preguntas visibles que Enketo marco como obligatorias sin responder o con valor no valido
+_JS_CAMPOS_CON_ERROR = r"""
+() => [...document.querySelectorAll('.question.invalid-required, .question.invalid-constraint')]
+  .filter(q => q.offsetParent !== null)
+  .map(q => ((q.querySelector('.question-label') || q).innerText || '').trim().split('\n')[0])
+"""
 
 
 def _guardar_mapa_columnas(mapa: dict):
