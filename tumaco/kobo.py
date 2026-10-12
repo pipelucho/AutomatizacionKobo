@@ -7,10 +7,23 @@ from playwright.sync_api import Error, Page, TimeoutError
 
 from . import config
 from .humano import clic, escribir, pausa
-from .texto import digitos, norm, similitud_nombre
+from .texto import digitos, norm, numeros_casa, similitud_nombre, terminos_busqueda_nombre
 
 LOGIN_TIMEOUT_MS = 5 * 60 * 1000  # tiempo para iniciar sesion a mano si hace falta
 UMBRAL_NOMBRE = 0.6  # similitud minima del nombre para aceptar una fila sin preguntar
+UMBRAL_NOMBRE_SOLO = 0.85  # buscando solo por nombre (sin numero que lo confirme) se exige mas
+MARGEN_DECISION = 0.3  # ventaja minima de la mejor fila sobre la segunda para elegirla sin dudar
+
+# Orden de busqueda propio de algunos formularios: (campo, posicion de su caja en la fila de filtros, 1 = primera)
+# El formulario 1 no esta aqui: ubica sus columnas por el nombre del encabezado (config.KOBO_COLUMNA_*).
+BUSQUEDA_POR_FILTRO = {
+    config.FORMULARIOS[1]: [("casa", 16), ("usuario", 15), ("nombre", 13)],
+}
+CLAVES_COLUMNA = {
+    "usuario": config.KOBO_COLUMNA_USUARIO,
+    "casa": config.KOBO_COLUMNA_CASA,
+    "nombre": config.KOBO_COLUMNA_NOMBRE,
+}
 
 
 @dataclass
@@ -18,8 +31,24 @@ class Coincidencia:
     indice: int  # posicion de la fila en la tabla filtrada (para abrirla despues)
     datos: dict  # {encabezado: valor}
     sim_nombre: float
-    casa_ok: bool
+    casa_ok: bool  # el numero de la casa coincide (298 con 298A cuenta)
     nombre: str = ""  # nombre de la persona atendida segun Kobo
+    casa_exacta: bool = False  # la casa coincide tal cual (298 con 298A NO cuenta)
+    usuario_ok: bool = False  # el No. de usuario coincide
+    casa: str = ""  # direccion segun Kobo
+
+    @property
+    def puntaje(self) -> float:
+        """Que tanto coincide con el Excel comparando los 3 datos: nombre, usuario y casa."""
+        return (self.sim_nombre + (0.6 if self.usuario_ok else 0)
+                + (0.4 if self.casa_exacta else 0.2 if self.casa_ok else 0))
+
+    @property
+    def confirmada(self) -> bool:
+        """Hay evidencia suficiente de que es la persona del Excel."""
+        return (self.sim_nombre >= UMBRAL_NOMBRE_SOLO
+                or (self.sim_nombre >= UMBRAL_NOMBRE and (self.usuario_ok or self.casa_ok))
+                or (self.usuario_ok and self.casa_exacta))
 
 
 class Kobo:
@@ -27,6 +56,7 @@ class Kobo:
         self.page = page
         self.base = config.KOBO_URL
         self.formulario = ""
+        self.motivo = ""  # por que no se encontro al ultimo usuario buscado (se anota en el Excel)
         self._mapa_columnas = _cargar_mapa_columnas()
         self._url_datos: dict[str, str] = {}  # formulario -> URL de su pestana DATOS (para no navegar desde el inicio)
 
@@ -114,90 +144,140 @@ class Kobo:
     # ---------- Busqueda del usuario ----------
 
     def buscar_usuario(self, usuario, etiqueta: str = "tabla") -> Coincidencia | None:
-        """Busca al usuario: primero por USUARIO, luego por CASA y por ultimo por Nombre.
+        """Busca al usuario filtrando la tabla de DATOS, en el orden propio de cada formulario.
+
+        - Formulario 1: USUARIO, CASA y Nombre (columnas ubicadas por el nombre del encabezado).
+        - Formularios en BUSQUEDA_POR_FILTRO: columnas fijas por la posicion de su caja de filtro.
 
         El filtro de Kobo es "contiene" (buscar 81 trae 810, 181, 781...), asi que cada fila
-        se valida: el valor debe ser exacto en esa columna y el nombre (o la casa) debe
-        parecerse al del Excel.
+        se compara con los 3 datos del Excel (nombre, usuario y casa) y se elige sola la que
+        mejor coincide. Si no se encuentra o hay duda, devuelve None y deja en self.motivo
+        lo que paso (para anotarlo en el Excel).
         """
-        intentos = [
-            ("usuario", config.KOBO_COLUMNA_USUARIO, usuario.usuario),
-            ("casa", config.KOBO_COLUMNA_CASA, usuario.casa),
-            # El filtro busca el texto tal cual, asi que se filtra por el ultimo apellido
-            # y luego se compara el nombre completo
-            ("nombre", config.KOBO_COLUMNA_NOMBRE, (usuario.nombre.split() or [""])[-1]),
-        ]
-        for n, (campo, clave, valor) in enumerate(intentos, start=1):
-            if not valor:
-                continue
-            print(f"\nIntento {n}: buscar '{valor}' por {campo.upper()}")
-            tabla = self.leer_tabla()
-            self._guardar_debug(f"{etiqueta}_intento{n}", tabla)
-            col = self._columna(tabla["encabezados"], campo, clave)
-            if col is None or not self._filtrar(col, valor):
-                continue
+        self.motivo = ""
+        tabla = self.leer_tabla()
+        encabezados = tabla["encabezados"]
+        plan = BUSQUEDA_POR_FILTRO.get(self.formulario)
+        if plan:
+            orden = [campo for campo, _ in plan]
+            columnas = {campo: posicion - 1 for campo, posicion in plan}
+            for campo, col in columnas.items():
+                nombre_col = encabezados[col] if col < len(encabezados) else "(no existe)"
+                print(f"   Columna para {campo.upper()}: [{col + 1}] {nombre_col}")
+        else:
+            orden = ["usuario", "casa", "nombre"]
+            columnas = {campo: self._columna(encabezados, campo, CLAVES_COLUMNA[campo], preguntar=False)
+                        for campo in orden}
 
-            tabla = self.leer_tabla()
-            self._guardar_debug(f"{etiqueta}_intento{n}_filtrada", tabla)
-            elegida = self._elegir_fila(tabla, campo, col, valor, usuario)
-            if elegida:
-                print(f"   Usuario encontrado en la fila {elegida.indice + 1}.")
-                return elegida
-            self._filtrar(col, "")
-        print("\nNo se encontro al usuario por USUARIO, CASA ni Nombre.")
+        valores = {
+            "usuario": [usuario.usuario],
+            "casa": [usuario.casa],
+            "nombre": terminos_busqueda_nombre(usuario.nombre),
+        }
+        n = 0
+        mas_parecida, dudas = None, []
+        for campo in orden:
+            col = columnas.get(campo)
+            if col is None and not plan:
+                col = columnas[campo] = self._columna(encabezados, campo, CLAVES_COLUMNA[campo])
+            if col is None:
+                continue
+            for valor in valores[campo]:
+                if not valor:
+                    continue
+                n += 1
+                print(f"\nIntento {n}: buscar '{valor}' por {campo.upper()}")
+                self._guardar_debug(f"{etiqueta}_intento{n}", self.leer_tabla())
+                if not self._filtrar(col, valor):
+                    break
+                tabla = self.leer_tabla()
+                self._guardar_debug(f"{etiqueta}_intento{n}_filtrada", tabla)
+                candidatas = self._candidatas(tabla, campo, col, valor, usuario, columnas)
+                elegida, empatadas = self._decidir(candidatas)
+                if elegida:
+                    print(f"   Usuario encontrado en la fila {elegida.indice + 1}.")
+                    return elegida
+                for c in candidatas:
+                    if mas_parecida is None or c.puntaje > mas_parecida.puntaje:
+                        mas_parecida = c
+                self._filtrar(col, "")
+                if empatadas:  # registro repetido en Kobo: buscar por otro dato traeria lo mismo
+                    dudas = empatadas
+                    break
+            if dudas:
+                break
+
+        if dudas:
+            self.motivo = "Dudoso: varios registros iguales en Kobo (" + " / ".join(
+                f"{c.nombre} {c.casa}".strip() for c in dudas[:3]) + ")"
+        elif mas_parecida:
+            self.motivo = (f"No encontrado: el mas parecido en Kobo es {mas_parecida.nombre} "
+                           f"{mas_parecida.casa} ({mas_parecida.sim_nombre:.0%} de parecido en el nombre)").replace("  ", " ")
+        else:
+            self.motivo = f"No encontrado en Kobo por {', '.join(c.lower() for c in orden)}"
+        print(f"\n{self.motivo}")
         return None
 
-    def _elegir_fila(self, tabla: dict, campo: str, col: int, valor: str, usuario) -> Coincidencia | None:
+    def _candidatas(self, tabla: dict, campo: str, col: int, valor: str, usuario,
+                    columnas: dict) -> list[Coincidencia]:
+        """Filas de la tabla filtrada que de verdad coinciden con lo buscado, comparadas con el Excel."""
         encabezados = tabla["encabezados"]
-        col_nombre = self._columna(encabezados, "nombre", config.KOBO_COLUMNA_NOMBRE, preguntar=False)
-        col_casa = self._columna(encabezados, "casa", config.KOBO_COLUMNA_CASA, preguntar=False)
+
+        def celda(celdas, campo_col):
+            i = columnas.get(campo_col)
+            return celdas[i] if i is not None and i < len(celdas) else ""
 
         candidatas = []
         for i, celdas in enumerate(tabla["filas"]):
-            celda = celdas[col] if col < len(celdas) else ""
+            buscada = celdas[col] if col < len(celdas) else ""
             if campo == "nombre":
-                exacto = similitud_nombre(usuario.nombre, celda) >= UMBRAL_NOMBRE
+                coincide = similitud_nombre(usuario.nombre, buscada) >= UMBRAL_NOMBRE
             else:
-                exacto = digitos(valor) in digitos(celda, todos=True)
-            if not exacto:
+                coincide = digitos(valor) in digitos(buscada, todos=True)
+            if not coincide:
                 continue
-            nombre_kobo = celdas[col_nombre] if col_nombre is not None and col_nombre < len(celdas) else ""
-            casa_kobo = celdas[col_casa] if col_casa is not None and col_casa < len(celdas) else ""
+            nombre_kobo, casa_kobo, usuario_kobo = celda(celdas, "nombre"), celda(celdas, "casa"), celda(celdas, "usuario")
             candidatas.append(Coincidencia(
                 indice=i,
                 datos=dict(zip(encabezados, celdas)),
                 sim_nombre=similitud_nombre(usuario.nombre, nombre_kobo),
                 casa_ok=bool(usuario.casa) and digitos(usuario.casa) in digitos(casa_kobo, todos=True),
                 nombre=nombre_kobo.strip(),
+                casa_exacta=bool(numeros_casa(usuario.casa) & numeros_casa(casa_kobo)),
+                usuario_ok=bool(usuario.usuario) and digitos(usuario.usuario) in digitos(usuario_kobo, todos=True),
+                casa=casa_kobo.strip(),
             ))
 
-        total = len(tabla["filas"])
-        print(f"   {total} fila(s) en la tabla, {len(candidatas)} con valor exacto '{valor}'.")
-        if not candidatas:
-            return None
-
-        candidatas.sort(key=lambda c: (c.sim_nombre + (0.5 if c.casa_ok else 0)), reverse=True)
-        fuertes = [c for c in candidatas if c.sim_nombre >= UMBRAL_NOMBRE or c.casa_ok]
-        if len(fuertes) == 1:
-            c = fuertes[0]
-            print(f"   Coincide: {self._resumen(c, col_nombre, col_casa, encabezados)}")
-            return c
-
-        # Ninguna o varias parecidas: decide el usuario
-        print(f"   Excel: {usuario.nombre} | USUARIO {usuario.usuario} | CASA {usuario.casa}")
-        for k, c in enumerate(candidatas[:15], start=1):
-            print(f"   [{k}] {self._resumen(c, col_nombre, col_casa, encabezados)}")
-        resp = input("   ¿Cual es el usuario correcto? (numero, o 0 si ninguno): ").strip()
-        if resp.isdigit() and 1 <= int(resp) <= len(candidatas[:15]):
-            return candidatas[int(resp) - 1]
-        return None
+        criterio = "con nombre parecido a" if campo == "nombre" else "con valor exacto"
+        print(f"   {len(tabla['filas'])} fila(s) en la tabla, {len(candidatas)} {criterio} '{valor}'.")
+        candidatas.sort(key=lambda c: c.puntaje, reverse=True)
+        for k, c in enumerate(candidatas[:10], start=1):
+            print(f"   [{k}] {self._resumen(c)}")
+        return candidatas
 
     @staticmethod
-    def _resumen(c: Coincidencia, col_nombre, col_casa, encabezados) -> str:
-        nombre = c.datos.get(encabezados[col_nombre], "?") if col_nombre is not None else "?"
-        casa = c.datos.get(encabezados[col_casa], "?") if col_casa is not None else "?"
-        return (f"{nombre} | {casa} | similitud nombre {c.sim_nombre:.0%}"
-                f"{' | casa coincide' if c.casa_ok else ''}")
+    def _decidir(candidatas: list[Coincidencia]) -> tuple[Coincidencia | None, list[Coincidencia]]:
+        """Elige sola la fila que mejor coincide con el Excel en nombre, usuario y casa.
+
+        Devuelve (elegida, []) si la mejor esta confirmada y claramente por encima de las demas,
+        o (None, empatadas) si hay varias confirmadas casi iguales (ej. registro duplicado).
+        """
+        confirmadas = [c for c in candidatas if c.confirmada]
+        if not confirmadas:
+            return None, []
+        mejor = confirmadas[0]
+        empatadas = [c for c in confirmadas if mejor.puntaje - c.puntaje < MARGEN_DECISION]
+        if len(empatadas) > 1:
+            print(f"   [!] {len(empatadas)} registros coinciden casi igual: no se puede saber cual es.")
+            return None, empatadas
+        print(f"   Elegido: {mejor.nombre} | {mejor.casa} (el que mas coincide con el Excel)")
+        return mejor, []
+
+    @staticmethod
+    def _resumen(c: Coincidencia) -> str:
+        marcas = [m for m, ok in (("usuario coincide", c.usuario_ok),
+                                  ("casa exacta" if c.casa_exacta else "casa parecida", c.casa_ok)) if ok]
+        return " | ".join([c.nombre or "?", c.casa or "?", f"nombre {c.sim_nombre:.0%}", *marcas])
 
     # ---------- Edicion ----------
 
@@ -434,6 +514,13 @@ _JS_LEER_TABLA = r"""
 _JS_MARCAR_FILTRO = r"""
 (col) => {
   document.querySelectorAll('[data-tumaco-filtro]').forEach(e => e.removeAttribute('data-tumaco-filtro'));
+  const celda = document.querySelector(`.rt-thead.-filters > div > div:nth-child(${col + 1})`);
+  const directo = celda && celda.querySelector('input:not([type=checkbox]):not([type=radio]):not([type=hidden])');
+  if (directo) {
+    celda.scrollIntoView({ inline: 'center', block: 'nearest' });
+    directo.setAttribute('data-tumaco-filtro', '1');
+    return true;
+  }
   let ths = [...document.querySelectorAll('.rt-thead.-header .rt-th')];
   if (!ths.length) ths = [...document.querySelectorAll('thead tr:first-child th, [role="columnheader"]')];
   const th = ths[col];

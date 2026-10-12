@@ -1,5 +1,6 @@
 """Correcciones que se aplican dentro del formulario de edicion (Enketo) de cada formulario."""
 import json
+from pathlib import Path
 
 from playwright.sync_api import Locator, Page, TimeoutError
 
@@ -17,6 +18,10 @@ MAYUSCULAS = {
         f"{FORM} > section:nth-child(5) > label:nth-child(6)",
         f"{FORM} > section:nth-child(10) > section.or-group.or-branch.or-appearance-field-list > label:nth-child(2)",
     ],
+    2: [
+        f"{FORM} > section:nth-child(5) > label:nth-child(5)",
+        f"{FORM} > section:nth-child(5) > label:nth-child(6)",
+    ],
 }
 
 # Campos que siempre llevan el mismo valor, por formulario
@@ -26,6 +31,12 @@ VALORES_FIJOS = {
         (f"{FORM} > section:nth-child(10) > section:nth-child(4) > label:nth-child(2)", "ADRIANA MUÑOZ"),
         (f"{FORM} > section:nth-child(10) > section:nth-child(4) > label:nth-child(3)", "59122110"),
     ],
+    2: [
+        (f"{FORM} > section:nth-child(3) > label:nth-child(9)", "ADRIANA MUÑOZ"),
+        # RESPONSABLE CONTRATISTA: nombre y documento
+        (f"{FORM} > section:nth-child(5) > section:nth-child(18) > label:nth-child(2)", "ADRIANA MUÑOZ"),
+        (f"{FORM} > section:nth-child(5) > section:nth-child(18) > label:nth-child(3)", "59122110"),
+    ],
 }
 
 # Campos que se reemplazan con el dato del Excel de usuarios (viene corregido), por formulario.
@@ -34,6 +45,10 @@ VALORES_DEL_EXCEL = {
     1: [
         # PERSONA ATENDIDA: nombre
         (f"{FORM} > section:nth-child(5) > label:nth-child(2)", "nombre"),
+    ],
+    2: [
+        (f"{FORM} > section:nth-child(5) > label:nth-child(2)", "nombre"),
+        (f"{FORM} > section:nth-child(5) > section:nth-child(17) > label:nth-child(2)", "nombre"),
     ],
 }
 
@@ -51,6 +66,7 @@ DOCUMENTOS = {
 # Firma que se borra y se vuelve a dibujar: seccion del formulario y trazos guardados en firmas/
 FIRMAS = {
     1: {"seccion": f"{FORM} > section:nth-child(10) > section:nth-child(4)", "trazos": "contratista.json"},
+    2: {"seccion": f"{FORM} > section:nth-child(5) > section:nth-child(18)", "trazos": "contratista.json"},  # misma firma
 }
 
 CONFIRMAR_ELIMINAR = (
@@ -66,6 +82,7 @@ def aplicar(page: Page, numero_formulario: int, usuario=None) -> list[str]:
     """
     cambios = []
     if usuario is not None:
+        print("\nDatos del Excel:")
         for selector, atributo in VALORES_DEL_EXCEL.get(numero_formulario, []):
             valor = " ".join(str(getattr(usuario, atributo, "") or "").split()).upper()
             if not valor:
@@ -74,12 +91,14 @@ def aplicar(page: Page, numero_formulario: int, usuario=None) -> list[str]:
             cambio = poner_valor(page, selector, valor)
             if cambio:
                 cambios.append(cambio)
+    if numero_formulario in MAYUSCULAS:
+        print("\nMayusculas:")
     for selector in MAYUSCULAS.get(numero_formulario, []):
         cambio = poner_mayusculas(page, selector)
         if cambio:
             cambios.append(cambio)
     if numero_formulario in VALORES_FIJOS:
-        print("\nResponsable contratista:")
+        print("\nValores fijos:")
         for selector, valor in VALORES_FIJOS[numero_formulario]:
             cambio = poner_valor(page, selector, valor)
             if cambio:
@@ -94,6 +113,31 @@ def aplicar(page: Page, numero_formulario: int, usuario=None) -> list[str]:
         for doc in revisar_documentos(page, DOCUMENTOS[numero_formulario]):
             cambios.append(f"{doc['pregunta']}: {doc['archivo']} -> {doc['decision']}")
     return cambios
+
+
+def tiene_correcciones(numero_formulario: int) -> bool:
+    """True si el formulario ya tiene correcciones configuradas (solo entonces se envia a Kobo)."""
+    return any(numero_formulario in m for m in (MAYUSCULAS, VALORES_FIJOS, VALORES_DEL_EXCEL, DOCUMENTOS, FIRMAS))
+
+
+def inventario_campos(page: Page, numero_formulario: int) -> Path:
+    """Guarda la lista de preguntas del formulario abierto (selector, texto, tipo, valor actual).
+
+    Sirve para elegir que campos corregir en un formulario nuevo: queda en
+    salida/debug/formularioN_campos.txt (legible) y .json.
+    """
+    campos = page.evaluate(_JS_INVENTARIO, FORM)
+    config.DEBUG_DIR.mkdir(parents=True, exist_ok=True)
+    base = config.DEBUG_DIR / f"formulario{numero_formulario}_campos"
+    base.with_suffix(".json").write_text(json.dumps(campos, ensure_ascii=False, indent=1), encoding="utf-8")
+    lineas = [f"Formulario {numero_formulario}: {len(campos)} pregunta(s)\n"]
+    for c in campos:
+        estado = "" if c["visible"] else "  [oculta en este registro]"
+        lineas.append(f"[{c['tipo']}] {c['pregunta']}{estado}\n    valor: {c['valor'] or '(vacio)'}\n"
+                      f"    selector: {c['selector']}\n")
+    base.with_suffix(".txt").write_text("\n".join(lineas), encoding="utf-8")
+    print(f"   Inventario de {len(campos)} campos guardado en {base.with_suffix('.txt')}")
+    return base.with_suffix(".txt")
 
 
 # ---------- Verificaciones previas ----------
@@ -337,5 +381,52 @@ _JS_MODAL = r"""
     window.__tumacoDecision = elegido.value;
     m.remove();
   };
+}
+"""
+
+# Todas las preguntas del formulario: texto, tipo, valor actual y selector (mismo estilo que los de arriba)
+_JS_INVENTARIO = r"""
+(formSel) => {
+  const form = document.querySelector(formSel);
+  if (!form) return [];
+  const ruta = el => {
+    const partes = [];
+    while (el && el !== form) {
+      const padre = el.parentElement;
+      partes.unshift(`${el.tagName.toLowerCase()}:nth-child(${[...padre.children].indexOf(el) + 1})`);
+      el = padre;
+    }
+    return formSel + ' > ' + partes.join(' > ');
+  };
+  const texto = el => (el ? (el.innerText || el.textContent || '') : '').replace(/\s+/g, ' ').trim();
+  return [...form.querySelectorAll('.question')].map(q => {
+    const etiqueta = q.querySelector('.question-label');
+    const entradas = [...q.querySelectorAll('input:not([type=hidden]), select, textarea')];
+    const opciones = entradas.filter(i => i.type === 'radio' || i.type === 'checkbox');
+    const archivo = entradas.find(i => i.type === 'file');
+    let tipo = 'nota', valor = '';
+    if (q.querySelector('canvas')) {
+      tipo = 'firma'; valor = '(lienzo de firma)';
+    } else if (archivo) {
+      tipo = 'archivo';
+      valor = texto(q.querySelector('.fake-file-input')) || archivo.getAttribute('data-loaded-file-name') || '';
+    } else if (opciones.length) {
+      tipo = opciones[0].type === 'radio' ? 'opcion unica' : 'opcion multiple';
+      valor = opciones.filter(o => o.checked).map(o => texto(o.closest('label')) || o.value).join(' | ');
+    } else if (entradas[0] && entradas[0].tagName === 'SELECT') {
+      tipo = 'lista';
+      valor = entradas[0].selectedOptions[0] ? texto(entradas[0].selectedOptions[0]) : '';
+    } else if (entradas[0]) {
+      tipo = entradas[0].tagName === 'TEXTAREA' ? 'texto largo' : (entradas[0].type || 'texto');
+      valor = entradas[0].value;
+    }
+    return {
+      pregunta: ((etiqueta && etiqueta.innerText) || '').trim().split('\n')[0].slice(0, 150),
+      tipo,
+      valor: (valor || '').slice(0, 200),
+      selector: ruta(q),
+      visible: q.offsetParent !== null,
+    };
+  });
 }
 """
