@@ -63,6 +63,36 @@ def llenar_hoja(hoja: sheets.Hoja, usuario: excel.Usuario) -> bool:
     return ok
 
 
+def guardar_decisiones(usuario: excel.Usuario, numero: int, resultado):
+    """Lo que se decidio con Kobo, el Excel y la hoja (ya enviado): avisos para verificar en CASOS.xlsx y,
+    del formulario 1, el nombre de quien atendio si es otra persona (L) y la casa que quedo (M)."""
+    for tipo, texto in resultado.avisos:
+        casos.anotar_aviso(usuario, numero, tipo, texto)
+    if numero != 1:
+        return
+    for campo, columna, valor in (("nombre_final", excel.COL_NOMBRE_FINAL, resultado.nombre_final),
+                                  ("casa_final", excel.COL_CASA_FINAL, resultado.casa_final)):
+        if valor and valor != getattr(usuario, campo):
+            excel.marcar(usuario.fila, valor, columna)
+            setattr(usuario, campo, valor)
+            print(f"Excel: fila {usuario.fila}, columna {excel.letra(columna)} ({campo.replace('_', ' ')}) = '{valor}'")
+
+
+def cargar_referencias(hoja: sheets.Hoja, usuarios: list[excel.Usuario]):
+    """Nombre y direccion iniciales de cada usuario segun la hoja de Google, para decidir nombre y casa."""
+    try:
+        refs = sheets.referencias(sheets.leer_filas(hoja.pestana()))
+    except Exception as e:
+        print(f"[!] No se pudo leer la hoja de Google ({e}).\n"
+              f"    Sin ella, el bot no cambia nombres ni casas que no coincidan: los deja y avisa.")
+        return
+    for u in usuarios:
+        ref = refs.get(u.usuario, {})
+        u.ref_nombre, u.ref_direccion = ref.get("nombre", ""), ref.get("direccion", "")
+    print(f"Hoja de Google: datos iniciales de {sum(1 for u in usuarios if u.ref_nombre)} de {len(usuarios)} "
+          f"usuario(s) para comparar nombre y casa.")
+
+
 def procesar_formulario(kobo: Kobo, usuario: excel.Usuario, numero: int) -> tuple[str, str]:
     """Busca al usuario en el formulario `numero`, lo corrige, guarda el PDF y lo envia.
 
@@ -126,6 +156,8 @@ def procesar_formulario(kobo: Kobo, usuario: excel.Usuario, numero: int) -> tupl
         print()
         enviado = kobo.enviar_edicion(edicion)
         t.marcar("envio")
+        if enviado:
+            guardar_decisiones(usuario, numero, resultado)
         # Columna J: solo si quedo enviado, para que coincida con lo que quedo en Kobo
         if enviado and resultado.anexo:
             excel.marcar(usuario.fila, resultado.anexo, excel.COL_ANEXO)
@@ -186,6 +218,7 @@ def main():
         kobo = Kobo(page)
         kobo.iniciar_sesion()
         hoja = sheets.Hoja(playwright)
+        cargar_referencias(hoja, por_procesar)
 
         for n, usuario in enumerate(por_procesar, start=1):
             print("\n" + "=" * 70)

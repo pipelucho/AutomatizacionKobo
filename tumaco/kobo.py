@@ -11,7 +11,6 @@ from .texto import digitos, mismo_documento, norm, numeros_casa, similitud_nombr
 
 LOGIN_TIMEOUT_MS = 5 * 60 * 1000  # tiempo para iniciar sesion a mano si hace falta
 UMBRAL_NOMBRE = 0.6  # similitud minima del nombre para aceptar una fila sin preguntar
-UMBRAL_NOMBRE_SOLO = 0.85  # buscando solo por nombre (sin numero que lo confirme) se exige mas
 MARGEN_DECISION = 0.3  # ventaja minima de la mejor fila sobre la segunda para elegirla sin dudar
 
 # Orden de busqueda propio de algunos formularios: (campo, posicion de su caja en la fila de filtros, 1 = primera)
@@ -54,11 +53,11 @@ class Coincidencia:
     def confirmada(self) -> bool:
         """Hay evidencia suficiente de que es la persona del Excel.
 
-        El documento solo no basta (puede estar mal digitado en otra persona): se pide ademas
-        un nombre parecido, el No. de usuario o la casa.
+        Nunca solo por el nombre: con nombres comunes (dos 'MARTHA CORTES') se editaba el registro de
+        otra persona. Se pide nombre parecido y ademas usuario, casa o documento; o dos de esos tres.
+        El documento solo tampoco basta (puede estar mal digitado en otra persona).
         """
-        return (self.sim_nombre >= UMBRAL_NOMBRE_SOLO
-                or (self.sim_nombre >= UMBRAL_NOMBRE and (self.usuario_ok or self.casa_ok or self.documento_ok))
+        return ((self.sim_nombre >= UMBRAL_NOMBRE and (self.usuario_ok or self.casa_ok or self.documento_ok))
                 or (self.usuario_ok and self.casa_exacta)
                 or (self.documento_ok and (self.usuario_ok or self.casa_exacta)))
 

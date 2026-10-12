@@ -16,7 +16,8 @@ from contextlib import contextmanager
 
 from playwright.sync_api import Page, sync_playwright
 
-from . import config
+from . import config, reglas
+from .texto import numeros_casa
 
 PESTANA = "Tumaco"
 FILA_ENCABEZADOS = 16  # No. | NOMBRES Y APELLIDOS USUARIO INICIAL | ... | RESPONSABLE
@@ -85,6 +86,17 @@ def _celda(filas, fila: int, col: str) -> str:
     return filas[fila - 1][i].strip() if fila <= len(filas) and i < len(filas[fila - 1]) else ""
 
 
+def referencias(filas) -> dict[str, dict]:
+    """Datos iniciales de cada usuario segun la hoja (columna A): nombre inicial (B) y direccion (E).
+    Es la tercera fuente, junto al Excel y Kobo, para decidir nombre y casa cuando no coinciden."""
+    refs = {}
+    for n in range(FILA_ENCABEZADOS + 1, len(filas) + 1):
+        numero, nombre = _celda(filas, n, COL_NUMERO), _celda(filas, n, "B")
+        if numero and nombre:
+            refs[numero] = {"nombre": nombre, "direccion": _celda(filas, n, COL_DIRECCION_INICIAL), "fila": n}
+    return refs
+
+
 def buscar_fila(filas, numero_usuario: str) -> int | None:
     """Fila de la hoja cuyo No. (columna A) es el usuario. Solo filas con nombre: al final de la hoja
     hay numeros sueltos sin datos que no cuentan."""
@@ -115,11 +127,20 @@ def direccion_hoja(texto: str) -> str:
 
 
 def valores_usuario(usuario, direccion_inicial: str) -> dict[str, str]:
-    """Lo que se escribe en la fila del usuario, columna -> valor, a partir del Excel de usuarios."""
+    """Lo que se escribe en la fila del usuario, columna -> valor, a partir del Excel de usuarios.
+
+    F es el usuario final: el nombre de Kobo si quien atendio es otra persona (columna L del Excel).
+    H parte de la direccion inicial (E) pero con la casa que quedo en el formulario 1 (columna M).
+    """
+    direccion = direccion_hoja(direccion_inicial)
+    casa = reglas.casa_corta(getattr(usuario, "casa_final", ""))
+    if casa and not (numeros_casa(casa) & numeros_casa(direccion)):
+        barrio = re.sub(r"^CASA(\s+\d+(\s[A-Z](?![A-Z0-9]))?)?\s*", "", direccion)
+        direccion = f"{casa} {barrio}".strip()
     return {
-        COL_NOMBRE: " ".join(usuario.nombre.upper().split()),
+        COL_NOMBRE: " ".join((getattr(usuario, "nombre_final", "") or usuario.nombre).upper().split()),
         COL_DOCUMENTO: usuario.documento,
-        COL_DIRECCION: direccion_hoja(direccion_inicial),
+        COL_DIRECCION: direccion,
         COL_VERIFICACION: "CONFIRMADO" if usuario.propietario.lower() == "si" else "INCORPORADO",
         COL_SOPORTE: ("CEDULA DE CIUDADANIA Y RECIBO DE ENERGIA" if usuario.anexo.lower() == "si"
                       else "CEDULA DE CIUDADANIA"),

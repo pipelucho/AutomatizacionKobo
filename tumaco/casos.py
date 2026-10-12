@@ -17,6 +17,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from . import config, excel
 
 ERRORES_PATH = config.OUTPUT_DIR / "errores.json"
+AVISOS_PATH = config.OUTPUT_DIR / "avisos.json"  # decisiones de nombre/casa para verificar
 PENDIENTE, RESUELTO = "Pendiente", "Resuelto"
 COLUMNAS = ["Estado", "Tipo", "Formulario", "Fila Excel", "Usuario", "Nombre", "Detalle", "Que hacer",
             "Detectado", "Ultima revision", "Resuelto", "Notas", "Clave"]
@@ -34,6 +35,14 @@ QUE_HACER = {
     "Hoja pendiente": "Abrir el Chrome de la hoja y correr el bot (solo llena la hoja de esa persona).",
     "Faltan datos": "Correr herramientas\\completar_datos_form1.py.",
     "Error": "Revisar el log de la corrida (salida\\logs); el bot lo reintenta en la siguiente corrida.",
+    "Verificar nombre": "Kobo tiene otro nombre que el Excel y se dejo el de Kobo. Confirmar quien es; si esta bien, "
+                        "cambiar el Estado a 'Verificado'.",
+    "Registro ajeno": "El bot pudo editar el registro de OTRA persona con el mismo nombre (antes aceptaba un "
+                      "registro solo por el nombre). Revisar ese registro en Kobo; el formulario se rehace.",
+    "Registro duplicado": "Hay mas de un registro de Kobo que coincide con la persona. Confirmar cual es el "
+                          "correcto y si el otro es un duplicado.",
+    "Verificar casa": "Kobo, el Excel y la hoja no coinciden en la casa. Confirmar cual es la correcta; si esta "
+                      "bien, cambiar el Estado a 'Verificado'.",
     "Otro": "Revisar la marca escrita en el Excel.",
 }
 
@@ -58,6 +67,7 @@ def _tipo_marca(numero: int, marca: str) -> str | None:
 def detectar(tabla) -> list[dict]:
     """Casos abiertos segun el Excel de usuarios y los errores de las corridas."""
     errores = _leer_errores()
+    avisos = _leer_json(AVISOS_PATH)
     casos = []
 
     def caso(u, tipo, formulario, detalle):
@@ -82,6 +92,10 @@ def detectar(tabla) -> list[dict]:
                 faltan.append("propietario sin respuesta en el formulario 1")
             if faltan:
                 caso(u, "Faltan datos", "F1", "Falta en el Excel: " + ", ".join(faltan))
+        # Decisiones de nombre/casa para verificar (quedan hasta que les cambies el Estado)
+        for clave, aviso in avisos.items():
+            if clave.startswith(f"{u.usuario}|"):
+                caso(u, aviso["tipo"], aviso["formulario"], f"{aviso['fecha']}: {aviso['texto']}")
     return casos
 
 
@@ -92,15 +106,31 @@ def anotar_error(usuario, numero: int, mensaje: str):
     errores = _leer_errores()
     errores[f"{usuario.usuario}|{numero}"] = {"fecha": f"{datetime.now():%Y-%m-%d %H:%M}",
                                               "mensaje": mensaje.splitlines()[0][:300]}
-    ERRORES_PATH.parent.mkdir(parents=True, exist_ok=True)
-    ERRORES_PATH.write_text(json.dumps(errores, ensure_ascii=False, indent=1), encoding="utf-8")
+    _guardar_json(ERRORES_PATH, errores)
+
+
+def anotar_aviso(usuario, numero: int, tipo: str, texto: str):
+    """Guarda una decision para verificar (ej. 'Verificar nombre'); uno por persona, formulario y tipo."""
+    avisos = _leer_json(AVISOS_PATH)
+    avisos[f"{usuario.usuario}|F{numero}|{tipo}"] = {"tipo": tipo, "formulario": f"F{numero}", "texto": texto,
+                                                      "fecha": f"{datetime.now():%Y-%m-%d %H:%M}"}
+    _guardar_json(AVISOS_PATH, avisos)
 
 
 def _leer_errores() -> dict:
+    return _leer_json(ERRORES_PATH)
+
+
+def _leer_json(ruta) -> dict:
     try:
-        return json.loads(ERRORES_PATH.read_text(encoding="utf-8"))
+        return json.loads(ruta.read_text(encoding="utf-8"))
     except (FileNotFoundError, ValueError):
         return {}
+
+
+def _guardar_json(ruta, datos: dict):
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    ruta.write_text(json.dumps(datos, ensure_ascii=False, indent=1), encoding="utf-8")
 
 
 # ---------- Registro en CASOS.xlsx ----------

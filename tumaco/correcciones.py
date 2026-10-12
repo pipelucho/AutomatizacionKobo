@@ -3,7 +3,6 @@ import base64
 import json
 import math
 import random
-import re
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -11,9 +10,9 @@ from pathlib import Path
 import cv2
 from playwright.sync_api import Locator, Page, TimeoutError
 
-from . import cedula, config
+from . import cedula, config, reglas
 from .humano import clic, escribir, pausa, pegar
-from .texto import norm, numeros_casa
+from .texto import norm
 
 FORM = "body > div.main > article > form"
 
@@ -159,6 +158,9 @@ class Resultado:
     cedulas: dict = field(default_factory=dict)  # lado ('cara'/'reverso') -> jpg ajustado
     revisar: list = field(default_factory=list)  # lo que no se pudo hacer y queda para hacer a mano
     anexo: str | None = None  # documento anexo: "Si" si se conservo, "No" si se elimino o no habia
+    avisos: list = field(default_factory=list)  # (tipo, texto): decisiones de nombre/casa para verificar
+    nombre_final: str = ""  # nombre que quedo cuando Kobo es otra persona que la del Excel
+    casa_final: str = ""  # casa que quedo en la direccion (ej. 'CASA 127')
 
 
 def aplicar(page: Page, numero_formulario: int, usuario=None) -> Resultado:
@@ -170,18 +172,33 @@ def aplicar(page: Page, numero_formulario: int, usuario=None) -> Resultado:
     cambios = resultado.cambios
     _NO_QUEDARON.clear()
     if usuario is not None and numero_formulario in DIRECCIONES:
-        print("\nDireccion (casa del Excel):")
-        cambio = corregir_direccion(page, DIRECCIONES[numero_formulario], getattr(usuario, "casa", ""))
+        print("\nDireccion (Excel, hoja y Kobo):")
+        cambio, aviso, valor = corregir_direccion(page, DIRECCIONES[numero_formulario], getattr(usuario, "casa", ""),
+                                                  getattr(usuario, "ref_direccion", ""))
         if cambio:
             cambios.append(cambio)
+        if aviso:
+            print(f"   [?] Verificar casa: {aviso}")
+            resultado.avisos.append(("Verificar casa", aviso))
+        resultado.casa_final = reglas.casa_corta(valor)
     if usuario is not None:
         print("\nDatos del Excel:")
         for selector, atributo in VALORES_DEL_EXCEL.get(numero_formulario, []):
-            valor = " ".join(str(getattr(usuario, atributo, "") or "").split()).upper()
-            if not valor:
-                print(f"   [!] El Excel no tiene {atributo} para este usuario; se deja el de Kobo")
-                continue
-            cambio = poner_valor(page, selector, valor)
+            if atributo == "nombre":
+                # El nombre se decide con Kobo, el Excel y la hoja: si es otra persona se deja el de Kobo
+                # Con el nombre decidido en el formulario 1 (si fue otra persona) los 4 quedan iguales
+                referencia = getattr(usuario, "nombre_final", "") or usuario.nombre
+                cambio, aviso, valor = corregir_nombre(page, selector, referencia, getattr(usuario, "ref_nombre", ""))
+                if aviso and not resultado.nombre_final:  # el primer nombre del formulario es el de la persona
+                    print(f"   [?] Verificar nombre: {aviso}")
+                    resultado.avisos.append(("Verificar nombre", aviso))
+                    resultado.nombre_final = valor
+            else:
+                valor = " ".join(str(getattr(usuario, atributo, "") or "").split()).upper()
+                if not valor:
+                    print(f"   [!] El Excel no tiene {atributo} para este usuario; se deja el de Kobo")
+                    continue
+                cambio = poner_valor(page, selector, valor)
             if cambio:
                 cambios.append(cambio)
     if numero_formulario in MAYUSCULAS:
@@ -346,19 +363,32 @@ def llenar_si_vacio(page: Page, selector: str, valor: str) -> str | None:
                            "ya tiene texto, se deja igual", pegando=True)
 
 
-def corregir_direccion(page: Page, selector: str, casa_excel: str) -> str | None:
-    """La direccion queda con la casa del Excel: si su numero coincide se deja (en mayuscula); si no
-    tiene numero, esta vacia o tiene otro, se cambia por 'CASA <casa del Excel>'."""
-    casa_excel = " ".join(str(casa_excel or "").split()).upper()
+def corregir_direccion(page: Page, selector: str, casa_excel: str,
+                       direccion_hoja: str = "") -> tuple[str | None, str | None, str]:
+    """Direccion decidida con Kobo, el Excel y la hoja (ver reglas.decidir_casa).
+    Devuelve (cambio hecho, aviso para verificar, direccion que quedo)."""
+    decision = {}
 
     def transformar(actual: str) -> str:
-        limpio = " ".join(actual.split()).upper()
-        limpio = re.sub(r"\bCS\.?\s*(?=\d)", "CASA ", limpio)  # 'CS652' / 'CS 27A' -> 'CASA 652' / 'CASA 27A'
-        if not casa_excel or numeros_casa(limpio) & numeros_casa(casa_excel):
-            return limpio
-        return f"CASA {casa_excel}"
+        decision["valor"], decision["aviso"] = reglas.decidir_casa(actual, casa_excel, direccion_hoja)
+        return decision["valor"]
 
-    return _corregir_texto(page, selector, transformar, "ya coincide con la casa del Excel")
+    cambio = _corregir_texto(page, selector, transformar, "ya esta bien")
+    return cambio, decision.get("aviso"), decision.get("valor", "")
+
+
+def corregir_nombre(page: Page, selector: str, nombre_excel: str,
+                    nombre_hoja: str = "") -> tuple[str | None, str | None, str]:
+    """Nombre decidido con Kobo, el Excel y la hoja (ver reglas.decidir_nombre).
+    Devuelve (cambio hecho, aviso para verificar, nombre que quedo)."""
+    decision = {}
+
+    def transformar(actual: str) -> str:
+        decision["valor"], decision["aviso"] = reglas.decidir_nombre(actual, nombre_excel, nombre_hoja)
+        return decision["valor"]
+
+    cambio = _corregir_texto(page, selector, transformar, "ya tiene el valor correcto")
+    return cambio, decision.get("aviso"), decision.get("valor", "")
 
 
 # Campos escritos que al releerlos no quedaron con el valor esperado (se pasan a resultado.revisar)
