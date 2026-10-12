@@ -1,6 +1,8 @@
 """Carpetas por usuario dentro de CONTINGENCIAL y PDF del formulario (equivalente a Ctrl+P > Guardar como PDF)."""
 import base64
+import os
 import re
+import time
 from pathlib import Path
 
 from playwright.sync_api import Page
@@ -33,8 +35,11 @@ def guardar_pdf(page: Page, carpeta: Path) -> Path:
     titulo = nombre_valido(page.title()) or "formulario"
     destino = carpeta / f"{titulo}.pdf"
 
-    # Que las fotos de documentos anexos (cedulas) esten cargadas antes de imprimir.
+    t0 = time.monotonic()
+    # Que las fotos de documentos anexos (cedulas, fachada...) esten cargadas antes de imprimir.
     # Solo esas: otras imagenes de la pagina pueden no cargar nunca y harian esperar de mas.
+    # Las que no se han visto en pantalla pueden estar en carga diferida: se piden ya.
+    page.evaluate("() => document.querySelectorAll('.file-preview img').forEach(i => { i.loading = 'eager'; })")
     try:
         page.wait_for_function(
             "() => [...document.querySelectorAll('.file-preview img')].filter(i => i.getAttribute('src'))"
@@ -42,11 +47,12 @@ def guardar_pdf(page: Page, carpeta: Path) -> Path:
             timeout=20_000, polling=300)
     except Exception:
         print("   (alguna foto de documento no termino de cargar; se imprime igual)")
+    t_fotos = time.monotonic()
 
     # Activar el modo impresion para que el formulario acomode su diseño como con Ctrl+P
     page.evaluate("() => window.dispatchEvent(new Event('beforeprint'))")
     page.emulate_media(media="print")
-    page.wait_for_timeout(1500)
+    page.wait_for_timeout(800)
     try:
         cdp = page.context.new_cdp_session(page)
         resultado = cdp.send("Page.printToPDF", {
@@ -64,13 +70,27 @@ def guardar_pdf(page: Page, carpeta: Path) -> Path:
         # queda en modo impresion, donde Enketo oculta el pie con el boton ENVIAR. "null" la quita.
         page.emulate_media(media="null")
         page.evaluate("() => window.dispatchEvent(new Event('afterprint'))")
-        page.wait_for_timeout(500)
+        page.wait_for_timeout(300)
+    t_imprimir = time.monotonic()
 
-    if destino.exists():
+    archivo = _ruta_larga(destino)
+    if archivo.exists():
         print(f"   (se reemplaza el PDF anterior: {destino.name})")
-    destino.write_bytes(base64.b64decode(resultado["data"]))
+    contenido = base64.b64decode(resultado["data"])
+    archivo.write_bytes(contenido)
     print(f"   PDF guardado: {destino}")
+    print(f"   ({len(contenido) / 1e6:.1f} MB | fotos {t_fotos - t0:.0f}s, imprimir {t_imprimir - t_fotos:.0f}s, "
+          f"guardar {time.monotonic() - t_imprimir:.0f}s)")
     return destino
+
+
+def _ruta_larga(ruta: Path) -> Path:
+    """En Windows una ruta de 260+ caracteres falla al guardar (pasa con el nombre largo del formulario 4
+    dentro de carpetas profundas); el prefijo \\\\?\\ quita ese limite."""
+    absoluta = str(ruta.resolve())
+    if os.name == "nt" and len(absoluta) >= 240 and not absoluta.startswith("\\\\?\\"):
+        return Path("\\\\?\\" + absoluta)
+    return ruta
 
 
 def guardar_documento(carpeta: Path, cara: bytes, reverso: bytes) -> Path:

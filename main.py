@@ -6,6 +6,8 @@ from tumaco.kobo import Kobo
 
 
 ENVIADO, OTRO, PENDIENTE, NO_ENCONTRADO = "enviado", "otro", "pendiente", "no encontrado"
+# Formularios que algunas personas no tienen: si no aparece se marca "No encontrado" y se da por terminado
+FORMULARIOS_OPCIONALES = {4}
 
 
 class Tiempos:
@@ -122,6 +124,7 @@ def main():
         return
 
     terminados, con_otro, pendientes, no_encontrados, a_mano = [], [], [], [], []
+    sin_formulario = []  # (usuario, numero) de formularios opcionales que no existen para esa persona
     sin_configurar = set()  # formularios sin correcciones cuyo inventario ya se guardo en esta corrida
     with abrir_navegador() as (_, page):
         kobo = Kobo(page)
@@ -157,6 +160,13 @@ def main():
                     print(f"Excel: fila {usuario.fila}, columna {letra} = '{excel.MARCA_OTRO}'")
                     con_otro.append(usuario)
                     break
+                if resultado == NO_ENCONTRADO and numero in FORMULARIOS_OPCIONALES \
+                        and kobo.motivo.startswith(excel.MARCA_NO_ENCONTRADO):
+                    # Hay personas sin este formulario: se anota y la persona queda terminada
+                    excel.marcar(usuario.fila, excel.MARCA_NO_ENCONTRADO, columna)
+                    print(f"Excel: fila {usuario.fila}, columna {letra} = '{excel.MARCA_NO_ENCONTRADO}'")
+                    sin_formulario.append((usuario, numero))
+                    continue
                 if resultado == NO_ENCONTRADO:
                     excel.marcar(usuario.fila, kobo.motivo, columna)
                     print(f"Excel: fila {usuario.fila}, columna {letra} = '{kobo.motivo}'")
@@ -177,13 +187,15 @@ def main():
         print("\n" + "=" * 70)
         print(f"Con todos los formularios enviados: {len(terminados)} | Con opcion 'Otro': {len(con_otro)} "
               f"| Enviados con algo a mano: {len(a_mano)} | No encontrados o dudosos: {len(no_encontrados)} "
-              f"| Pendientes: {len(pendientes)}")
+              f"| Sin formulario 4 en Kobo: {len(sin_formulario)} | Pendientes: {len(pendientes)}")
         for u in con_otro:
             print(f"   - fila {u.fila}: {u.usuario} {u.nombre} ({excel.MARCA_OTRO})")
         for u, numero, nota in a_mano:
             print(f"   - fila {u.fila}: {u.usuario} {u.nombre} (formulario {numero}: {nota})")
         for u, numero, motivo in no_encontrados:
             print(f"   - fila {u.fila}: {u.usuario} {u.nombre} (formulario {numero}: {motivo})")
+        for u, numero in sin_formulario:
+            print(f"   - fila {u.fila}: {u.usuario} {u.nombre} (sin formulario {numero} en Kobo)")
         for u, numero in pendientes:
             print(f"   - fila {u.fila}: {u.usuario} {u.nombre} (falta formulario {numero})")
         excel.guardar_pendientes(esperar=True)  # lo que no se pudo guardar con el Excel abierto

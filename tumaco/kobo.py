@@ -20,6 +20,8 @@ BUSQUEDA_POR_FILTRO = {
     config.FORMULARIOS[1]: [("casa", 16), ("usuario", 15), ("nombre", 13)],
     # Mismo orden que el 2; columnas de DATOS DEL USUARIO (la 11 es el nombre de la encuestadora, no del usuario)
     config.FORMULARIOS[2]: [("casa", 15), ("usuario", 14), ("nombre", 12)],
+    # DATOS DEL USUARIO Y DEL INMUEBLE (la 9 es el nombre de quien hace el acta, no del usuario)
+    config.FORMULARIOS[3]: [("casa", 13), ("usuario", 12), ("nombre", 10)],
 }
 CLAVES_COLUMNA = {
     "usuario": config.KOBO_COLUMNA_USUARIO,

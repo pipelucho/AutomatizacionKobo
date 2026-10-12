@@ -7,12 +7,14 @@ import pandas as pd
 from . import config
 
 COL_NOMBRE, COL_USUARIO, COL_CASA = 1, 2, 3  # A, B, C
-COL_REALIZADO, COL_FORMULARIO_2, COL_FORMULARIO_3 = 4, 5, 6  # D, E, F
+COL_REALIZADO, COL_FORMULARIO_2, COL_FORMULARIO_3, COL_FORMULARIO_4 = 4, 5, 6, 7  # D, E, F, G
 # Columna donde se marca cada formulario (numero de formulario -> columna)
-COLUMNA_FORMULARIO = {1: COL_REALIZADO, 2: COL_FORMULARIO_2, 3: COL_FORMULARIO_3}
-ENCABEZADOS = {COL_REALIZADO: "REALIZADO:", COL_FORMULARIO_2: "FORMULARIO 2:", COL_FORMULARIO_3: "FORMULARIO 3:"}
+COLUMNA_FORMULARIO = {1: COL_REALIZADO, 2: COL_FORMULARIO_2, 3: COL_FORMULARIO_3, 4: COL_FORMULARIO_4}
+ENCABEZADOS = {COL_REALIZADO: "REALIZADO:", COL_FORMULARIO_2: "FORMULARIO 2:", COL_FORMULARIO_3: "FORMULARIO 3:",
+              COL_FORMULARIO_4: "FORMULARIO 4:"}
 MARCA_REALIZADO = "Si"
 MARCA_A_MANO = "Revisar a mano"  # se envio, pero algo quedo para hacerlo a mano (ej. una cedula)
+MARCA_NO_ENCONTRADO = "No encontrado"  # formulario que no existe para esa persona (ej. el 4)
 MARCA_OTRO = "Tiene otro"  # la persona que atiende manifiesta ser "Otro": no se procesa
 # Marcas que no se pudieron escribir porque el Excel estaba abierto: [fila, columna, valor]
 PENDIENTES_PATH = config.OUTPUT_DIR / "marcas_pendientes.json"
@@ -27,6 +29,7 @@ class Usuario:
     formulario1: str = ""  # valor de la columna D
     formulario2: str = ""  # valor de la columna E
     formulario3: str = ""  # valor de la columna F
+    formulario4: str = ""  # valor de la columna G
 
     def marca(self, numero: int) -> str:
         """Lo que dice el Excel para el formulario `numero` (vacio = falta hacerlo)."""
@@ -65,7 +68,7 @@ def _texto(valor) -> str:
 def cargar_tabla() -> pd.DataFrame:
     """Lee el Excel UNA sola vez: nombre, usuario, casa, marcas de cada formulario y la fila real de Excel."""
     crudo = pd.read_excel(config.EXCEL_PATH, header=0, dtype=object)
-    while len(crudo.columns) < max(COLUMNA_FORMULARIO.values()):  # las columnas D/E/F pueden no existir todavia
+    while len(crudo.columns) < max(COLUMNA_FORMULARIO.values()):  # las columnas D a G pueden no existir todavia
         crudo[f"_vacia_{len(crudo.columns)}"] = None
     tabla = pd.DataFrame({
         "nombre": crudo.iloc[:, COL_NOMBRE - 1],

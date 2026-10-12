@@ -21,3 +21,16 @@ def escribir(locator: Locator, texto: str):
     locator.fill("")
     locator.press_sequentially(texto, delay=random.randint(60, 160))
     pausa(locator.page, 0.2, 0.5)
+
+
+def pegar(locator: Locator, texto: str):
+    """Borra el campo y pone el texto de una sola vez, como al pegar con Ctrl+V.
+
+    Se inserta directo en el campo (mismo efecto que pegar) sin pasar por el portapapeles
+    de Windows, para no reemplazar lo que el usuario tenga copiado.
+    """
+    clic(locator)
+    locator.fill("")
+    pausa(locator.page, 0.2, 0.4)
+    locator.page.keyboard.insert_text(texto)
+    pausa(locator.page, 0.2, 0.5)

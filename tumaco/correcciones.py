@@ -1,13 +1,16 @@
 """Correcciones que se aplican dentro del formulario de edicion (Enketo) de cada formulario."""
 import base64
 import json
+import math
+import random
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from playwright.sync_api import Locator, Page, TimeoutError
 
 from . import cedula, config
-from .humano import clic, escribir, pausa
+from .humano import clic, escribir, pausa, pegar
 from .texto import norm
 
 FORM = "body > div.main > article > form"
@@ -27,6 +30,11 @@ MAYUSCULAS = {
         # DATOS DEL USUARIO: direccion y barrio
         f"{FORM} > section:nth-child(4) > label:nth-child(6)",
         f"{FORM} > section:nth-child(4) > label:nth-child(7)",
+    ],
+    4: [
+        # DATOS DEL USUARIO Y DEL INMUEBLE: direccion y barrio
+        f"{FORM} > section:nth-child(4) > label:nth-child(5)",
+        f"{FORM} > section:nth-child(4) > label:nth-child(6)",
     ],
 }
 
@@ -49,6 +57,13 @@ VALORES_FIJOS = {
         # RESPONSABLE CONTRATISTA: nombre y documento
         (f"{FORM} > section:nth-child(6) > section:nth-child(5) > label:nth-child(2)", "ADRIANA MUÑOZ"),
         (f"{FORM} > section:nth-child(6) > section:nth-child(5) > label:nth-child(3)", "59122110"),
+    ],
+    4: [
+        # INFORMACION GENERAL: nombre (unica pregunta de texto de la seccion)
+        (f"{FORM} > section:nth-child(3) > label", "ADRIANA MUÑOZ"),
+        # RESPONSABLE CONTRATISTA (ingeniero residente): nombre y documento
+        (f"{FORM} > section:nth-child(8) > section:nth-child(4) > label:nth-child(2)", "JHON SEBASTIAN MONTEALEGRE STERLING"),
+        (f"{FORM} > section:nth-child(8) > section:nth-child(4) > label:nth-child(3)", "1032490603"),
     ],
 }
 
@@ -81,6 +96,12 @@ VALORES_DEL_EXCEL = {
         # ENTREVISTADO (junto a su firma): nombre
         (f"{FORM} > section:nth-child(6) > section:nth-child(4) > label:nth-child(2)", "nombre"),
     ],
+    4: [
+        # DATOS DEL USUARIO Y DEL INMUEBLE: nombre
+        (f"{FORM} > section:nth-child(4) > label:nth-child(2)", "nombre"),
+        # USUARIO (junto a su firma): nombre
+        (f"{FORM} > section:nth-child(8) > section:nth-child(3) > label:nth-child(2)", "nombre"),
+    ],
 }
 
 # VERIFICACION DEL USUARIO, "la persona que atiende la visita manifiesta ser": si esta marcada
@@ -99,6 +120,7 @@ FIRMAS = {
     1: {"seccion": f"{FORM} > section:nth-child(10) > section:nth-child(4)", "trazos": "contratista.json"},
     2: {"seccion": f"{FORM} > section:nth-child(5) > section:nth-child(18)", "trazos": "contratista.json"},  # misma firma
     3: {"seccion": f"{FORM} > section:nth-child(6) > section:nth-child(5)", "trazos": "contratista.json"},  # misma firma
+    4: {"seccion": f"{FORM} > section:nth-child(8) > section:nth-child(4)", "trazos": "jhon.json"},  # otra persona
 }
 
 # Fotos de la cedula que se recortan al borde del documento y se enderezan: (pregunta, lado)
@@ -245,12 +267,17 @@ def poner_valor(page: Page, selector: str, valor: str) -> str | None:
 
 
 def llenar_si_vacio(page: Page, selector: str, valor: str) -> str | None:
+    # Son textos largos: se pegan de una vez en lugar de escribirlos letra por letra
     return _corregir_texto(page, selector, lambda actual: actual if actual.strip() else valor,
-                           "ya tiene texto, se deja igual")
+                           "ya tiene texto, se deja igual", pegando=True)
 
 
-def _corregir_texto(page: Page, selector: str, transformar, msg_sin_cambio: str) -> str | None:
-    """Reescribe el campo con transformar(valor_actual) si el resultado es distinto."""
+def _corregir_texto(page: Page, selector: str, transformar, msg_sin_cambio: str,
+                    pegando: bool = False) -> str | None:
+    """Reescribe el campo con transformar(valor_actual) si el resultado es distinto.
+
+    pegando=True pone el texto de una vez (como Ctrl+V) en lugar de escribirlo tecla por tecla.
+    """
     pregunta = page.locator(selector)
     if not pregunta.count():
         print(f"   [!] No encontre el campo: {selector}")
@@ -270,7 +297,7 @@ def _corregir_texto(page: Page, selector: str, transformar, msg_sin_cambio: str)
 
     campo.scroll_into_view_if_needed()
     pausa(page, 0.3, 0.8)
-    escribir(campo, nuevo)
+    (pegar if pegando else escribir)(campo, nuevo)
     campo.dispatch_event("change")  # Enketo guarda el valor al detectar el cambio
     print(f"   * {nombre}: '{actual}' -> '{nuevo}'")
     return f"{nombre}: {actual} -> {nuevo}"
@@ -278,12 +305,43 @@ def _corregir_texto(page: Page, selector: str, transformar, msg_sin_cambio: str)
 
 # ---------- Firma ----------
 
+def _dibujar(page: Page, trazos: list[list[tuple[float, float]]], paso_px: float = 6):
+    """Dibuja los trazos como una mano: boton presionado y movimientos continuos cada ~18 ms.
+
+    Va directo al navegador (eventos reales de mouse por CDP) para no pagar la pausa fija de
+    SLOW_MO en cada punto: asi el trazo sale continuo y el lienzo le da el grosor de un trazo a
+    mano. Entre puntos se agregan intermedios cada `paso_px` para que las curvas no queden en picos.
+    """
+    cdp = page.context.new_cdp_session(page)
+
+    def mouse(tipo, x, y, presionado):
+        cdp.send("Input.dispatchMouseEvent", {
+            "type": tipo, "x": x, "y": y, "button": "left", "buttons": 1 if presionado else 0, "clickCount": 1,
+        })
+
+    try:
+        for trazo in trazos:
+            puntos = [trazo[0]]
+            for (xa, ya), (xb, yb) in zip(trazo, trazo[1:]):
+                n = max(1, math.ceil(math.hypot(xb - xa, yb - ya) / paso_px))
+                puntos += [(xa + (xb - xa) * k / n, ya + (yb - ya) * k / n) for k in range(1, n + 1)]
+            mouse("mouseMoved", *puntos[0], False)
+            mouse("mousePressed", *puntos[0], True)
+            for x, y in puntos[1:]:
+                time.sleep(random.uniform(0.016, 0.022))  # el lienzo ignora movimientos de menos de 16 ms
+                mouse("mouseMoved", x, y, True)
+            mouse("mouseReleased", *puntos[-1], False)
+            time.sleep(random.uniform(0.08, 0.2))
+    finally:
+        cdp.detach()
+
+
 def rehacer_firma(page: Page, selector_seccion: str, archivo_trazos: str) -> bool:
     """Borra la firma del lienzo (boton del pie + Aceptar) y la dibuja de nuevo con el mouse."""
     ruta = config.FIRMAS_DIR / archivo_trazos
     if not ruta.exists():
-        print(f"   [!] No existe {ruta}; crea los trazos con herramientas/firma_desde_imagen.py")
-        return False
+        raise FileNotFoundError(f"No existe {ruta}; crea los trazos con herramientas/firma_desde_imagen.py "
+                                "(el formulario no se envia sin su firma)")
     firma = json.loads(ruta.read_text(encoding="utf-8"))
 
     pregunta = page.locator(f"{selector_seccion} > label.or-appearance-signature").first
@@ -316,13 +374,7 @@ def rehacer_firma(page: Page, selector_seccion: str, archivo_trazos: str) -> boo
     def punto(p):
         return x0 + p[0] * firma["ancho"] * escala, y0 + p[1] * firma["alto"] * escala
 
-    for trazo in firma["trazos"]:
-        page.mouse.move(*punto(trazo[0]))
-        page.mouse.down()
-        for p in trazo[1:]:
-            page.mouse.move(*punto(p))
-        page.mouse.up()
-        pausa(page, 0.01, 0.04)
+    _dibujar(page, [[punto(p) for p in trazo] for trazo in firma["trazos"]])
     pausa(page, 0.2, 0.4)  # que el lienzo guarde la firma
     print(f"   * Firma dibujada ({len(firma['trazos'])} trazos)")
     return True
