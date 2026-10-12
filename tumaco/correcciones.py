@@ -110,6 +110,12 @@ OPCION_OTRO = {
     1: f"{FORM} > section:nth-child(6) > fieldset:nth-child(2) > fieldset > div > label:nth-child(9)",
 }
 
+# VERIFICACION DEL USUARIO, "la persona que atiende la visita manifiesta ser": la opcion marcada
+# se anota en la columna H del Excel (Si = propietario(a), No = cualquier otra)
+PREGUNTA_PROPIETARIO = {
+    1: f"{FORM} > section:nth-child(6) > fieldset:nth-child(2)",
+}
+
 # Seccion donde se cargan los documentos anexos, por formulario
 DOCUMENTOS = {
     1: f"{FORM} > section:nth-child(11)",
@@ -254,6 +260,26 @@ def marco_opcion_otro(page: Page, numero_formulario: int) -> bool | None:
     marcado = entrada.is_checked()
     print(f"   - Opcion '{texto}': {'MARCADA' if marcado else 'no marcada'}")
     return marcado
+
+
+def es_propietario(page: Page, numero_formulario: int) -> tuple[str, str] | None:
+    """('Si' | 'No' | 'Sin respuesta', opcion marcada) segun 'la persona que atiende la visita manifiesta ser'.
+
+    None si el formulario no tiene esa pregunta configurada o no se encontro.
+    """
+    selector = PREGUNTA_PROPIETARIO.get(numero_formulario)
+    if not selector:
+        return None
+    pregunta = page.locator(selector).first
+    if not pregunta.count():
+        print(f"   [!] No encontre la pregunta de propietario: {selector}")
+        return None
+    opcion = pregunta.evaluate(
+        "f => { const i = f.querySelector('input[type=radio]:checked');"
+        " return i ? (i.closest('label') || i.parentElement).innerText.trim() : ''; }")
+    if not opcion:
+        return "Sin respuesta", ""
+    return ("Si" if norm(opcion).startswith("propietari") else "No"), opcion
 
 
 # ---------- Campos de texto ----------

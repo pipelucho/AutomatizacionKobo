@@ -49,6 +49,14 @@ def procesar_formulario(kobo: Kobo, usuario: excel.Usuario, numero: int) -> tupl
         print(f"Formulario de edicion abierto: {edicion.url}")
         correcciones.inventario_campos(edicion, numero)
 
+        # Columna H: si quien atiende es propietario(a). Se anota aunque luego no se envie (ej. opcion "Otro")
+        propietario = correcciones.es_propietario(edicion, numero)
+        if propietario:
+            marca, opcion = propietario
+            excel.marcar(usuario.fila, marca, excel.COL_PROPIETARIO)
+            print(f"Excel: fila {usuario.fila}, columna {excel.letra(excel.COL_PROPIETARIO)} (propietario) = "
+                  f"'{marca}'" + (f" ({opcion})" if opcion else ""))
+
         # Si la persona que atiende la visita manifiesta ser "Otro", no se corrige ni se envia
         if numero in correcciones.OPCION_OTRO:
             print("\nVerificacion del usuario (la persona que atiende la visita manifiesta ser):")

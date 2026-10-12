@@ -45,3 +45,12 @@ FIRMAS_DIR = ROOT / "firmas"
 CONTINGENCIAL_DIR = ROOT / os.getenv("CONTINGENCIAL_DIR", "CONTINGENCIAL")
 # Fecha/titulo arriba y direccion/pagina abajo en el PDF, como Ctrl+P en Chrome (1 = si, 0 = no)
 PDF_ENCABEZADOS = os.getenv("PDF_ENCABEZADOS", "1") == "1"
+
+# Hoja de calculo de Google que se actualiza al final (la sesion de Google queda en el perfil del navegador)
+GOOGLE_SHEET_URL = os.getenv(
+    "GOOGLE_SHEET_URL",
+    "https://docs.google.com/spreadsheets/d/1sKzEkMpefgbGclUG54sgASOmp6Dr7EJR/edit#gid=1042612756")
+
+# Chrome abierto a mano por el usuario (con su sesion de Google) al que el bot se conecta para la hoja.
+# Se abre con: chrome.exe --remote-debugging-port=9222 --user-data-dir=%LOCALAPPDATA%\TumacoChrome
+CHROME_DEPURACION_URL = os.getenv("CHROME_DEPURACION_URL", "http://127.0.0.1:9222")

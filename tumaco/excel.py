@@ -9,9 +9,10 @@ from . import config
 COL_NOMBRE, COL_USUARIO, COL_CASA = 1, 2, 3  # A, B, C
 COL_REALIZADO, COL_FORMULARIO_2, COL_FORMULARIO_3, COL_FORMULARIO_4 = 4, 5, 6, 7  # D, E, F, G
 # Columna donde se marca cada formulario (numero de formulario -> columna)
+COL_PROPIETARIO = 8  # H: si la persona que atiende el formulario 1 es propietaria (Si / No)
 COLUMNA_FORMULARIO = {1: COL_REALIZADO, 2: COL_FORMULARIO_2, 3: COL_FORMULARIO_3, 4: COL_FORMULARIO_4}
 ENCABEZADOS = {COL_REALIZADO: "REALIZADO:", COL_FORMULARIO_2: "FORMULARIO 2:", COL_FORMULARIO_3: "FORMULARIO 3:",
-              COL_FORMULARIO_4: "FORMULARIO 4:"}
+              COL_FORMULARIO_4: "FORMULARIO 4:", COL_PROPIETARIO: "PROPIETARIO:"}
 MARCA_REALIZADO = "Si"
 MARCA_A_MANO = "Revisar a mano"  # se envio, pero algo quedo para hacerlo a mano (ej. una cedula)
 MARCA_NO_ENCONTRADO = "No encontrado"  # formulario que no existe para esa persona (ej. el 4)
