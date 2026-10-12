@@ -105,8 +105,10 @@ def hoja_y_excel(kobo: Kobo, hoja: sheets.Hoja, u: excel.Usuario, p: dict) -> li
                 "detalle": {"F": "Usuario final", "H": "Direccion / barrio"}.get(celda[0], "")}
                for celda, c in p["hoja"].items()]
     if p["nombre_final"] and p["nombre_final"] != u.nombre_final:
+        nueva = pdf.nombre_valido(f"{u.usuario}_{p['nombre_final'].upper()}")
         cambios.append({"id": "excel:L", "campo": "Excel L (nombre final)", "actual": u.nombre_final,
-                        "nuevo": p["nombre_final"], "detalle": "Nombre de quien atendio, usado en la hoja"})
+                        "nuevo": p["nombre_final"],
+                        "detalle": f"Nombre de quien atendio. Tambien renombra la carpeta y el PDF unido a '{nueva}'"})
     if p["casa_final"] and p["casa_final"] != u.casa_final:
         cambios.append({"id": "excel:M", "campo": "Excel M (casa final)", "actual": u.casa_final,
                         "nuevo": p["casa_final"], "detalle": "Casa que quedo en el formulario 1"})
@@ -127,9 +129,11 @@ def hoja_y_excel(kobo: Kobo, hoja: sheets.Hoja, u: excel.Usuario, p: dict) -> li
             if quedo == valor:
                 hechos.append(f"hoja {celda}")
         kobo.page.bring_to_front()
-    for clave, columna in (("excel:L", excel.COL_NOMBRE_FINAL), ("excel:M", excel.COL_CASA_FINAL)):
+    for clave, columna, campo in (("excel:L", excel.COL_NOMBRE_FINAL, "nombre_final"),
+                                  ("excel:M", excel.COL_CASA_FINAL, "casa_final")):
         if clave in elegidos:
             excel.marcar(u.fila, elegidos[clave], columna)
+            setattr(u, campo, elegidos[clave])
             print(f"   Excel {clave[-1]} = '{elegidos[clave]}'")
             hechos.append(f"excel {clave[-1]}")
     return hechos
@@ -149,7 +153,7 @@ def main():
         hoja = sheets.Hoja(playwright)
         for p in personas:
             u = usuarios[p["usuario"]]
-            carpeta = pdf.carpeta_usuario(u.usuario, u.nombre)
+            carpeta = pdf.carpeta_persona(u)
             print(f"\n=== {u.usuario} {u.nombre} (fila {u.fila}) ===")
             cambio_pdf = rehacer(kobo, u, p, carpeta)
             for f in p["formularios"]:
@@ -159,10 +163,12 @@ def main():
                 resultado = parchar(kobo, u, p, f, carpeta)
                 destino = {True: hechos, False: fallas, None: omitidos}[resultado]
                 destino.append(f"{u.usuario} F{f['formulario']}")
-                cambio_pdf = cambio_pdf or bool(resultado)
-            if cambio_pdf:
-                pdf.unir_pdfs(carpeta)
+                # Aunque el envio falle, su PDF ya se regenero: el unido debe coincidir con el
+                cambio_pdf = cambio_pdf or resultado is not None
             hechos += [f"{u.usuario} {h}" for h in hoja_y_excel(kobo, hoja, u, p)]
+            nueva = pdf.carpeta_persona(u)  # si se acepto el nombre final, renombra la carpeta
+            if cambio_pdf or nueva != carpeta:
+                pdf.unir_pdfs(nueva)
             for texto in p["avisos"]:
                 numero = int(texto[1]) if texto[:1] == "F" and texto[1:2].isdigit() else 1
                 casos.anotar_aviso(u, numero, tipo_aviso(texto), texto.split(":", 1)[1].strip())

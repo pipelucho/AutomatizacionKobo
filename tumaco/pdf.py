@@ -29,6 +29,31 @@ def carpeta_usuario(numero_usuario: str, nombre: str) -> Path:
     return carpeta
 
 
+def carpeta_persona(usuario, nombre_final: str = "") -> Path:
+    """Carpeta de la persona: <USUARIO>_<nombre final> si quien atendio es otra persona que la del Excel
+    (columna L), si no <USUARIO>_<nombre del Excel>.
+
+    Si la carpeta ya existia con el nombre del Excel y ahora hay nombre final, se renombra (sus PDF se
+    conservan) y se borra el PDF unido con el nombre viejo, para que no queden documentos en dos carpetas.
+    """
+    final = (nombre_final or getattr(usuario, "nombre_final", "") or "").strip()
+    destino = config.CONTINGENCIAL_DIR / nombre_valido(f"{usuario.usuario}_{(final or usuario.nombre).strip().upper()}")
+    vieja = config.CONTINGENCIAL_DIR / nombre_valido(f"{usuario.usuario}_{usuario.nombre.strip().upper()}")
+    if final and vieja.exists() and vieja != destino:
+        destino.mkdir(parents=True, exist_ok=True)
+        for archivo in vieja.iterdir():
+            nuevo = destino / archivo.name
+            if not nuevo.exists() or archivo.stat().st_mtime > nuevo.stat().st_mtime:
+                archivo.replace(nuevo)  # se queda el mas reciente
+            else:
+                archivo.unlink()
+        vieja.rmdir()
+        (destino / f"{vieja.name}.pdf").unlink(missing_ok=True)  # PDF unido con el nombre viejo
+        print(f"   Carpeta renombrada: {vieja.name} -> {destino.name}")
+    destino.mkdir(parents=True, exist_ok=True)
+    return destino
+
+
 def guardar_pdf(page: Page, carpeta: Path) -> Path:
     """Imprime la pagina tal como esta (con las correcciones) y la guarda con el nombre por defecto de Chrome,
     que es el titulo de la pagina: '1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA.pdf'."""
@@ -47,6 +72,9 @@ def guardar_pdf(page: Page, carpeta: Path) -> Path:
             timeout=20_000, polling=300)
     except Exception:
         print("   (alguna foto de documento no termino de cargar; se imprime igual)")
+    # Fotos de celular a tamaño de impresion (solo para el PDF; despues se restauran): en carta se ven
+    # igual y el PDF pasa de decenas de MB y minutos a pocos MB y segundos. En Kobo no cambia nada.
+    reducidas = page.evaluate(_JS_REDUCIR_FOTOS, config.FOTOS_PDF_MAX) if config.FOTOS_PDF_MAX > 0 else 0
     t_fotos = time.monotonic()
 
     # Activar el modo impresion para que el formulario acomode su diseño como con Ctrl+P
@@ -70,6 +98,8 @@ def guardar_pdf(page: Page, carpeta: Path) -> Path:
         # queda en modo impresion, donde Enketo oculta el pie con el boton ENVIAR. "null" la quita.
         page.emulate_media(media="null")
         page.evaluate("() => window.dispatchEvent(new Event('afterprint'))")
+        if reducidas:
+            page.evaluate(_JS_RESTAURAR_FOTOS)
         page.wait_for_timeout(300)
     t_imprimir = time.monotonic()
 
@@ -79,7 +109,7 @@ def guardar_pdf(page: Page, carpeta: Path) -> Path:
     contenido = base64.b64decode(resultado["data"])
     archivo.write_bytes(contenido)
     print(f"   PDF guardado: {destino}")
-    print(f"   ({len(contenido) / 1e6:.1f} MB | fotos {t_fotos - t0:.0f}s, imprimir {t_imprimir - t_fotos:.0f}s, "
+    print(f"   ({len(contenido) / 1e6:.1f} MB | {reducidas} foto(s) reducida(s) | fotos {t_fotos - t0:.0f}s, imprimir {t_imprimir - t_fotos:.0f}s, "
           f"guardar {time.monotonic() - t_imprimir:.0f}s)")
     return destino
 
@@ -141,3 +171,36 @@ def unir_pdfs(carpeta: Path) -> Path | None:
     for parte in partes:
         print(f"     - {parte.name}")
     return destino
+
+
+# Reduce las fotos cargadas en el formulario (vista previa) a `maximo` px de lado mayor, en JPEG.
+# Guarda la direccion original para restaurarla despues de imprimir. Devuelve cuantas redujo.
+_JS_REDUCIR_FOTOS = r"""
+async (maximo) => {
+  let n = 0;
+  for (const img of document.querySelectorAll('.file-preview img')) {
+    const lado = Math.max(img.naturalWidth, img.naturalHeight);
+    if (!img.complete || !lado || lado <= maximo || img.dataset.tumacoSrc) continue;
+    try {
+      const escala = maximo / lado;
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.naturalWidth * escala);
+      c.height = Math.round(img.naturalHeight * escala);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      const url = c.toDataURL('image/jpeg', 0.85);  // falla si la foto es de otro dominio: se deja igual
+      img.dataset.tumacoSrc = img.src;
+      img.src = url;
+      await img.decode().catch(() => {});
+      n++;
+    } catch (e) { /* se imprime la original */ }
+  }
+  return n;
+}
+"""
+
+_JS_RESTAURAR_FOTOS = r"""
+() => document.querySelectorAll('img[data-tumaco-src]').forEach(img => {
+  img.src = img.dataset.tumacoSrc;
+  delete img.dataset.tumacoSrc;
+})
+"""

@@ -12,7 +12,12 @@ KOBO_PASS = os.getenv("KOBO_PASS", "")
 OUTPUT_DIR = ROOT / os.getenv("OUTPUT_DIR", "salida")
 BROWSER_CHANNEL = os.getenv("BROWSER_CHANNEL", "chrome") or None
 # Pausa (ms) entre acciones del navegador para poder seguirlas con la vista; 0 = maxima velocidad
-SLOW_MO = int(os.getenv("SLOW_MO", "100"))
+SLOW_MO = int(os.getenv("SLOW_MO", "0"))
+# Pausas al azar entre pasos (1 = completas, 0.3 = rapido, 0 = sin pausas) y escritura tecla por tecla (1) o pegada (0)
+ESCALA_PAUSAS = float(os.getenv("ESCALA_PAUSAS", "0.3"))
+TECLEAR = os.getenv("TECLEAR", "0") == "1"
+# Lado mayor (px) de las fotos al imprimir el PDF: se ven igual en carta y el PDF pesa y tarda mucho menos
+FOTOS_PDF_MAX = int(os.getenv("FOTOS_PDF_MAX", "1600"))
 
 # Perfil persistente: la sesion de Kobo (y luego Google) queda guardada entre ejecuciones
 PROFILE_DIR = ROOT / ".browser_profile"
@@ -57,3 +62,7 @@ CHROME_DEPURACION_URL = os.getenv("CHROME_DEPURACION_URL", "http://127.0.0.1:922
 
 # Registro de casos por resolver (no encontrados, dudosos, sin formulario 4...), se actualiza en cada corrida
 CASOS_PATH = ROOT / os.getenv("CASOS_PATH", "CASOS.xlsx")
+
+# Cuando Kobo, el Excel y la hoja no coinciden en nombre o casa: 1 = preguntar en una ventana en el
+# momento (no quedan correcciones para despues); 0 = aplicar la regla y dejar aviso en CASOS.xlsx
+PREGUNTAR_DUDAS = os.getenv("PREGUNTAR_DUDAS", "1") == "1"

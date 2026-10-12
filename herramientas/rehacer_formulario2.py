@@ -56,7 +56,7 @@ def main_rehacer():
             (siguen if nota else listos).append((usuario, nota))
             print("\nVolviendo a unir los PDF del usuario:")
             try:
-                pdf.unir_pdfs(pdf.carpeta_usuario(usuario.usuario, usuario.nombre))
+                pdf.unir_pdfs(pdf.carpeta_persona(usuario))
             except Exception as e:
                 print(f"   [ERROR] No se pudo unir los PDF: {type(e).__name__}: {e}")
 

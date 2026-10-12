@@ -10,9 +10,9 @@ from pathlib import Path
 import cv2
 from playwright.sync_api import Locator, Page, TimeoutError
 
-from . import cedula, config, reglas
+from . import cedula, config, reglas, ventanas
 from .humano import clic, escribir, pausa, pegar
-from .texto import norm
+from .texto import norm, similitud_nombre
 
 FORM = "body > div.main > article > form"
 
@@ -189,9 +189,13 @@ def aplicar(page: Page, numero_formulario: int, usuario=None) -> Resultado:
                 # Con el nombre decidido en el formulario 1 (si fue otra persona) los 4 quedan iguales
                 referencia = getattr(usuario, "nombre_final", "") or usuario.nombre
                 cambio, aviso, valor = corregir_nombre(page, selector, referencia, getattr(usuario, "ref_nombre", ""))
-                if aviso and not resultado.nombre_final:  # el primer nombre del formulario es el de la persona
+                if aviso:
                     print(f"   [?] Verificar nombre: {aviso}")
                     resultado.avisos.append(("Verificar nombre", aviso))
+                # El primer nombre del formulario es el de la persona: si quedo otro distinto al de referencia
+                # (decidido por la regla o en la ventana), es el nombre final
+                if (valor and not resultado.nombre_final and selector == VALORES_DEL_EXCEL[numero_formulario][0][0]
+                        and similitud_nombre(valor, referencia) < reglas.UMBRAL_MISMO_NOMBRE):
                     resultado.nombre_final = valor
             else:
                 valor = " ".join(str(getattr(usuario, atributo, "") or "").split()).upper()
@@ -370,8 +374,12 @@ def corregir_direccion(page: Page, selector: str, casa_excel: str,
     decision = {}
 
     def transformar(actual: str) -> str:
-        decision["valor"], decision["aviso"] = reglas.decidir_casa(actual, casa_excel, direccion_hoja)
-        return decision["valor"]
+        valor, aviso = reglas.decidir_casa(actual, casa_excel, direccion_hoja)
+        if aviso:  # duda real: se pregunta en el momento en vez de corregir despues
+            valor, aviso = _preguntar_duda(page, "Dirección", actual, valor, reglas.normalizar_direccion(actual), aviso,
+                                           [f"Excel (casa): {casa_excel or '-'}", f"Hoja (direccion inicial): {direccion_hoja or '-'}"])
+        decision["valor"], decision["aviso"] = valor, aviso
+        return valor
 
     cambio = _corregir_texto(page, selector, transformar, "ya esta bien")
     return cambio, decision.get("aviso"), decision.get("valor", "")
@@ -384,11 +392,35 @@ def corregir_nombre(page: Page, selector: str, nombre_excel: str,
     decision = {}
 
     def transformar(actual: str) -> str:
-        decision["valor"], decision["aviso"] = reglas.decidir_nombre(actual, nombre_excel, nombre_hoja)
-        return decision["valor"]
+        valor, aviso = reglas.decidir_nombre(actual, nombre_excel, nombre_hoja)
+        if aviso:  # parece otra persona: se pregunta en el momento en vez de corregir despues
+            valor, aviso = _preguntar_duda(page, "Nombre", actual, valor, reglas.limpio(actual), aviso,
+                                           [f"Excel: {nombre_excel or '-'}", f"Hoja (usuario inicial): {nombre_hoja or '-'}"])
+        decision["valor"], decision["aviso"] = valor, aviso
+        return valor
 
     cambio = _corregir_texto(page, selector, transformar, "ya tiene el valor correcto")
     return cambio, decision.get("aviso"), decision.get("valor", "")
+
+
+def _preguntar_duda(page: Page, campo: str, actual: str, propuesto: str, kobo: str, aviso: str,
+                    fuentes: list[str]) -> tuple[str, str | None]:
+    """Cuando Kobo, el Excel y la hoja no coinciden, muestra la ventana para decidir en el momento.
+
+    Devuelve (valor que queda, aviso). Si decides en la ventana no queda aviso para verificar despues.
+    Con PREGUNTAR_DUDAS=0 en .env no pregunta: aplica la regla y deja el aviso en CASOS.xlsx.
+    """
+    if not config.PREGUNTAR_DUDAS:
+        return propuesto, aviso
+    print(f"   ? {campo}: {aviso} -> decide en la ventana del navegador...")
+    elegidos = ventanas.revisar_cambios(
+        page, f"{campo}: Kobo, el Excel y la hoja no coinciden", [f"Kobo hoy: {actual or '(vacío)'}", *fuentes, aviso],
+        [{"id": "v", "campo": campo, "actual": actual, "nuevo": propuesto,
+          "detalle": "Propuesta del bot; puedes editarla. 'Dejar lo de Kobo' no cambia este dato."}],
+        aplicar="Usar este valor", omitir="Dejar lo de Kobo")
+    valor = elegidos["v"] if elegidos else kobo
+    print(f"   - {campo}: decidido en la ventana -> '{valor}'")
+    return reglas.limpio(valor), None
 
 
 # Campos escritos que al releerlos no quedaron con el valor esperado (se pasan a resultado.revisar)
@@ -436,12 +468,13 @@ def _corregir_texto(page: Page, selector: str, transformar, msg_sin_cambio: str,
 
 # ---------- Firma ----------
 
-def _dibujar(page: Page, trazos: list[list[tuple[float, float]]], paso_px: float = 6):
-    """Dibuja los trazos como una mano: boton presionado y movimientos continuos cada ~18 ms.
+def _dibujar(page: Page, trazos: list[list[tuple[float, float]]], paso_px: float = 12):
+    """Dibuja los trazos como una mano: boton presionado y un movimiento cada ~17 ms.
 
     Va directo al navegador (eventos reales de mouse por CDP) para no pagar la pausa fija de
     SLOW_MO en cada punto: asi el trazo sale continuo y el lienzo le da el grosor de un trazo a
-    mano. Entre puntos se agregan intermedios cada `paso_px` para que las curvas no queden en picos.
+    mano. Entre puntos se agregan intermedios cada `paso_px` (solo en tramos rectos: los puntos que
+    dan la forma se conservan). El ritmo descuenta lo que tarda cada envio, para no sumar esperas.
     """
     cdp = page.context.new_cdp_session(page)
 
@@ -458,11 +491,14 @@ def _dibujar(page: Page, trazos: list[list[tuple[float, float]]], paso_px: float
                 puntos += [(xa + (xb - xa) * k / n, ya + (yb - ya) * k / n) for k in range(1, n + 1)]
             mouse("mouseMoved", *puntos[0], False)
             mouse("mousePressed", *puntos[0], True)
+            siguiente = time.perf_counter()
             for x, y in puntos[1:]:
-                time.sleep(random.uniform(0.016, 0.022))  # el lienzo ignora movimientos de menos de 16 ms
+                siguiente += random.uniform(0.0165, 0.019)  # el lienzo ignora movimientos de menos de 16 ms
+                if (espera := siguiente - time.perf_counter()) > 0:
+                    time.sleep(espera)
                 mouse("mouseMoved", x, y, True)
             mouse("mouseReleased", *puntos[-1], False)
-            time.sleep(random.uniform(0.08, 0.2))
+            time.sleep(random.uniform(0.04, 0.09))
     finally:
         cdp.detach()
 

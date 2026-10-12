@@ -1,3 +1,4 @@
+import sys
 import time
 
 from tumaco import casos, config, correcciones, excel, pdf, registro, sheets
@@ -142,9 +143,9 @@ def procesar_formulario(kobo: Kobo, usuario: excel.Usuario, numero: int) -> tupl
             nota = "Revisar a mano: " + "; ".join(resultado.revisar)
             print(nota)
 
-        # La carpeta usa el nombre del Excel (viene corregido): asi los dos formularios de la misma
-        # persona quedan juntos aunque en Kobo el nombre este escrito distinto en cada uno
-        carpeta = pdf.carpeta_usuario(usuario.usuario, usuario.nombre or encontrado.nombre)
+        # Carpeta con el nombre del Excel, o con el de quien atendio si es otra persona (decidido en el
+        # formulario 1): asi todos los PDF de la persona quedan juntos y con el nombre de sus documentos
+        carpeta = pdf.carpeta_persona(usuario, resultado.nombre_final if numero == 1 else "")
         # Orden: primero todo lo de las cedulas (ya ajustadas y cargadas), luego el PDF y al final el envio
         if {"cara", "reverso"} <= resultado.cedulas.keys():
             print(f"\nGuardando DOCUMENTO.pdf en {carpeta.name}...")
@@ -192,6 +193,15 @@ def _intentar(kobo: Kobo, usuario: excel.Usuario, numero: int) -> tuple[str, str
         return PENDIENTE, ""
 
 
+def _limite() -> int | None:
+    """Numero de personas de '--limite N' en la linea de comando (None = todas)."""
+    if "--limite" in sys.argv:
+        i = sys.argv.index("--limite")
+        if i + 1 < len(sys.argv) and sys.argv[i + 1].isdigit():
+            return int(sys.argv[i + 1])
+    return None
+
+
 def actualizar_casos():
     """Al final de la corrida: CASOS.xlsx con lo que quedo por resolver (relee el Excel ya marcado)."""
     print("\nRegistro de casos:")
@@ -206,6 +216,10 @@ def main():
     tabla = excel.cargar_tabla()
     por_procesar = excel.pendientes(tabla)
     print(f"{config.EXCEL_PATH.name}: {len(tabla)} fila(s), {len(por_procesar)} con formularios pendientes.")
+    if limite := _limite():  # ej. main.py --limite 5: una prueba con pocas personas
+        por_procesar = por_procesar[:limite]
+        print(f"Prueba: solo las primeras {len(por_procesar)}: "
+              + ", ".join(f"{u.usuario} {u.nombre}" for u in por_procesar))
     if not por_procesar:
         actualizar_casos()
         return
@@ -276,7 +290,7 @@ def main():
                 # Ultimo paso: un solo PDF con todo (1, DOCUMENTO, 2, 3, 4) con el nombre de la carpeta
                 print("\nUniendo los PDF del usuario:")
                 try:
-                    pdf.unir_pdfs(pdf.carpeta_usuario(usuario.usuario, usuario.nombre))
+                    pdf.unir_pdfs(pdf.carpeta_persona(usuario))
                 except Exception as e:  # el PDF unido se puede rehacer con herramientas/unir_pdfs.py
                     print(f"   [ERROR] No se pudo unir los PDF: {type(e).__name__}: {e}")
                 # Y por ultimo su fila en la hoja de Google, antes de pasar a la siguiente persona

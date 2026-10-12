@@ -1,11 +1,18 @@
-"""Interaccion con ritmo humano: pausas variables, mover el mouse antes de clic y escribir tecla por tecla."""
+"""Interaccion con ritmo humano: pausas variables, mover el mouse antes de clic y escribir.
+
+La velocidad se ajusta en .env: ESCALA_PAUSAS (1 = pausas completas, 0.3 = rapido, 0 = sin pausas)
+y TECLEAR (1 = escribir tecla por tecla, 0 = pegar el texto de una vez).
+"""
 import random
 
 from playwright.sync_api import Locator, Page
 
+from . import config
+
 
 def pausa(page: Page, minimo: float = 0.4, maximo: float = 1.2):
-    page.wait_for_timeout(random.uniform(minimo, maximo) * 1000)
+    if config.ESCALA_PAUSAS > 0:
+        page.wait_for_timeout(random.uniform(minimo, maximo) * config.ESCALA_PAUSAS * 1000)
 
 
 def clic(locator: Locator):
@@ -16,7 +23,10 @@ def clic(locator: Locator):
 
 
 def escribir(locator: Locator, texto: str):
-    """Borra el campo y escribe el texto con velocidad variable."""
+    """Borra el campo y escribe el texto: de una vez (rapido) o tecla por tecla si TECLEAR=1."""
+    if not config.TECLEAR:
+        pegar(locator, texto)
+        return
     clic(locator)
     locator.fill("")
     locator.press_sequentially(texto, delay=random.randint(60, 160))

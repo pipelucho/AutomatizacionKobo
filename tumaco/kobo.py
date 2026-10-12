@@ -121,6 +121,7 @@ class Kobo:
         self.page.locator(".rt-tbody .rt-tr-group").first.wait_for(timeout=60_000)
         print("Esperando que cargue la tabla de datos...")
         self._esperar_red()
+        self._esperar_tabla_lista()
         self._esperar_tabla_estable()
 
     def cerrar_pestanas_extra(self):
@@ -150,6 +151,7 @@ class Kobo:
         self.page.locator(".rt-tbody .rt-tr-group").first.wait_for(timeout=60_000)
         print("Esperando que cargue la tabla de datos...")
         self._esperar_red()
+        self._esperar_tabla_lista()
         self._esperar_tabla_estable()
 
     # ---------- Busqueda del usuario ----------
@@ -166,8 +168,12 @@ class Kobo:
         lo que paso (para anotarlo en el Excel).
         """
         self.motivo = ""
+        self._esperar_tabla_lista()
         tabla = self.leer_tabla()
         encabezados = tabla["encabezados"]
+        if len([h for h in encabezados if h]) < 5:
+            # La tabla no cargo bien: no es "no encontrado" (seria una marca falsa en el Excel)
+            raise RuntimeError("la tabla de Kobo no cargo sus columnas; se reintenta en la proxima corrida")
         plan = BUSQUEDA_POR_FILTRO.get(self.formulario)
         if plan:
             orden = [campo for campo, _ in plan]
@@ -201,7 +207,8 @@ class Kobo:
                 print(f"\nIntento {n}: buscar '{valor}' por {campo.upper()}")
                 self._guardar_debug(f"{etiqueta}_intento{n}", self.leer_tabla())
                 if not self._filtrar(col, valor):
-                    break
+                    # Sin filtro no se puede saber si existe: error (se reintenta), nunca "No encontrado"
+                    raise RuntimeError(f"no aparecio la caja de filtro de {campo.upper()} en la tabla de Kobo")
                 tabla = self.leer_tabla()
                 self._guardar_debug(f"{etiqueta}_intento{n}_filtrada", tabla)
                 candidatas = self._candidatas(tabla, campo, col, valor, usuario, columnas)
@@ -315,7 +322,7 @@ class Kobo:
         edicion.wait_for_load_state("domcontentloaded")
         print("Esperando que cargue el formulario de edicion...")
         edicion.locator("form.or").first.wait_for(timeout=90_000)
-        edicion.wait_for_timeout(2000)
+        edicion.wait_for_timeout(800)
         return edicion
 
     def enviar_edicion(self, edicion: Page) -> bool:
@@ -365,7 +372,11 @@ class Kobo:
         El id del filtro (#mantine-xxxx) cambia en cada carga, asi que se ubica
         por la posicion del encabezado de la columna.
         """
-        if not self.page.evaluate(_JS_MARCAR_FILTRO, col):
+        for intento in range(6):  # la tabla puede estar redibujandose: se reintenta unos segundos
+            if self.page.evaluate(_JS_MARCAR_FILTRO, col):
+                break
+            self.page.wait_for_timeout(700)
+        else:
             print("   No encontre la caja de filtro de esa columna.")
             return False
         filtro = self.page.locator("[data-tumaco-filtro]")
@@ -378,6 +389,17 @@ class Kobo:
         self._esperar_red()
         self._esperar_tabla_estable(antes)
         return True
+
+    def _esperar_tabla_lista(self, timeout_ms: int = 60_000):
+        """Espera a que la tabla tenga encabezados y cajas de filtro: sin la pausa fija entre acciones,
+        el bot llegaba antes de que Kobo las dibujara y no encontraba las columnas ni los filtros."""
+        try:
+            self.page.wait_for_function(
+                "() => document.querySelectorAll('.rt-thead.-header .rt-th').length > 8"
+                " && document.querySelectorAll('.rt-thead.-filters input').length > 3",
+                timeout=timeout_ms, polling=300)
+        except TimeoutError:
+            print("   [!] La tabla de Kobo no termino de cargar sus columnas y filtros")
 
     def _esperar_red(self, timeout_ms: int = 4_000):
         try:
@@ -418,8 +440,8 @@ class Kobo:
         if opciones:
             # Si hay varias (ej. 'PERSONA ATENDIDA / Nombre' aparece tambien en la firma) se usa la primera
             return opciones[0]
-        if not preguntar:
-            return None
+        if not preguntar or not [h for h in encabezados if h]:
+            return None  # sin encabezados la tabla no ha cargado: no tiene sentido preguntar
 
         print(f"\n   ¿Cual columna corresponde a {campo.upper()} en '{self.formulario}'?")
         lista = opciones or range(len(encabezados))
