@@ -110,3 +110,34 @@ def guardar_documento(carpeta: Path, cara: bytes, reverso: bytes) -> Path:
     hoja.save(destino, "PDF", resolution=dpi, quality=90)
     print(f"   Cedula guardada en un solo PDF: {destino}")
     return destino
+
+
+# Orden de los documentos en el PDF unido: prefijo del nombre del archivo
+ORDEN_UNION = ["1.", "DOCUMENTO", "2.", "3.", "4."]
+
+
+def unir_pdfs(carpeta: Path) -> Path | None:
+    """Une los PDF de la carpeta del usuario en un solo archivo con el nombre de la carpeta,
+    ej. 498_BIOLINDA BELARCAZAR.pdf, en el orden 1, DOCUMENTO, 2, 3, 4 (los que existan)."""
+    from pypdf import PdfWriter
+
+    destino = carpeta / f"{carpeta.name}.pdf"
+    archivos = sorted(f for f in carpeta.glob("*.pdf") if f.name != destino.name)
+    partes = []
+    for prefijo in ORDEN_UNION:
+        partes += [f for f in archivos if f.name.upper().startswith(prefijo) and f not in partes]
+    if not partes:
+        print(f"   No hay PDF para unir en {carpeta.name}")
+        return None
+
+    union = PdfWriter()
+    for parte in partes:
+        with _ruta_larga(parte).open("rb") as f:
+            union.append(f)
+    with _ruta_larga(destino).open("wb") as f:
+        union.write(f)
+    union.close()
+    print(f"   PDF unido ({len(partes)} documentos): {destino}")
+    for parte in partes:
+        print(f"     - {parte.name}")
+    return destino

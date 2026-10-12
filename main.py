@@ -183,6 +183,12 @@ def main():
                     a_mano.append((usuario, numero, nota))
             else:
                 terminados.append(usuario)
+                # Ultimo paso: un solo PDF con todo (1, DOCUMENTO, 2, 3, 4) con el nombre de la carpeta
+                print("\nUniendo los PDF del usuario:")
+                try:
+                    pdf.unir_pdfs(pdf.carpeta_usuario(usuario.usuario, usuario.nombre))
+                except Exception as e:  # el PDF unido se puede rehacer con herramientas/unir_pdfs.py
+                    print(f"   [ERROR] No se pudo unir los PDF: {type(e).__name__}: {e}")
 
         print("\n" + "=" * 70)
         print(f"Con todos los formularios enviados: {len(terminados)} | Con opcion 'Otro': {len(con_otro)} "
