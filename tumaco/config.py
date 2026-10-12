@@ -50,6 +50,8 @@ FIRMAS_DIR = ROOT / "firmas"
 CONTINGENCIAL_DIR = ROOT / os.getenv("CONTINGENCIAL_DIR", "CONTINGENCIAL")
 # Personas terminadas sin problemas (herramientas/terminados.py las mueve aqui)
 TERMINADOS_DIR = CONTINGENCIAL_DIR / os.getenv("TERMINADOS_DIR", "TERMINADOS")
+# Personas procesadas con algo que corregir aparte (para no confundirlas con las listas para cargar)
+POR_CORREGIR_DIR = CONTINGENCIAL_DIR / os.getenv("POR_CORREGIR_DIR", "POR CORREGIR")
 # Fecha/titulo arriba y direccion/pagina abajo en el PDF, como Ctrl+P en Chrome (1 = si, 0 = no)
 PDF_ENCABEZADOS = os.getenv("PDF_ENCABEZADOS", "1") == "1"
 

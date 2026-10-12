@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import Error, Page, sync_playwright
 
 from . import config
 
@@ -41,6 +41,28 @@ def lanzar(p, headless: bool = False):
     return context
 
 
+def maximizar(page: Page):
+    """Deja maximizada la ventana de Chrome de esa pagina.
+
+    Al abrir el formulario de edicion en una pestana nueva, Chrome a veces deja la ventana en tamano
+    normal: el lienzo de la firma queda cortado a la derecha y los trazos que caen fuera no se dibujan.
+    """
+    try:
+        cdp = page.context.new_cdp_session(page)
+        try:
+            ventana = cdp.send("Browser.getWindowForTarget")["windowId"]
+            estado = cdp.send("Browser.getWindowBounds", {"windowId": ventana})["bounds"].get("windowState")
+            if estado == "maximized":
+                return
+            if estado in ("minimized", "fullscreen"):  # Chrome solo maximiza desde el tamano normal
+                cdp.send("Browser.setWindowBounds", {"windowId": ventana, "bounds": {"windowState": "normal"}})
+            cdp.send("Browser.setWindowBounds", {"windowId": ventana, "bounds": {"windowState": "maximized"}})
+        finally:
+            cdp.detach()
+    except Error:
+        pass  # sin ventana (modo oculto) o la pagina se cerro: no hace falta
+
+
 @contextmanager
 def abrir_navegador():
     """Abre un navegador visible con perfil persistente y devuelve (context, page, playwright).
@@ -50,6 +72,7 @@ def abrir_navegador():
     with sync_playwright() as p:
         context = lanzar(p)
         page = context.pages[0] if context.pages else context.new_page()
+        maximizar(page)
         try:
             yield context, page, p
         finally:

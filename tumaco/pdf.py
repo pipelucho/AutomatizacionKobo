@@ -41,10 +41,12 @@ def carpeta_persona(usuario, nombre_final: str = "") -> Path:
     vieja = config.CONTINGENCIAL_DIR / nombre_valido(f"{usuario.usuario}_{usuario.nombre.strip().upper()}")
     # Si ya estaba en TERMINADOS y se va a cambiar algo, vuelve a CONTINGENCIAL (no se crea otra carpeta)
     for carpeta in (vieja, destino):
-        terminada = config.TERMINADOS_DIR / carpeta.name
-        if terminada.is_dir() and not carpeta.exists():
+        # En una subcarpeta de CONTINGENCIAL (TERMINADOS, TERMINADOS\CARGADOS, POR CORREGIR...)
+        terminada = next((t for t in (*config.CONTINGENCIAL_DIR.glob(f"*/{carpeta.name}"),
+                                      *config.CONTINGENCIAL_DIR.glob(f"*/*/{carpeta.name}")) if t.is_dir()), None)
+        if terminada and not carpeta.exists():
             terminada.rename(carpeta)
-            print(f"   Carpeta devuelta de TERMINADOS a CONTINGENCIAL: {carpeta.name}")
+            print(f"   Carpeta devuelta a CONTINGENCIAL (se va a cambiar): {terminada.relative_to(config.CONTINGENCIAL_DIR)}")
     if final and vieja.exists() and vieja != destino:
         destino.mkdir(parents=True, exist_ok=True)
         for archivo in vieja.iterdir():

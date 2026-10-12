@@ -10,7 +10,7 @@ from pathlib import Path
 import cv2
 from playwright.sync_api import Locator, Page, TimeoutError
 
-from . import cedula, config, reglas, ventanas
+from . import cedula, config, firmas, reglas, ventanas
 from .humano import clic, escribir, pausa, pegar
 from .texto import norm, similitud_nombre
 
@@ -125,17 +125,31 @@ CAMPO_DOCUMENTO = {
     1: f"{FORM} > section:nth-child(5) > label:nth-child(3)",
 }
 
+# NO. USUARIO de cada formulario: si en Kobo esta vacio se llena con el del Excel (es el mismo de la hoja).
+# Si ya tiene otro numero no se cambia: queda el aviso para verificar.
+CAMPO_USUARIO = {
+    1: f"{FORM} > section:nth-child(5) > label:nth-child(4)",
+    2: f"{FORM} > section:nth-child(5) > label:nth-child(4)",
+    3: f"{FORM} > section:nth-child(4) > label:nth-child(5)",
+    4: f"{FORM} > section:nth-child(4) > label:nth-child(4)",
+}
+
 # Seccion donde se cargan los documentos anexos, por formulario
 DOCUMENTOS = {
     1: f"{FORM} > section:nth-child(11)",
 }
 
 # Firma que se borra y se vuelve a dibujar: seccion del formulario y trazos guardados en firmas/
+# "xpath": el campo de la firma en la API de Kobo, para ver si ya tiene la firma del bot y no volver a firmar
 FIRMAS = {
-    1: {"seccion": f"{FORM} > section:nth-child(10) > section:nth-child(4)", "trazos": "contratista.json"},
-    2: {"seccion": f"{FORM} > section:nth-child(5) > section:nth-child(18)", "trazos": "contratista.json"},  # misma firma
-    3: {"seccion": f"{FORM} > section:nth-child(6) > section:nth-child(5)", "trazos": "contratista.json"},  # misma firma
-    4: {"seccion": f"{FORM} > section:nth-child(8) > section:nth-child(4)", "trazos": "jhon.json"},  # otra persona
+    1: {"seccion": f"{FORM} > section:nth-child(10) > section:nth-child(4)", "trazos": "contratista.json",
+        "xpath": "group_ma5xk12/grp_firma_contratista/contratista_firma"},
+    2: {"seccion": f"{FORM} > section:nth-child(5) > section:nth-child(18)", "trazos": "contratista.json",  # misma firma
+        "xpath": "grp_declaracion/grp_firma_contratista/contratista_firma"},
+    3: {"seccion": f"{FORM} > section:nth-child(6) > section:nth-child(5)", "trazos": "contratista.json",  # misma firma
+        "xpath": "declaracion_aceptacion/responsable_contratista/contratista_firma"},
+    4: {"seccion": f"{FORM} > section:nth-child(8) > section:nth-child(4)", "trazos": "jhon.json",  # otra persona
+        "xpath": "grp_declaracion/grp_firma_contratista/Firma"},
 }
 
 # Fotos de la cedula que se recortan al borde del documento y se enderezan: (pregunta, lado)
@@ -166,10 +180,12 @@ class Resultado:
     casa_final: str = ""  # casa que quedo en la direccion (ej. 'CASA 127')
 
 
-def aplicar(page: Page, numero_formulario: int, usuario=None) -> Resultado:
+def aplicar(page: Page, numero_formulario: int, usuario=None, firma_actual: bytes | None = None) -> Resultado:
     """Aplica las correcciones del formulario: que cambio, cedulas ajustadas y que revisar a mano.
 
     `usuario` (excel.Usuario) aporta los datos corregidos que se escriben tal cual en Kobo.
+    `firma_actual`: imagen de la firma del contratista que tiene hoy el registro (de la API); si ya es la
+    del bot y esta completa, no se vuelve a firmar.
     """
     resultado = Resultado()
     cambios = resultado.cambios
@@ -208,6 +224,10 @@ def aplicar(page: Page, numero_formulario: int, usuario=None) -> Resultado:
                 cambio = poner_valor(page, selector, valor)
             if cambio:
                 cambios.append(cambio)
+        if numero_formulario in CAMPO_USUARIO and usuario.usuario:
+            cambio = llenar_usuario(page, CAMPO_USUARIO[numero_formulario], str(usuario.usuario))
+            if cambio:
+                cambios.append(cambio)
     if numero_formulario in MAYUSCULAS:
         print("\nMayusculas:")
     for selector in MAYUSCULAS.get(numero_formulario, []):
@@ -229,8 +249,14 @@ def aplicar(page: Page, numero_formulario: int, usuario=None) -> Resultado:
     if numero_formulario in FIRMAS:
         firma = FIRMAS[numero_formulario]
         print("\nFirma del responsable contratista:")
-        if rehacer_firma(page, firma["seccion"], firma["trazos"]):
-            cambios.append("Firma responsable contratista: redibujada")
+        ya_firmado, como = firmas.es_la_del_bot(firma_actual, firma["trazos"])
+        if ya_firmado:
+            print(f"   - Ya tiene la firma del bot completa ({como}): no se vuelve a firmar")
+        else:
+            if firma_actual:
+                print(f"   - La firma actual no es la del bot o esta incompleta ({como}): se rehace")
+            if rehacer_firma(page, firma["seccion"], firma["trazos"]):
+                cambios.append("Firma responsable contratista: redibujada")
     if numero_formulario in CEDULAS:
         print("\nFotos de la cedula:")
         for selector, lado in CEDULAS[numero_formulario]:
@@ -283,6 +309,26 @@ def inventario_campos(page: Page, numero_formulario: int) -> Path:
 
 
 # ---------- Verificaciones previas ----------
+
+def procesar_aunque_otro(page: Page, numero_formulario: int, usuario) -> bool:
+    """Quien atiende marco 'Otro': se pregunta en la ventana si se procesa igual (como cuando atiende otra
+    persona: queda el nombre de quien atendio). Con PREGUNTAR_DUDAS=0 se mantiene la regla: no se procesa."""
+    if not config.PREGUNTAR_DUDAS:
+        return False
+    campo = page.locator(VALORES_DEL_EXCEL[numero_formulario][0][0]).locator("input, textarea").first
+    quien = " ".join(campo.input_value().split()) if campo.count() else ""
+    print("   ? Quien atiende marco 'Otro' -> decide en la ventana del navegador...")
+    elegidos = ventanas.revisar_cambios(
+        page, "Quien atiende la visita marcó 'Otro'",
+        [f"Usuario {usuario.usuario} | casa {usuario.casa}",
+         f"Excel: {usuario.nombre} | hoja: {getattr(usuario, 'ref_nombre', '') or '-'}",
+         f"Quien atendió (Kobo): {quien or '-'}",
+         "Procesar: se corrige y se envía; queda el nombre de quien atendió. Saltar: queda 'Tiene otro'."],
+        [{"id": "otro", "campo": "Quien atiende", "actual": "Otro", "nuevo": "Procesar igual", "editable": False,
+          "detalle": "Desmarca o elige 'Saltar' para no procesarlo"}],
+        aplicar="Procesar", omitir="Saltar (Tiene otro)")
+    return bool(elegidos)
+
 
 def marco_opcion_otro(page: Page, numero_formulario: int) -> bool | None:
     """True si en 'la persona que atiende la visita manifiesta ser' esta marcada la opcion 'Otro'.
@@ -371,6 +417,24 @@ def llenar_si_vacio(page: Page, selector: str, valor: str) -> str | None:
     # Son textos largos: se pegan de una vez en lugar de escribirlos letra por letra
     return _corregir_texto(page, selector, lambda actual: actual if actual.strip() else valor,
                            "ya tiene texto, se deja igual", pegando=True)
+
+
+def llenar_usuario(page: Page, selector: str, numero: str) -> str | None:
+    """NO. USUARIO: si esta vacio se pone el del Excel (es el mismo de la hoja). Si tiene otro numero se
+    pregunta en la ventana, proponiendo el del Excel (con PREGUNTAR_DUDAS=0 se cambia y queda el aviso)."""
+    def transformar(actual: str) -> str:
+        if not actual.strip():
+            return numero
+        if "".join(c for c in actual if c.isdigit()) == numero:
+            return actual
+        aviso = f"Kobo dice '{actual}' y el Excel y la hoja dicen '{numero}'"
+        valor, aviso = _preguntar_duda(page, "No. Usuario", actual, numero, actual, aviso,
+                                       [f"Excel y hoja (No. Usuario): {numero}"])
+        if aviso:
+            print(f"   [?] Verificar usuario: {aviso}")
+        return valor
+
+    return _corregir_texto(page, selector, transformar, "ya tiene usuario")
 
 
 def corregir_direccion(page: Page, selector: str, casa_excel: str,

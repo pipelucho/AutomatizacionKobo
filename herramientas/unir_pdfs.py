@@ -19,7 +19,8 @@ def main():
     nombres = sys.argv[1:]
     bases = [b for b in (config.CONTINGENCIAL_DIR, config.TERMINADOS_DIR) if b.is_dir()]
     carpetas = ([next((b / n for b in bases if (b / n).is_dir()), bases[0] / n) for n in nombres] if nombres
-                else sorted((c for b in bases for c in b.iterdir() if c.is_dir() and c != config.TERMINADOS_DIR),
+                else sorted((c for b in bases for c in b.iterdir()
+                             if c.is_dir() and c.name.split("_")[0].isdigit()),  # solo carpetas de personas
                             key=lambda c: c.name))
     for carpeta in carpetas:
         print(carpeta.name)

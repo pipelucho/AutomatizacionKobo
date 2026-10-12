@@ -21,7 +21,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from tumaco import analisis, casos, config, excel, pdf, sheets, ventanas  # noqa: E402
-from tumaco.browser import abrir_navegador  # noqa: E402
+from tumaco.browser import abrir_navegador, maximizar  # noqa: E402
 from tumaco.humano import pegar  # noqa: E402
 from tumaco.kobo import Kobo  # noqa: E402
 
@@ -70,6 +70,7 @@ def parchar(kobo: Kobo, u: excel.Usuario, p: dict, form: dict, carpeta: Path) ->
         print(f"   [!] Kobo no dio el enlace de edicion (HTTP {resp.status})")
         return False
     edicion = kobo.page.context.new_page()
+    maximizar(edicion)  # en ventana pequena la ventana de cambios y el formulario quedan cortados
     try:
         edicion.goto(resp.json()["url"])
         edicion.locator("form.or").first.wait_for(timeout=90_000)

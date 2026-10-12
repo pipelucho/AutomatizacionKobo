@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from playwright.sync_api import Error, Page, TimeoutError
 
 from . import config, ventanas
+from .browser import maximizar
 from .humano import clic, escribir, pausa
 from .texto import digitos, mismo_documento, norm, numeros_casa, similitud_nombre, terminos_busqueda_nombre
 
@@ -17,12 +18,23 @@ MARGEN_DECISION = 0.3  # ventaja minima de la mejor fila sobre la segunda para e
 # El formulario 1 no esta aqui: ubica sus columnas por el nombre del encabezado (config.KOBO_COLUMNA_*).
 # Primero el documento (sale del formulario 1, columna I del Excel): es el dato mas seguro. Si la persona
 # aun no lo tiene en el Excel, se empieza por la casa.
+# Cada columna se ubica por el titulo completo de su encabezado (grupo / pregunta), no por su posicion:
+# el 12-oct cambio el orden de las columnas del formulario 4 en Kobo y la posicion fija apuntaba a
+# Barrio, Celular, Ubicacion y Muros.
+_DECLARACION = "DECLARACIÓN DE CONSENTIMIENTO Y AUTORIZACIÓN DEL USUARIO"
 BUSQUEDA_POR_FILTRO = {
-    config.FORMULARIOS[1]: [("documento", 14), ("casa", 16), ("usuario", 15), ("nombre", 13)],
-    # Mismo orden que el 2; columnas de DATOS DEL USUARIO (la 11 es el nombre de la encuestadora, no del usuario)
-    config.FORMULARIOS[2]: [("documento", 13), ("casa", 15), ("usuario", 14), ("nombre", 12)],
-    # DATOS DEL USUARIO Y DEL INMUEBLE (la 9 es el nombre de quien hace el acta, no del usuario)
-    config.FORMULARIOS[3]: [("documento", 11), ("casa", 13), ("usuario", 12), ("nombre", 10)],
+    config.FORMULARIOS[1]: [("documento", f"{_DECLARACION} / Cédula de ciudadanía No."),
+                            ("casa", f"{_DECLARACION} / Dirección"),
+                            ("usuario", f"{_DECLARACION} / No. Usuario"),
+                            ("nombre", f"{_DECLARACION} / Nombre completo del usuario")],
+    # Mismo orden que el 2; columnas de DATOS DEL USUARIO (hay otra 'Nombre': la de la encuestadora)
+    config.FORMULARIOS[2]: [("documento", "DATOS DEL USUARIO / Documento"), ("casa", "DATOS DEL USUARIO / Dirección"),
+                            ("usuario", "DATOS DEL USUARIO / No. Usuario"), ("nombre", "DATOS DEL USUARIO / Nombre")],
+    # DATOS DEL USUARIO Y DEL INMUEBLE (hay otra 'Nombre': la de quien hace el acta)
+    config.FORMULARIOS[3]: [("documento", "DATOS DEL USUARIO Y DEL INMUEBLE / Documento"),
+                            ("casa", "DATOS DEL USUARIO Y DEL INMUEBLE / Dirección"),
+                            ("usuario", "DATOS DEL USUARIO Y DEL INMUEBLE / No. Usuario"),
+                            ("nombre", "DATOS DEL USUARIO Y DEL INMUEBLE / Nombre")],
 }
 CLAVES_COLUMNA = {
     "usuario": config.KOBO_COLUMNA_USUARIO,
@@ -163,7 +175,7 @@ class Kobo:
         """Busca al usuario filtrando la tabla de DATOS, en el orden propio de cada formulario.
 
         - Formulario 1: USUARIO, CASA y Nombre (columnas ubicadas por el nombre del encabezado).
-        - Formularios en BUSQUEDA_POR_FILTRO: columnas fijas por la posicion de su caja de filtro.
+        - Formularios en BUSQUEDA_POR_FILTRO: columnas ubicadas por el titulo completo del encabezado.
 
         El filtro de Kobo es "contiene" (buscar 81 trae 810, 181, 781...), asi que cada fila
         se compara con los 3 datos del Excel (nombre, usuario y casa) y se elige sola la que
@@ -180,10 +192,14 @@ class Kobo:
         plan = BUSQUEDA_POR_FILTRO.get(self.formulario)
         if plan:
             orden = [campo for campo, _ in plan]
-            columnas = {campo: posicion - 1 for campo, posicion in plan}
-            for campo, col in columnas.items():
-                nombre_col = encabezados[col] if col < len(encabezados) else "(no existe)"
-                print(f"   Columna para {campo.upper()}: [{col + 1}] {nombre_col}")
+            columnas = {}
+            for campo, titulo in plan:
+                col = next((i for i, h in enumerate(encabezados) if norm(h) == norm(titulo)), None)
+                if col is None:
+                    # Buscar en otra columna daria un 'No encontrado' falso: se detiene esta persona
+                    raise RuntimeError(f"no encontre la columna '{titulo}' en la tabla de Kobo")
+                columnas[campo] = col
+                print(f"   Columna para {campo.upper()}: [{col + 1}] {encabezados[col]}")
         else:
             orden = ["usuario", "casa", "nombre"]
             columnas = {campo: self._columna(encabezados, campo, CLAVES_COLUMNA[campo], preguntar=False)
@@ -361,6 +377,31 @@ class Kobo:
 
     # ---------- Edicion ----------
 
+    def firma_actual(self, c: Coincidencia, xpath: str) -> bytes | None:
+        """Imagen que tiene hoy el registro en el campo de firma `xpath` (por la API de Kobo).
+
+        None si no tiene firma o no se pudo descargar (entonces se firma como siempre).
+        """
+        m = re.search(r"/forms/([A-Za-z0-9]+)", self._url_datos.get(self.formulario, "") or self.page.url)
+        _id = str(c.datos.get("_id", "")).strip()
+        if not m or not _id.isdigit():
+            return None
+        try:
+            resp = self.page.request.get(f"{config.KOBO_URL}/api/v2/assets/{m.group(1)}/data/{_id}/",
+                                         params={"format": "json"})
+            if not resp.ok:
+                return None
+            envio = resp.json()
+            archivo = str(envio.get(xpath, "") or "")
+            adjunto = next((a for a in envio.get("_attachments", []) if archivo
+                            and str(a.get("filename", "")).endswith(archivo) and str(a.get("is_deleted")) != "True"), None)
+            if not adjunto:
+                return None
+            imagen = self.page.request.get(adjunto["download_url"])
+            return imagen.body() if imagen.ok else None
+        except Error:
+            return None
+
     def abrir_edicion(self, c: Coincidencia) -> Page:
         """Clic en el lapiz (3er boton de la primera columna) de la fila del usuario.
 
@@ -376,6 +417,7 @@ class Kobo:
         except TimeoutError:
             edicion = self.page  # se abrio en la misma pestana
         edicion.bring_to_front()
+        maximizar(edicion)  # en ventana pequena la firma queda cortada y no se dibuja completa
         edicion.wait_for_load_state("domcontentloaded")
         print("Esperando que cargue el formulario de edicion...")
         edicion.locator("form.or").first.wait_for(timeout=90_000)

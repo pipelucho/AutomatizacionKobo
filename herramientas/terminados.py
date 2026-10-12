@@ -81,7 +81,9 @@ def main():
     movidas = 0
     for u, c, _ in listos:
         sin_f4 = " (sin formulario 4)" if u.marca(4).lower() == excel.MARCA_NO_ENCONTRADO.lower() else ""
-        if c.parent == config.TERMINADOS_DIR:
+        if c.parent == config.POR_CORREGIR_DIR:
+            print(f"   {c.name}{sin_f4}: esta en POR CORREGIR; se deja ahi hasta que la saques tu")
+        elif c.parent == config.TERMINADOS_DIR or c.parent.parent == config.TERMINADOS_DIR:
             print(f"   {c.name}{sin_f4}: ya estaba en TERMINADOS")
         elif mover:
             c.rename(config.TERMINADOS_DIR / c.name)
@@ -90,14 +92,14 @@ def main():
         else:
             print(f"   {c.name}{sin_f4}")
 
-    print(f"\nCon algo pendiente (se quedan en CONTINGENCIAL): {len(con_problemas)}")
+    print(f"\nCon algo pendiente: {len(con_problemas)}")
     for u, c, motivos in con_problemas:
-        print(f"   {u.usuario} {u.nombre_final or u.nombre}" + ("" if c else " (sin carpeta)"))
+        donde = "" if c else " (sin carpeta)"
+        if c and c.parent == config.TERMINADOS_DIR:
+            donde = " (ya esta en TERMINADOS porque se reviso a mano: se deja ahi)"
+        print(f"   {u.usuario} {u.nombre_final or u.nombre}{donde}")
         for m in motivos:
             print(f"      - {m[:160]}")
-        if c and c.parent == config.TERMINADOS_DIR and mover:
-            c.rename(config.CONTINGENCIAL_DIR / c.name)
-            print(f"      (estaba en TERMINADOS: devuelta a CONTINGENCIAL)")
 
     if mover:
         print(f"\nCarpetas movidas a TERMINADOS: {movidas}")

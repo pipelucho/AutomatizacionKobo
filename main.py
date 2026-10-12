@@ -126,8 +126,10 @@ def procesar_formulario(kobo: Kobo, usuario: excel.Usuario, numero: int) -> tupl
                 print("   No se pudo verificar la opcion 'Otro': queda pendiente para revisarlo a mano.")
                 return PENDIENTE, ""
             if es_otro:
-                print("   Marco la opcion 'Otro': no se corrige ni se envia.")
-                return OTRO, ""
+                if not correcciones.procesar_aunque_otro(edicion, numero, usuario):
+                    print("   Marco la opcion 'Otro': no se corrige ni se envia (Tiene otro).")
+                    return OTRO, ""
+                print("   - Opcion 'Otro': decidido en la ventana -> se procesa igual")
 
         # Un formulario sin correcciones configuradas no se envia: se marcaria como hecho sin corregirlo
         if not correcciones.tiene_correcciones(numero):
@@ -136,7 +138,10 @@ def procesar_formulario(kobo: Kobo, usuario: excel.Usuario, numero: int) -> tupl
             return PENDIENTE, ""
 
         print(f"\nCorrecciones del formulario {numero}:")
-        resultado = correcciones.aplicar(edicion, numero, usuario)
+        # La firma que tiene hoy el registro: si ya es la del bot y esta completa no se vuelve a firmar
+        firma_actual = (kobo.firma_actual(encontrado, correcciones.FIRMAS[numero]["xpath"])
+                        if numero in correcciones.FIRMAS else None)
+        resultado = correcciones.aplicar(edicion, numero, usuario, firma_actual)
         t.marcar("correcciones")
         print(f"\n{len(resultado.cambios)} cambio(s) aplicado(s).")
         if resultado.revisar:
