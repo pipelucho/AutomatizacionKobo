@@ -3,15 +3,17 @@ import base64
 import json
 import math
 import random
+import re
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
+import cv2
 from playwright.sync_api import Locator, Page, TimeoutError
 
 from . import cedula, config
 from .humano import clic, escribir, pausa, pegar
-from .texto import norm
+from .texto import norm, numeros_casa
 
 FORM = "body > div.main > article > form"
 
@@ -19,23 +21,26 @@ FORM = "body > div.main > article > form"
 MAYUSCULAS = {
     1: [
         f"{FORM} > section:nth-child(4) > label:nth-child(8)",
-        f"{FORM} > section:nth-child(5) > label:nth-child(5)",
-        f"{FORM} > section:nth-child(5) > label:nth-child(6)",
+        f"{FORM} > section:nth-child(5) > label:nth-child(6)",  # barrio
     ],
     2: [
-        f"{FORM} > section:nth-child(5) > label:nth-child(5)",
-        f"{FORM} > section:nth-child(5) > label:nth-child(6)",
+        f"{FORM} > section:nth-child(5) > label:nth-child(6)",  # barrio
     ],
     3: [
-        # DATOS DEL USUARIO: direccion y barrio
-        f"{FORM} > section:nth-child(4) > label:nth-child(6)",
-        f"{FORM} > section:nth-child(4) > label:nth-child(7)",
+        f"{FORM} > section:nth-child(4) > label:nth-child(7)",  # DATOS DEL USUARIO: barrio
     ],
     4: [
-        # DATOS DEL USUARIO Y DEL INMUEBLE: direccion y barrio
-        f"{FORM} > section:nth-child(4) > label:nth-child(5)",
-        f"{FORM} > section:nth-child(4) > label:nth-child(6)",
+        f"{FORM} > section:nth-child(4) > label:nth-child(6)",  # DATOS DEL USUARIO Y DEL INMUEBLE: barrio
     ],
+}
+
+# Direccion de la persona: en mayuscula si el numero de casa coincide con la casa del Excel (columna C);
+# si esta vacia, sin numero ('No tiene numero la casa') u otro numero, se cambia por 'CASA <casa del Excel>'
+DIRECCIONES = {
+    1: f"{FORM} > section:nth-child(5) > label:nth-child(5)",
+    2: f"{FORM} > section:nth-child(5) > label:nth-child(5)",
+    3: f"{FORM} > section:nth-child(4) > label:nth-child(6)",
+    4: f"{FORM} > section:nth-child(4) > label:nth-child(5)",
 }
 
 # Campos que siempre llevan el mismo valor, por formulario
@@ -163,6 +168,12 @@ def aplicar(page: Page, numero_formulario: int, usuario=None) -> Resultado:
     """
     resultado = Resultado()
     cambios = resultado.cambios
+    _NO_QUEDARON.clear()
+    if usuario is not None and numero_formulario in DIRECCIONES:
+        print("\nDireccion (casa del Excel):")
+        cambio = corregir_direccion(page, DIRECCIONES[numero_formulario], getattr(usuario, "casa", ""))
+        if cambio:
+            cambios.append(cambio)
     if usuario is not None:
         print("\nDatos del Excel:")
         for selector, atributo in VALORES_DEL_EXCEL.get(numero_formulario, []):
@@ -213,6 +224,8 @@ def aplicar(page: Page, numero_formulario: int, usuario=None) -> Resultado:
         for doc in documentos:
             cambios.append(f"{doc['pregunta']}: {doc['archivo']} -> {doc['decision']}")
         resultado.anexo = "Si" if any(d["decision"] == "conservar" for d in documentos) else "No"
+    # Campos que se escribieron pero al releerlos no quedaron bien: se envia igual y queda para revisar
+    resultado.revisar.extend(_NO_QUEDARON)
     return resultado
 
 
@@ -333,9 +346,29 @@ def llenar_si_vacio(page: Page, selector: str, valor: str) -> str | None:
                            "ya tiene texto, se deja igual", pegando=True)
 
 
+def corregir_direccion(page: Page, selector: str, casa_excel: str) -> str | None:
+    """La direccion queda con la casa del Excel: si su numero coincide se deja (en mayuscula); si no
+    tiene numero, esta vacia o tiene otro, se cambia por 'CASA <casa del Excel>'."""
+    casa_excel = " ".join(str(casa_excel or "").split()).upper()
+
+    def transformar(actual: str) -> str:
+        limpio = " ".join(actual.split()).upper()
+        limpio = re.sub(r"\bCS\.?\s*(?=\d)", "CASA ", limpio)  # 'CS652' / 'CS 27A' -> 'CASA 652' / 'CASA 27A'
+        if not casa_excel or numeros_casa(limpio) & numeros_casa(casa_excel):
+            return limpio
+        return f"CASA {casa_excel}"
+
+    return _corregir_texto(page, selector, transformar, "ya coincide con la casa del Excel")
+
+
+# Campos escritos que al releerlos no quedaron con el valor esperado (se pasan a resultado.revisar)
+_NO_QUEDARON: list[str] = []
+
+
 def _corregir_texto(page: Page, selector: str, transformar, msg_sin_cambio: str,
                     pegando: bool = False) -> str | None:
-    """Reescribe el campo con transformar(valor_actual) si el resultado es distinto.
+    """Reescribe el campo con transformar(valor_actual) si el resultado es distinto, y lo relee
+    para verificar que quedo bien (si no, reintenta una vez y si sigue mal lo anota para revisar).
 
     pegando=True pone el texto de una vez (como Ctrl+V) en lugar de escribirlo tecla por tecla.
     """
@@ -360,6 +393,13 @@ def _corregir_texto(page: Page, selector: str, transformar, msg_sin_cambio: str,
     pausa(page, 0.3, 0.8)
     (pegar if pegando else escribir)(campo, nuevo)
     campo.dispatch_event("change")  # Enketo guarda el valor al detectar el cambio
+    if campo.input_value() != nuevo:  # verificar: a veces se pierde una letra o se corta
+        campo.fill(nuevo)
+        campo.dispatch_event("change")
+        if (quedo := campo.input_value()) != nuevo:
+            print(f"   [!] {nombre}: quedo '{quedo}' y debia ser '{nuevo}'")
+            _NO_QUEDARON.append(f"{nombre.lower()} no quedo bien ('{quedo}')")
+            return f"{nombre}: {actual} -> {quedo} (no quedo como se esperaba)"
     print(f"   * {nombre}: '{actual}' -> '{nuevo}'")
     return f"{nombre}: {actual} -> {nuevo}"
 
@@ -484,11 +524,18 @@ def ajustar_cedula(page: Page, selector: str, lado: str, usuario=None) -> tuple[
 
     resultado = cedula.enderezar_cedula(foto, lado)
     if resultado is None:
-        return None, None, f"no se encontro el borde de la cedula {lado} en la foto"
-    ajustada, seguro, nota = resultado
-    if not seguro:
-        (carpeta / f"{prefijo}_dudosa.jpg").write_bytes(cedula.a_jpg(ajustada))
-        return None, None, f"no es seguro hacia donde va arriba la cedula {lado}"
+        ajustada = _cedula_a_mano(page, foto, lado, None, "no encontre el borde de la cedula en la foto")
+        if ajustada is None:
+            return None, None, f"no se encontro el borde de la cedula {lado} en la foto"
+        nota = "ajustada a mano"
+    else:
+        ajustada, seguro, nota = resultado
+        if not seguro:
+            (carpeta / f"{prefijo}_dudosa.jpg").write_bytes(cedula.a_jpg(ajustada))
+            ajustada = _cedula_a_mano(page, foto, lado, ajustada, "no estoy seguro de hacia donde va arriba")
+            if ajustada is None:
+                return None, None, f"no es seguro hacia donde va arriba la cedula {lado}"
+            nota = "revisada a mano"
 
     jpg = cedula.a_jpg(ajustada)
     (carpeta / f"{prefijo}_ajustada.jpg").write_bytes(jpg)
@@ -497,6 +544,126 @@ def ajustar_cedula(page: Page, selector: str, lado: str, usuario=None) -> tuple[
         return None, None, f"no se pudo subir la cedula {lado} ajustada"
     print(f"   * Cedula {lado}: recortada y enderezada ({nota})")
     return f"Cedula {lado}: {info['archivo']} -> {nombre}", jpg, None
+
+
+def _cedula_a_mano(page: Page, foto, lado: str, propuesta, motivo: str):
+    """Cuando el ajuste automatico no es seguro, pregunta en una ventana sobre el formulario.
+
+    Con propuesta: se ve la cedula recortada con 'Usar asi', 'Girar 180', 'Marcar esquinas' y
+    'Dejar la original'. Marcar esquinas muestra la foto original para dar clic en las 4 esquinas de
+    la tarjeta; se recorta, se endereza y se vuelve a mostrar para confirmar.
+    Devuelve la imagen elegida, o None si se deja la original (queda 'Revisar a mano' en el Excel).
+    """
+    actual = propuesta
+    while True:
+        if actual is not None:
+            print(f"   ? Cedula {lado}: {motivo} -> revisa la ventana en el navegador...")
+            r = _preguntar_cedula(page, {"modo": "revisar", "imagen": _data_url(actual),
+                                         "titulo": f"Cédula ({lado}): {motivo}"})
+            if r["accion"] == "usar":
+                return cv2.rotate(actual, cv2.ROTATE_180) if r.get("girada") else actual
+            if r["accion"] == "original":
+                return None
+        print(f"   ? Cedula {lado}: marca las 4 esquinas en la ventana del navegador...")
+        r = _preguntar_cedula(page, {"modo": "esquinas", "imagen": _data_url(foto, 1400),
+                                     "titulo": f"Cédula ({lado}): {motivo}"})
+        if r["accion"] != "esquinas" or len(r.get("puntos", [])) != 4:
+            return None
+        escala = foto.shape[1] / r["ancho"]  # de la imagen mostrada (reducida) a la foto original
+        actual, _ = cedula.orientar(cedula.recortar_por_esquinas(foto, [(x * escala, y * escala)
+                                                                        for x, y in r["puntos"]]), lado)
+        motivo = "revisa el recorte con las esquinas que marcaste"
+
+
+def _data_url(img, lado_maximo: int = 1200) -> str:
+    escala = min(1.0, lado_maximo / max(img.shape[:2]))
+    if escala < 1:
+        img = cv2.resize(img, None, fx=escala, fy=escala, interpolation=cv2.INTER_AREA)
+    ok, buf = cv2.imencode(".jpg", img, [cv2.IMWRITE_JPEG_QUALITY, 85])
+    return "data:image/jpeg;base64," + base64.b64encode(buf.tobytes()).decode()
+
+
+def _preguntar_cedula(page: Page, info: dict) -> dict:
+    page.evaluate(_JS_MODAL_CEDULA, info)
+    page.wait_for_function("() => window.__tumacoCedula", timeout=0, polling=500)
+    return json.loads(page.evaluate("() => { const r = window.__tumacoCedula; delete window.__tumacoCedula; return r; }"))
+
+
+# Ventana para revisar la cedula (usar / girar / marcar esquinas / dejar original) o marcar sus 4 esquinas
+_JS_MODAL_CEDULA = r"""
+(info) => {
+  document.getElementById('tumaco-cedula')?.remove();
+  const m = document.createElement('div');
+  m.id = 'tumaco-cedula';
+  m.innerHTML = `
+    <div style="position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:2147483647;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif">
+      <div style="background:#fff;border-radius:10px;width:94vw;max-width:1100px;max-height:94vh;display:flex;flex-direction:column;box-shadow:0 10px 40px rgba(0,0,0,.4)">
+        <div style="padding:14px 18px;border-bottom:1px solid #ddd">
+          <div id="tc-titulo" style="font-size:17px;font-weight:bold;color:#222"></div>
+          <div id="tc-ayuda" style="font-size:14px;color:#555;margin-top:4px"></div>
+        </div>
+        <div id="tc-vista" style="flex:1;overflow:auto;padding:10px;text-align:center;background:#f2f2f2"></div>
+        <div id="tc-botones" style="padding:12px 18px;border-top:1px solid #ddd;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"></div>
+      </div>
+    </div>`;
+  document.body.appendChild(m);
+  m.querySelector('#tc-titulo').textContent = info.titulo;
+  const ayuda = m.querySelector('#tc-ayuda');
+  const marco = document.createElement('div');
+  marco.style.cssText = 'position:relative;display:inline-block';
+  const img = document.createElement('img');
+  img.src = info.imagen;
+  img.style.cssText = 'max-width:100%;max-height:66vh;display:block;transition:transform .2s;user-select:none';
+  img.draggable = false;
+  marco.appendChild(img);
+  m.querySelector('#tc-vista').appendChild(marco);
+  const responder = (r) => { window.__tumacoCedula = JSON.stringify(r); m.remove(); };
+  const boton = (texto, principal, fn) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = texto;
+    b.style.cssText = `padding:10px 18px;font-size:15px;border-radius:6px;cursor:pointer;border:1px solid ${principal ? '#1976d2' : '#bbb'};background:${principal ? '#1976d2' : '#fff'};color:${principal ? '#fff' : '#222'}`;
+    b.onclick = fn;
+    m.querySelector('#tc-botones').appendChild(b);
+    return b;
+  };
+
+  if (info.modo === 'revisar') {
+    ayuda.textContent = 'Revisa que la cédula quede recortada al borde y derecha (no de cabeza).';
+    let girada = false;
+    boton('Girar 180°', false, () => { girada = !girada; img.style.transform = girada ? 'rotate(180deg)' : ''; });
+    boton('Marcar esquinas', false, () => responder({accion: 'esquinas'}));
+    boton('Dejar la original', false, () => responder({accion: 'original'}));
+    boton('Usar así', true, () => responder({accion: 'usar', girada}));
+    return;
+  }
+
+  ayuda.textContent = 'Haz clic en las 4 esquinas de la cédula, en cualquier orden.';
+  img.style.cursor = 'crosshair';
+  const puntos = [];
+  const listo = boton('Listo', true, () => responder({accion: 'esquinas', puntos, ancho: img.naturalWidth}));
+  listo.disabled = true;
+  listo.style.opacity = .5;
+  const reiniciar = () => {
+    puntos.length = 0;
+    marco.querySelectorAll('.tc-punto').forEach(d => d.remove());
+    listo.disabled = true; listo.style.opacity = .5;
+  };
+  boton('Borrar puntos', false, reiniciar);
+  boton('Dejar la original', false, () => responder({accion: 'original'}));
+  img.onclick = (e) => {
+    if (puntos.length >= 4) return;
+    const r = img.getBoundingClientRect();
+    puntos.push([(e.clientX - r.left) * img.naturalWidth / r.width, (e.clientY - r.top) * img.naturalHeight / r.height]);
+    const d = document.createElement('div');
+    d.className = 'tc-punto';
+    d.textContent = puntos.length;
+    d.style.cssText = `position:absolute;left:${e.clientX - r.left - 11}px;top:${e.clientY - r.top - 11}px;width:22px;height:22px;border-radius:50%;background:#e53935;color:#fff;font:bold 13px/22px Arial;text-align:center;pointer-events:none;box-shadow:0 0 0 2px #fff`;
+    marco.appendChild(d);
+    if (puntos.length === 4) { listo.disabled = false; listo.style.opacity = 1; }
+  };
+}
+"""
 
 
 def _descargar_imagen(page: Page, pregunta: Locator, src: str, intentos: int = 4) -> bytes | None:

@@ -92,6 +92,9 @@ def _texto(valor) -> str:
 
 def cargar_tabla() -> pd.DataFrame:
     """Lee el Excel UNA sola vez: nombre, usuario, casa, marcas de cada formulario y la fila real de Excel."""
+    # Primero las marcas de una corrida anterior en la que el Excel estaba abierto, y DESPUES se lee:
+    # leyendo antes, la tabla no las veia (se saltaba o repetia personas)
+    guardar_pendientes()
     crudo = pd.read_excel(config.EXCEL_PATH, header=0, dtype=object)
     while len(crudo.columns) < max(*COLUMNA_FORMULARIO.values(), *COLUMNA_DATO.values()):  # D a I pueden no existir
         crudo[f"_vacia_{len(crudo.columns)}"] = None
@@ -103,8 +106,7 @@ def cargar_tabla() -> pd.DataFrame:
         **{campo: crudo.iloc[:, col - 1] for campo, col in COLUMNA_DATO.items()},
     }).map(_texto)
     tabla["fila"] = crudo.index + 2  # la fila 1 son los encabezados
-    guardar_pendientes()  # marcas de una corrida anterior en la que el Excel estaba abierto
-    return aplicar_pendientes(tabla)
+    return aplicar_pendientes(tabla)  # las que siguen sin guardar (Excel abierto) tambien cuentan
 
 
 def pendientes(tabla: pd.DataFrame) -> list[Usuario]:
@@ -112,13 +114,17 @@ def pendientes(tabla: pd.DataFrame) -> list[Usuario]:
     los anteriores enviados, o ya terminaron los formularios y falta llenar su fila en la hoja de Google.
     Una marca como 'Tiene otro' o 'No encontrado' detiene a esa persona.
     """
-    usuarios = [
+    return [u for u in usuarios(tabla) if u.siguiente() is not None or (u.terminado() and not u.hoja)]
+
+
+def usuarios(tabla: pd.DataFrame) -> list[Usuario]:
+    """Todas las personas del Excel (con No. de usuario), con sus marcas y datos."""
+    return [
         Usuario(fila=int(f.fila), nombre=f.nombre, usuario=f.usuario, casa=f.casa,
                 **{f"formulario{n}": getattr(f, f"formulario{n}") for n in COLUMNA_FORMULARIO},
                 **{campo: getattr(f, campo) for campo in COLUMNA_DATO})
         for f in tabla[tabla["usuario"] != ""].itertuples(index=False)
     ]
-    return [u for u in usuarios if u.siguiente() is not None or (u.terminado() and not u.hoja)]
 
 
 def marcar_realizado(fila: int):

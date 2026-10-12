@@ -54,3 +54,6 @@ GOOGLE_SHEET_URL = os.getenv(
 # Chrome abierto a mano por el usuario (con su sesion de Google) al que el bot se conecta para la hoja.
 # Se abre con: chrome.exe --remote-debugging-port=9222 --user-data-dir=%LOCALAPPDATA%\TumacoChrome
 CHROME_DEPURACION_URL = os.getenv("CHROME_DEPURACION_URL", "http://127.0.0.1:9222")
+
+# Registro de casos por resolver (no encontrados, dudosos, sin formulario 4...), se actualiza en cada corrida
+CASOS_PATH = ROOT / os.getenv("CASOS_PATH", "CASOS.xlsx")

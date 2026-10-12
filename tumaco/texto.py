@@ -16,6 +16,12 @@ def digitos(texto: str, todos: bool = False):
     return nums if todos else (nums[0] if nums else "")
 
 
+def mismo_documento(a: str, b: str) -> bool:
+    """Mismo numero de documento, sin importar espacios o puntos: '59.675.754' = '59675754'."""
+    da, db = re.sub(r"\D", "", str(a or "")), re.sub(r"\D", "", str(b or ""))
+    return len(da) >= 5 and da == db
+
+
 def numeros_casa(texto: str) -> set:
     """Numeros de casa con su letra: 'Casa 298A' -> {('298', 'a')}, 'Casa 298 sector 1' -> {('298', ''), ('1', '')}."""
     return {(n.lstrip("0") or "0", letra)

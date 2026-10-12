@@ -158,12 +158,8 @@ def orientar(img: np.ndarray, lado: str) -> tuple[np.ndarray, bool]:
 
     `seguro` es False cuando las pistas no son claras o se contradicen.
     """
+    pistas = _pistas(img, lado)
     girada = cv2.rotate(img, cv2.ROTATE_180)
-    pistas = {"plantilla": _pista_plantilla(img, girada, lado)}
-    if lado == "cara":
-        pistas["rostro"] = (_rostros(img) - _rostros(girada)) / 6
-    else:
-        pistas["barras"] = float(np.clip((_barras_abajo(img) - 0.5) / 0.12, -1, 1))
     suma = sum(pistas.values())
     contradice = any(abs(v) >= CONTRADICCION and np.sign(v) != np.sign(suma) for v in pistas.values())
     seguro = abs(suma) >= SUMA_SEGURA and not contradice
@@ -172,13 +168,28 @@ def orientar(img: np.ndarray, lado: str) -> tuple[np.ndarray, bool]:
 
 def pistas_orientacion(img: np.ndarray, lado: str) -> dict:
     """Valores de cada pista (para revisar casos dudosos)."""
+    return {k: round(float(v), 2) for k, v in _pistas(img, lado).items()}
+
+
+def _pistas(img: np.ndarray, lado: str) -> dict:
     girada = cv2.rotate(img, cv2.ROTATE_180)
     pistas = {"plantilla": _pista_plantilla(img, girada, lado)}
     if lado == "cara":
         pistas["rostro"] = (_rostros(img) - _rostros(girada)) / 6
-    else:
+    elif modelo(img, lado) == "amarilla":
+        # El codigo de barras abajo solo existe en el reverso de la cedula amarilla; en la digital
+        # (QR y lineas ICCOL<<<) esa pista confunde y hacia dudar con fotos derechas
         pistas["barras"] = float(np.clip((_barras_abajo(img) - 0.5) / 0.12, -1, 1))
-    return {k: round(float(v), 2) for k, v in pistas.items()}
+    return pistas
+
+
+def modelo(img: np.ndarray, lado: str) -> str:
+    """'amarilla' o 'digital': la plantilla que mas se parece (derecha o de cabeza)."""
+    _cargar_plantillas()
+    a, b = _huella(img), _huella(cv2.rotate(img, cv2.ROTATE_180))
+    parecido = {nombre.split("_")[0]: max(float((a * h).mean()), float((b * h).mean()))
+                for nombre, h in _PLANTILLAS.items() if nombre.endswith(lado)}
+    return max(parecido, key=parecido.get) if parecido else "amarilla"
 
 
 def _rostros(img: np.ndarray) -> int:
@@ -214,9 +225,7 @@ def _huella(img: np.ndarray) -> np.ndarray:
 
 
 def _pista_plantilla(img: np.ndarray, girada: np.ndarray, lado: str) -> float:
-    global _PLANTILLAS
-    if _PLANTILLAS is None:
-        _PLANTILLAS = {ruta.stem: _huella(cv2.imread(str(ruta))) for ruta in PLANTILLAS_DIR.glob("*.png")}
+    _cargar_plantillas()
     plantillas = [h for nombre, h in _PLANTILLAS.items() if nombre.endswith(lado)]
     if not plantillas:
         return 0.0
@@ -224,6 +233,17 @@ def _pista_plantilla(img: np.ndarray, girada: np.ndarray, lado: str) -> float:
     normal = max(float((a * h).mean()) for h in plantillas)
     invertida = max(float((b * h).mean()) for h in plantillas)
     return float(np.clip((normal - invertida) / 0.3, -1, 1))
+
+
+def _cargar_plantillas():
+    global _PLANTILLAS
+    if _PLANTILLAS is None:
+        _PLANTILLAS = {ruta.stem: _huella(cv2.imread(str(ruta))) for ruta in PLANTILLAS_DIR.glob("*.png")}
+
+
+def recortar_por_esquinas(foto: np.ndarray, puntos) -> np.ndarray:
+    """Recorta y endereza la tarjeta con las 4 esquinas marcadas a mano (en cualquier orden)."""
+    return _enderezar(foto, _ordenar(np.array(puntos, dtype=np.float32)))
 
 
 def enderezar_cedula(foto: np.ndarray, lado: str) -> tuple[np.ndarray, bool, str] | None:

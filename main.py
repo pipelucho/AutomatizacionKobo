@@ -1,6 +1,6 @@
 import time
 
-from tumaco import config, correcciones, excel, pdf, sheets
+from tumaco import casos, config, correcciones, excel, pdf, registro, sheets
 from tumaco.browser import abrir_navegador
 from tumaco.kobo import Kobo
 
@@ -155,16 +155,27 @@ def _intentar(kobo: Kobo, usuario: excel.Usuario, numero: int) -> tuple[str, str
         return procesar_formulario(kobo, usuario, numero)
     except Exception as e:
         print(f"\n[ERROR] {type(e).__name__}: {e}")
+        casos.anotar_error(usuario, numero, f"{type(e).__name__}: {e}")  # queda en CASOS.xlsx
         kobo.cerrar_pestanas_extra()  # que lo siguiente empiece limpio
         return PENDIENTE, ""
 
 
+def actualizar_casos():
+    """Al final de la corrida: CASOS.xlsx con lo que quedo por resolver (relee el Excel ya marcado)."""
+    print("\nRegistro de casos:")
+    filas = casos.actualizar(excel.cargar_tabla())
+    if filas is not None:
+        print(f"   {casos.resumen(filas)}")
+
+
 def main():
+    registro.iniciar("corrida")  # todo lo que se ve en la terminal queda tambien en salida/logs
     # El Excel se lee una sola vez; durante la corrida solo se escribe para marcar cada formulario
     tabla = excel.cargar_tabla()
     por_procesar = excel.pendientes(tabla)
     print(f"{config.EXCEL_PATH.name}: {len(tabla)} fila(s), {len(por_procesar)} con formularios pendientes.")
     if not por_procesar:
+        actualizar_casos()
         return
 
     terminados, con_otro, pendientes, no_encontrados, a_mano = [], [], [], [], []
@@ -257,6 +268,7 @@ def main():
         for u in hoja_pendiente:
             print(f"   - fila {u.fila}: {u.usuario} {u.nombre} (falta llenar la hoja de Google)")
         excel.guardar_pendientes(esperar=True)  # lo que no se pudo guardar con el Excel abierto
+        actualizar_casos()
         input("\nSe procesaron todos los pendientes. Presiona Enter para cerrar el navegador...")
 
 

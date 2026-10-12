@@ -7,7 +7,7 @@ from playwright.sync_api import Error, Page, TimeoutError
 
 from . import config
 from .humano import clic, escribir, pausa
-from .texto import digitos, norm, numeros_casa, similitud_nombre, terminos_busqueda_nombre
+from .texto import digitos, mismo_documento, norm, numeros_casa, similitud_nombre, terminos_busqueda_nombre
 
 LOGIN_TIMEOUT_MS = 5 * 60 * 1000  # tiempo para iniciar sesion a mano si hace falta
 UMBRAL_NOMBRE = 0.6  # similitud minima del nombre para aceptar una fila sin preguntar
@@ -16,12 +16,14 @@ MARGEN_DECISION = 0.3  # ventaja minima de la mejor fila sobre la segunda para e
 
 # Orden de busqueda propio de algunos formularios: (campo, posicion de su caja en la fila de filtros, 1 = primera)
 # El formulario 1 no esta aqui: ubica sus columnas por el nombre del encabezado (config.KOBO_COLUMNA_*).
+# Primero el documento (sale del formulario 1, columna I del Excel): es el dato mas seguro. Si la persona
+# aun no lo tiene en el Excel, se empieza por la casa.
 BUSQUEDA_POR_FILTRO = {
-    config.FORMULARIOS[1]: [("casa", 16), ("usuario", 15), ("nombre", 13)],
+    config.FORMULARIOS[1]: [("documento", 14), ("casa", 16), ("usuario", 15), ("nombre", 13)],
     # Mismo orden que el 2; columnas de DATOS DEL USUARIO (la 11 es el nombre de la encuestadora, no del usuario)
-    config.FORMULARIOS[2]: [("casa", 15), ("usuario", 14), ("nombre", 12)],
+    config.FORMULARIOS[2]: [("documento", 13), ("casa", 15), ("usuario", 14), ("nombre", 12)],
     # DATOS DEL USUARIO Y DEL INMUEBLE (la 9 es el nombre de quien hace el acta, no del usuario)
-    config.FORMULARIOS[3]: [("casa", 13), ("usuario", 12), ("nombre", 10)],
+    config.FORMULARIOS[3]: [("documento", 11), ("casa", 13), ("usuario", 12), ("nombre", 10)],
 }
 CLAVES_COLUMNA = {
     "usuario": config.KOBO_COLUMNA_USUARIO,
@@ -40,19 +42,25 @@ class Coincidencia:
     casa_exacta: bool = False  # la casa coincide tal cual (298 con 298A NO cuenta)
     usuario_ok: bool = False  # el No. de usuario coincide
     casa: str = ""  # direccion segun Kobo
+    documento_ok: bool = False  # el documento coincide con el del formulario 1 (columna I del Excel)
 
     @property
     def puntaje(self) -> float:
-        """Que tanto coincide con el Excel comparando los 3 datos: nombre, usuario y casa."""
-        return (self.sim_nombre + (0.6 if self.usuario_ok else 0)
+        """Que tanto coincide con el Excel comparando nombre, usuario, casa y documento."""
+        return (self.sim_nombre + (0.6 if self.usuario_ok else 0) + (0.6 if self.documento_ok else 0)
                 + (0.4 if self.casa_exacta else 0.2 if self.casa_ok else 0))
 
     @property
     def confirmada(self) -> bool:
-        """Hay evidencia suficiente de que es la persona del Excel."""
+        """Hay evidencia suficiente de que es la persona del Excel.
+
+        El documento solo no basta (puede estar mal digitado en otra persona): se pide ademas
+        un nombre parecido, el No. de usuario o la casa.
+        """
         return (self.sim_nombre >= UMBRAL_NOMBRE_SOLO
-                or (self.sim_nombre >= UMBRAL_NOMBRE and (self.usuario_ok or self.casa_ok))
-                or (self.usuario_ok and self.casa_exacta))
+                or (self.sim_nombre >= UMBRAL_NOMBRE and (self.usuario_ok or self.casa_ok or self.documento_ok))
+                or (self.usuario_ok and self.casa_exacta)
+                or (self.documento_ok and (self.usuario_ok or self.casa_exacta)))
 
 
 class Kobo:
@@ -174,6 +182,7 @@ class Kobo:
                         for campo in orden}
 
         valores = {
+            "documento": [getattr(usuario, "documento", "")],
             "usuario": [usuario.usuario],
             "casa": [usuario.casa],
             "nombre": terminos_busqueda_nombre(usuario.nombre),
@@ -236,11 +245,14 @@ class Kobo:
             buscada = celdas[col] if col < len(celdas) else ""
             if campo == "nombre":
                 coincide = similitud_nombre(usuario.nombre, buscada) >= UMBRAL_NOMBRE
+            elif campo == "documento":
+                coincide = mismo_documento(valor, buscada)
             else:
                 coincide = digitos(valor) in digitos(buscada, todos=True)
             if not coincide:
                 continue
             nombre_kobo, casa_kobo, usuario_kobo = celda(celdas, "nombre"), celda(celdas, "casa"), celda(celdas, "usuario")
+            documento_excel = getattr(usuario, "documento", "")
             candidatas.append(Coincidencia(
                 indice=i,
                 datos=dict(zip(encabezados, celdas)),
@@ -250,6 +262,7 @@ class Kobo:
                 casa_exacta=bool(numeros_casa(usuario.casa) & numeros_casa(casa_kobo)),
                 usuario_ok=bool(usuario.usuario) and digitos(usuario.usuario) in digitos(usuario_kobo, todos=True),
                 casa=casa_kobo.strip(),
+                documento_ok=bool(documento_excel) and mismo_documento(documento_excel, celda(celdas, "documento")),
             ))
 
         criterio = "con nombre parecido a" if campo == "nombre" else "con valor exacto"
@@ -279,7 +292,7 @@ class Kobo:
 
     @staticmethod
     def _resumen(c: Coincidencia) -> str:
-        marcas = [m for m, ok in (("usuario coincide", c.usuario_ok),
+        marcas = [m for m, ok in (("documento coincide", c.documento_ok), ("usuario coincide", c.usuario_ok),
                                   ("casa exacta" if c.casa_exacta else "casa parecida", c.casa_ok)) if ok]
         return " | ".join([c.nombre or "?", c.casa or "?", f"nombre {c.sim_nombre:.0%}", *marcas])
 
