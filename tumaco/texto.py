@@ -22,6 +22,15 @@ def mismo_documento(a: str, b: str) -> bool:
     return len(da) >= 5 and da == db
 
 
+def documento_distinto(a: str, b: str) -> bool:
+    """Los dos documentos estan y son de personas distintas: no un error de digitacion de una o dos cifras
+    ('5968887' por '59688887') ni un relleno ('00000000')."""
+    da, db = re.sub(r"\D", "", str(a or "")), re.sub(r"\D", "", str(b or ""))
+    if len(da) < 5 or len(db) < 5 or da == db or len(set(da)) == 1 or len(set(db)) == 1:
+        return False
+    return SequenceMatcher(None, da, db).ratio() < 0.8
+
+
 def numeros_casa(texto: str) -> set:
     """Numeros de casa con su letra: 'Casa 298A' -> {('298', 'a')}, 'Casa 298 sector 1' -> {('298', ''), ('1', '')}."""
     return {(n.lstrip("0") or "0", letra)

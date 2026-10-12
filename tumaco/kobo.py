@@ -8,7 +8,8 @@ from playwright.sync_api import Error, Page, TimeoutError
 from . import config, ventanas
 from .browser import maximizar
 from .humano import clic, escribir, pausa
-from .texto import digitos, mismo_documento, norm, numeros_casa, similitud_nombre, terminos_busqueda_nombre
+from .texto import (digitos, documento_distinto, mismo_documento, norm, numeros_casa, similitud_nombre,
+                    terminos_busqueda_nombre)
 
 LOGIN_TIMEOUT_MS = 5 * 60 * 1000  # tiempo para iniciar sesion a mano si hace falta
 UMBRAL_NOMBRE = 0.6  # similitud minima del nombre para aceptar una fila sin preguntar
@@ -57,6 +58,7 @@ class Coincidencia:
     documento: str = ""  # documento segun Kobo
     usuario: str = ""  # No. de usuario segun Kobo
     filtro: tuple = ()  # (columna, valor) con el que se encontro: para volver a esa tabla si se elige despues
+    documento_distinto: bool = False  # su documento es claramente de otra persona (no un error de una cifra)
 
     @property
     def puntaje(self) -> float:
@@ -71,7 +73,11 @@ class Coincidencia:
         Nunca solo por el nombre: con nombres comunes (dos 'MARTHA CORTES') se editaba el registro de
         otra persona. Se pide nombre parecido y ademas usuario, casa o documento; o dos de esos tres.
         El documento solo tampoco basta (puede estar mal digitado en otra persona).
+        Si su documento es de otra persona y el usuario tampoco coincide, no es: asi se tomo para el usuario 1
+        (casa 27A) el F4 de la titular de su otra casa (27B), con el mismo nombre y la casa '27'.
         """
+        if self.documento_distinto and not self.usuario_ok:
+            return False
         return ((self.sim_nombre >= UMBRAL_NOMBRE and (self.usuario_ok or self.casa_ok or self.documento_ok))
                 or (self.usuario_ok and self.casa_exacta)
                 or (self.documento_ok and (self.usuario_ok or self.casa_exacta)))
@@ -309,6 +315,7 @@ class Kobo:
                 documento=celda(celdas, "documento").strip(),
                 usuario=usuario_kobo.strip(),
                 filtro=(col, valor),
+                documento_distinto=documento_distinto(documento_excel, celda(celdas, "documento")),
             ))
 
         criterio = "con nombre parecido a" if campo == "nombre" else "con valor exacto"
