@@ -32,6 +32,7 @@ QUE_HACER = {
     "Sin formulario 4": "Confirmar en Kobo que la persona no tiene formulario 4 (o buscarlo por documento).",
     "Revisar a mano": "Correr herramientas\\rehacer_formulario2.py (cedulas) o corregirlo en Kobo.",
     "Tiene otro": "Quien atendio la visita manifesto ser 'Otro': definir si se procesa.",
+    "Vivienda inexistente (RETIRADO)": "Lote vacio: no se proceso; en la hoja queda RETIRADO (FOTOGRAFIA VIVIENDA).",
     "Hoja pendiente": "Abrir el Chrome de la hoja y correr el bot (solo llena la hoja de esa persona).",
     "Faltan datos": "Correr herramientas\\completar_datos_form1.py.",
     "Error": "Revisar el log de la corrida (salida\\logs); el bot lo reintenta en la siguiente corrida.",
@@ -61,6 +62,8 @@ def _tipo_marca(numero: int, marca: str) -> str | None:
         return "Revisar a mano"
     if m.startswith(excel.MARCA_OTRO.lower()):
         return "Tiene otro"
+    if m.startswith(excel.MARCA_INEXISTENTE.lower()):
+        return "Vivienda inexistente (RETIRADO)"
     return "Otro"
 
 

@@ -48,8 +48,10 @@ FIRMAS_DIR = ROOT / "firmas"
 
 # Carpeta base donde se crea una subcarpeta por usuario (USUARIO_NOMBRE) con los PDF
 CONTINGENCIAL_DIR = ROOT / os.getenv("CONTINGENCIAL_DIR", "CONTINGENCIAL")
-# Personas terminadas sin problemas (herramientas/terminados.py las mueve aqui)
+# Personas terminadas sin problemas: TERMINADOS\LISTOS POR CARGAR (herramientas/terminados.py las mueve
+# ahi) y, cuando ya se subieron al Drive, TERMINADOS\CARGADOS (eso lo hace el usuario)
 TERMINADOS_DIR = CONTINGENCIAL_DIR / os.getenv("TERMINADOS_DIR", "TERMINADOS")
+LISTOS_DIR = TERMINADOS_DIR / os.getenv("LISTOS_DIR", "LISTOS POR CARGAR")
 # Personas procesadas con algo que corregir aparte (para no confundirlas con las listas para cargar)
 POR_CORREGIR_DIR = CONTINGENCIAL_DIR / os.getenv("POR_CORREGIR_DIR", "POR CORREGIR")
 # Fecha/titulo arriba y direccion/pagina abajo en el PDF, como Ctrl+P en Chrome (1 = si, 0 = no)

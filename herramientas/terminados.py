@@ -1,4 +1,4 @@
-r"""Mueve a CONTINGENCIAL\TERMINADOS las carpetas de las personas terminadas sin problemas.
+r"""Mueve a CONTINGENCIAL\TERMINADOS\LISTOS POR CARGAR las carpetas de las personas terminadas sin problemas.
 
 Una persona queda lista si:
 - todos sus formularios quedaron enviados (el 4 puede ser 'No encontrado': hay personas sin el) y
@@ -76,7 +76,7 @@ def main():
         motivos = problemas(u, analizadas, pendientes)
         (con_problemas if motivos else listos).append((u, c, motivos))
 
-    config.TERMINADOS_DIR.mkdir(parents=True, exist_ok=True)
+    config.LISTOS_DIR.mkdir(parents=True, exist_ok=True)
     print(f"\nTerminadas sin problemas: {len(listos)}")
     movidas = 0
     for u, c, _ in listos:
@@ -84,25 +84,25 @@ def main():
         if c.parent == config.POR_CORREGIR_DIR:
             print(f"   {c.name}{sin_f4}: esta en POR CORREGIR; se deja ahi hasta que la saques tu")
         elif c.parent == config.TERMINADOS_DIR or c.parent.parent == config.TERMINADOS_DIR:
-            print(f"   {c.name}{sin_f4}: ya estaba en TERMINADOS")
+            print(f"   {c.name}{sin_f4}: ya estaba en TERMINADOS ({c.parent.name})")
         elif mover:
-            c.rename(config.TERMINADOS_DIR / c.name)
+            c.rename(config.LISTOS_DIR / c.name)
             movidas += 1
-            print(f"   {c.name}{sin_f4}: movida a TERMINADOS")
+            print(f"   {c.name}{sin_f4}: movida a LISTOS POR CARGAR")
         else:
             print(f"   {c.name}{sin_f4}")
 
     print(f"\nCon algo pendiente: {len(con_problemas)}")
     for u, c, motivos in con_problemas:
         donde = "" if c else " (sin carpeta)"
-        if c and c.parent == config.TERMINADOS_DIR:
-            donde = " (ya esta en TERMINADOS porque se reviso a mano: se deja ahi)"
+        if c and (c.parent == config.TERMINADOS_DIR or c.parent.parent == config.TERMINADOS_DIR):
+            donde = f" (esta en {c.parent.name}: se deja ahi)"
         print(f"   {u.usuario} {u.nombre_final or u.nombre}{donde}")
         for m in motivos:
             print(f"      - {m[:160]}")
 
     if mover:
-        print(f"\nCarpetas movidas a TERMINADOS: {movidas}")
+        print(f"\nCarpetas movidas a LISTOS POR CARGAR: {movidas}")
     else:
         print("\nNo se movio nada. Para moverlas: .venv\\Scripts\\python herramientas\\terminados.py --mover")
 

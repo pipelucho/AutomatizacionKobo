@@ -17,7 +17,7 @@ from contextlib import contextmanager
 from playwright.sync_api import Page, sync_playwright
 
 from . import config, reglas
-from .texto import numeros_casa
+from .texto import numeros_casa, similitud_nombre
 
 PESTANA = "Tumaco"
 FILA_ENCABEZADOS = 16  # No. | NOMBRES Y APELLIDOS USUARIO INICIAL | ... | RESPONSABLE
@@ -166,20 +166,44 @@ def escribir_celda(hoja: Page, celda: str, valor: str):
     hoja.wait_for_timeout(random.randint(200, 400))
 
 
-def actualizar_usuario(hoja: Page, usuario) -> bool:
-    """Busca al usuario en la columna A y llena F a K. Devuelve True si la hoja quedo con esos valores."""
+def valores_retirado(usuario, direccion_inicial: str) -> dict[str, str]:
+    """Vivienda inexistente (lote vacio): la fila queda como las RETIRADO que ya habia en la hoja
+    (documento 0 y soporte 'FOTOGRAFIA VIVIENDA')."""
+    return {
+        COL_NOMBRE: " ".join((getattr(usuario, "nombre_final", "") or usuario.nombre).upper().split()),
+        COL_DOCUMENTO: "0",
+        COL_DIRECCION: direccion_hoja(direccion_inicial),
+        COL_VERIFICACION: "RETIRADO",
+        COL_SOPORTE: "FOTOGRAFIA VIVIENDA",
+        COL_RESPONSABLE: RESPONSABLE,
+    }
+
+
+def actualizar_usuario(hoja: Page, usuario, retirado: bool = False) -> bool:
+    """Busca al usuario en la columna A y llena F a K. Devuelve True si la hoja quedo con esos valores.
+    retirado=True: vivienda inexistente, la fila queda RETIRADO."""
     filas = leer_filas(hoja)
     fila = buscar_fila(filas, usuario.usuario)
     if not fila:
         print(f"   Hoja: el usuario {usuario.usuario} no esta en la columna A de '{PESTANA}'.")
         return False
+    # La fila debe ser de esta persona (nombre inicial B o casa inicial E): con el No. de usuario equivocado en
+    # el Excel se llenaba la fila de otra (Oleisa Cuero con el 782, que es de Johan Aguirre)
+    nombres = [n for n in (usuario.nombre, getattr(usuario, "nombre_final", "")) if n]
+    inicial, direccion = _celda(filas, fila, "B"), _celda(filas, fila, COL_DIRECCION_INICIAL)
+    casas = numeros_casa(usuario.casa) | numeros_casa(getattr(usuario, "casa_final", ""))
+    if (max(similitud_nombre(n, inicial) for n in nombres) < 0.6
+            and not ({c for c, _ in casas} & {c for c, _ in numeros_casa(re.sub(r"DIV\s*\d+", "", direccion))})):
+        print(f"   [!] Hoja: la fila {fila} del usuario {usuario.usuario} es de '{inicial}' ({direccion}), no de "
+              f"'{usuario.nombre}' casa {usuario.casa}: revisa el No. de usuario en el Excel. No se llena.")
+        return False
     faltan = [n for n, v in (("documento", usuario.documento), ("propietario", usuario.propietario),
                              ("documento anexo", usuario.anexo)) if not v]
-    if faltan:
+    if faltan and not retirado:
         print(f"   Hoja: faltan datos en el Excel ({', '.join(faltan)}); no se llena la fila {fila}.")
         return False
 
-    valores = valores_usuario(usuario, _celda(filas, fila, COL_DIRECCION_INICIAL))
+    valores = (valores_retirado if retirado else valores_usuario)(usuario, _celda(filas, fila, COL_DIRECCION_INICIAL))
     print(f"   Hoja '{PESTANA}', fila {fila} (usuario {usuario.usuario}):")
     hoja.bring_to_front()
     for col, valor in valores.items():

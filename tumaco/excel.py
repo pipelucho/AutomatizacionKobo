@@ -36,6 +36,7 @@ MARCA_REALIZADO = "Si"
 MARCA_A_MANO = "Revisar a mano"  # se envio, pero algo quedo para hacerlo a mano (ej. una cedula)
 MARCA_NO_ENCONTRADO = "No encontrado"  # formulario que no existe para esa persona (ej. el 4)
 MARCA_OTRO = "Tiene otro"  # la persona que atiende manifiesta ser "Otro": no se procesa
+MARCA_INEXISTENTE = "Vivienda inexistente"  # lote vacio: no se procesa y en la hoja queda RETIRADO
 # Marcas que no se pudieron escribir porque el Excel estaba abierto: [fila, columna, valor]
 PENDIENTES_PATH = config.OUTPUT_DIR / "marcas_pendientes.json"
 
@@ -135,7 +136,8 @@ def pendientes(tabla: pd.DataFrame) -> list[Usuario]:
     los anteriores enviados, o ya terminaron los formularios y falta llenar su fila en la hoja de Google.
     Una marca como 'Tiene otro' o 'No encontrado' detiene a esa persona.
     """
-    return [u for u in usuarios(tabla) if u.siguiente() is not None or (u.terminado() and not u.hoja)]
+    return [u for u in usuarios(tabla) if u.siguiente() is not None or (u.terminado() and not u.hoja)
+            or (u.marca(1).lower() == MARCA_INEXISTENTE.lower() and not u.hoja)]  # RETIRADO con hoja pendiente
 
 
 def usuarios(tabla: pd.DataFrame) -> list[Usuario]:

@@ -3,6 +3,7 @@ import base64
 import json
 import math
 import random
+import re
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -309,6 +310,41 @@ def inventario_campos(page: Page, numero_formulario: int) -> Path:
 
 
 # ---------- Verificaciones previas ----------
+
+# Notas del F1 que dicen que la casa no existe ('Lote vacio', 'Vivienda inexistente', 'inasistente', ...)
+_INEXISTENTE = re.compile(r"lote\s+vac|inexistent|inasistent|vivienda\s+destruid|casa\s+se\s+cay", re.I)
+_CAMPOS_NOTA = ("condiciones_especiales_otro_cual", "calidad_persona_otro_cual", "observaciones_gestion")
+
+
+def vivienda_inexistente(envio: dict) -> list[str]:
+    """Lo que dice el F1 (registro de la API) de que la vivienda no existe; lista vacia si no dice nada."""
+    evidencia = []
+    for clave, valor in (envio or {}).items():
+        if not isinstance(valor, str):
+            continue
+        campo = clave.split("/")[-1]
+        if campo == "condiciones_especiales_inmueble" and "vivienda_inexistente" in valor.split():
+            evidencia.append("Condiciones especiales del inmueble: vivienda inexistente")
+        elif campo in _CAMPOS_NOTA and _INEXISTENTE.search(valor):
+            evidencia.append(f"{campo.replace('_', ' ').capitalize()}: {' '.join(valor.split())}")
+    return evidencia
+
+
+def confirmar_retirado(page: Page, usuario, evidencia: list[str]) -> bool:
+    """Ventana: el F1 dice que la vivienda no existe. True = no se procesa y queda RETIRADO en la hoja."""
+    if not config.PREGUNTAR_DUDAS:
+        return False
+    print("   ? El formulario 1 dice que la vivienda no existe -> decide en la ventana del navegador...")
+    elegidos = ventanas.revisar_cambios(
+        page, "La vivienda no existe (lote vacío)",
+        [f"Usuario {usuario.usuario} | casa {usuario.casa} | {usuario.nombre}", *evidencia,
+         "Marcar RETIRADO: no se corrige ni se envía nada; en la hoja queda I = RETIRADO, J = FOTOGRAFIA VIVIENDA.",
+         "Procesar normal: se sigue como cualquier otro usuario."],
+        [{"id": "retirado", "campo": "Estado en la hoja", "actual": "PENDIENTE", "nuevo": "RETIRADO", "editable": False,
+          "detalle": "Desmarca o elige 'Procesar normal' para no retirarlo"}],
+        aplicar="Marcar RETIRADO", omitir="Procesar normal")
+    return bool(elegidos)
+
 
 def procesar_aunque_otro(page: Page, numero_formulario: int, usuario) -> bool:
     """Quien atiende marco 'Otro': se pregunta en la ventana si se procesa igual (como cuando atiende otra

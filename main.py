@@ -6,7 +6,7 @@ from tumaco.browser import abrir_navegador
 from tumaco.kobo import Kobo
 
 
-ENVIADO, OTRO, PENDIENTE, NO_ENCONTRADO = "enviado", "otro", "pendiente", "no encontrado"
+ENVIADO, OTRO, PENDIENTE, NO_ENCONTRADO, RETIRADO = "enviado", "otro", "pendiente", "no encontrado", "retirado"
 # Formularios que algunas personas no tienen: si no aparece se marca "No encontrado" y se da por terminado
 FORMULARIOS_OPCIONALES = excel.FORMULARIOS_OPCIONALES
 
@@ -47,11 +47,12 @@ def guardar_datos_formulario(edicion, usuario: excel.Usuario, numero: int):
               f"'{documento or 'vacio'}'")
 
 
-def llenar_hoja(hoja: sheets.Hoja, usuario: excel.Usuario) -> bool:
-    """Ultimo paso de cada persona: su fila en la hoja de Google (F a K). Marca la columna K del Excel."""
+def llenar_hoja(hoja: sheets.Hoja, usuario: excel.Usuario, retirado: bool = False) -> bool:
+    """Ultimo paso de cada persona: su fila en la hoja de Google (F a K). Marca la columna K del Excel.
+    retirado=True: vivienda inexistente, la fila queda RETIRADO."""
     print("\nHoja de Google:")
     try:
-        ok = sheets.actualizar_usuario(hoja.pestana(), usuario)
+        ok = sheets.actualizar_usuario(hoja.pestana(), usuario, retirado=retirado)
     except Exception as e:  # sin la ventana de la hoja no se detiene la corrida
         print(f"   [!] {e}")
         ok = False
@@ -119,6 +120,18 @@ def procesar_formulario(kobo: Kobo, usuario: excel.Usuario, numero: int) -> tupl
         correcciones.inventario_campos(edicion, numero)
 
         guardar_datos_formulario(edicion, usuario, numero)
+
+        # Lote vacio: si el F1 dice que la vivienda no existe y se confirma en la ventana, no se procesa
+        if numero == 1:
+            evidencia = correcciones.vivienda_inexistente(kobo.registro_json(encontrado))
+            if evidencia:
+                print("\nVivienda inexistente segun el formulario 1:")
+                for linea in evidencia:
+                    print(f"   - {linea}")
+                if correcciones.confirmar_retirado(edicion, usuario, evidencia):
+                    print("   - Decidido en la ventana: RETIRADO (no se corrige ni se envia)")
+                    return RETIRADO, ""
+                print("   - Decidido en la ventana: se procesa normal")
 
         # Si la persona que atiende la visita manifiesta ser "Otro", no se corrige ni se envia
         if numero in correcciones.OPCION_OTRO:
@@ -237,6 +250,7 @@ def main():
         return
 
     terminados, con_otro, pendientes, no_encontrados, a_mano = [], [], [], [], []
+    retirados = []  # vivienda inexistente (lote vacio): RETIRADO en la hoja
     sin_formulario = []  # (usuario, numero) de formularios opcionales que no existen para esa persona
     sin_configurar = set()  # formularios sin correcciones cuyo inventario ya se guardo en esta corrida
     hoja_pendiente = []  # personas terminadas cuya fila en la hoja de Google no se pudo llenar
@@ -260,6 +274,15 @@ def main():
                     if excel.fue_enviado(marca):
                         print(f"Formulario {numero} ya estaba realizado (columna {letra}).")
                         continue
+                    if numero in FORMULARIOS_OPCIONALES and marca.lower() == excel.MARCA_NO_ENCONTRADO.lower():
+                        # Opcional que no existe: la persona sigue (si no, nunca se llenaba su hoja pendiente)
+                        print(f"Formulario {numero}: no existe en Kobo (columna {letra}), es opcional.")
+                        continue
+                    if marca.lower() == excel.MARCA_INEXISTENTE.lower():
+                        print(f"Formulario {numero}: vivienda inexistente (RETIRADO).")
+                        if not usuario.hoja and not llenar_hoja(hoja, usuario, retirado=True):
+                            hoja_pendiente.append(usuario)
+                        break
                     print(f"Formulario {numero} tiene '{marca}' en la columna {letra}: no se sigue con esta persona.")
                     break
                 if numero in sin_configurar:
@@ -275,6 +298,13 @@ def main():
                     excel.marcar(usuario.fila, excel.MARCA_OTRO, columna)
                     print(f"Excel: fila {usuario.fila}, columna {letra} = '{excel.MARCA_OTRO}'")
                     con_otro.append(usuario)
+                    break
+                if resultado == RETIRADO:
+                    excel.marcar(usuario.fila, excel.MARCA_INEXISTENTE, columna)
+                    print(f"Excel: fila {usuario.fila}, columna {letra} = '{excel.MARCA_INEXISTENTE}'")
+                    retirados.append(usuario)
+                    if not llenar_hoja(hoja, usuario, retirado=True):
+                        hoja_pendiente.append(usuario)
                     break
                 if resultado == NO_ENCONTRADO and numero in FORMULARIOS_OPCIONALES \
                         and kobo.motivo.startswith(excel.MARCA_NO_ENCONTRADO):
@@ -311,6 +341,7 @@ def main():
 
         print("\n" + "=" * 70)
         print(f"Con todos los formularios enviados: {len(terminados)} | Con opcion 'Otro': {len(con_otro)} "
+              f"| Vivienda inexistente (RETIRADO): {len(retirados)} "
               f"| Enviados con algo a mano: {len(a_mano)} | No encontrados o dudosos: {len(no_encontrados)} "
               f"| Sin formulario 4 en Kobo: {len(sin_formulario)} | Pendientes: {len(pendientes)} "
               f"| Hoja de Google pendiente: {len(hoja_pendiente)}")

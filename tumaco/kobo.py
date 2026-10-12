@@ -413,11 +413,8 @@ class Kobo:
         edicion.goto(resp.json()["url"])
         return edicion
 
-    def firma_actual(self, c: Coincidencia, xpath: str) -> bytes | None:
-        """Imagen que tiene hoy el registro en el campo de firma `xpath` (por la API de Kobo).
-
-        None si no tiene firma o no se pudo descargar (entonces se firma como siempre).
-        """
+    def registro_json(self, c: Coincidencia) -> dict | None:
+        """El registro completo tal como lo tiene Kobo hoy (por la API), o None si no se pudo leer."""
         m = re.search(r"/forms/([A-Za-z0-9]+)", self._url_datos.get(self.formulario, "") or self.page.url)
         _id = str(c.datos.get("_id", "")).strip()
         if not m or not _id.isdigit():
@@ -425,9 +422,19 @@ class Kobo:
         try:
             resp = self.page.request.get(f"{config.KOBO_URL}/api/v2/assets/{m.group(1)}/data/{_id}/",
                                          params={"format": "json"})
-            if not resp.ok:
-                return None
-            envio = resp.json()
+            return resp.json() if resp.ok else None
+        except Error:
+            return None
+
+    def firma_actual(self, c: Coincidencia, xpath: str) -> bytes | None:
+        """Imagen que tiene hoy el registro en el campo de firma `xpath` (por la API de Kobo).
+
+        None si no tiene firma o no se pudo descargar (entonces se firma como siempre).
+        """
+        envio = self.registro_json(c)
+        if not envio:
+            return None
+        try:
             archivo = str(envio.get(xpath, "") or "")
             adjunto = next((a for a in envio.get("_attachments", []) if archivo
                             and str(a.get("filename", "")).endswith(archivo) and str(a.get("is_deleted")) != "True"), None)
