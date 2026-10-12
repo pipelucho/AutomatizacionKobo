@@ -43,11 +43,14 @@ def lanzar(p, headless: bool = False):
 
 @contextmanager
 def abrir_navegador():
-    """Abre un navegador visible con perfil persistente y devuelve (context, page)."""
+    """Abre un navegador visible con perfil persistente y devuelve (context, page, playwright).
+
+    playwright sirve para conectarse tambien al Chrome de la hoja de Google (tumaco.sheets.Hoja).
+    """
     with sync_playwright() as p:
         context = lanzar(p)
         page = context.pages[0] if context.pages else context.new_page()
         try:
-            yield context, page
+            yield context, page, p
         finally:
             context.close()

@@ -10,9 +10,18 @@ COL_NOMBRE, COL_USUARIO, COL_CASA = 1, 2, 3  # A, B, C
 COL_REALIZADO, COL_FORMULARIO_2, COL_FORMULARIO_3, COL_FORMULARIO_4 = 4, 5, 6, 7  # D, E, F, G
 # Columna donde se marca cada formulario (numero de formulario -> columna)
 COL_PROPIETARIO = 8  # H: si la persona que atiende el formulario 1 es propietaria (Si / No)
+COL_DOCUMENTO = 9  # I: documento de la persona atendida segun el formulario 1
+COL_ANEXO = 10  # J: si se conservo el documento anexo del formulario 1 (Si / No)
+COL_HOJA = 11  # K: "Si" cuando la fila del usuario quedo llena y verificada en la hoja de Google
+# Datos del formulario 1 que se guardan para usarlos despues en la hoja de Google (campo -> columna)
+COLUMNA_DATO = {"propietario": COL_PROPIETARIO, "documento": COL_DOCUMENTO, "anexo": COL_ANEXO,
+                "hoja": COL_HOJA}
+# Formularios que algunas personas no tienen: "No encontrado" no detiene a la persona
+FORMULARIOS_OPCIONALES = {4}
 COLUMNA_FORMULARIO = {1: COL_REALIZADO, 2: COL_FORMULARIO_2, 3: COL_FORMULARIO_3, 4: COL_FORMULARIO_4}
 ENCABEZADOS = {COL_REALIZADO: "REALIZADO:", COL_FORMULARIO_2: "FORMULARIO 2:", COL_FORMULARIO_3: "FORMULARIO 3:",
-              COL_FORMULARIO_4: "FORMULARIO 4:", COL_PROPIETARIO: "PROPIETARIO:"}
+              COL_FORMULARIO_4: "FORMULARIO 4:", COL_PROPIETARIO: "PROPIETARIO:",
+              COL_DOCUMENTO: "DOCUMENTO:", COL_ANEXO: "DOCUMENTO ANEXO:", COL_HOJA: "HOJA:"}
 MARCA_REALIZADO = "Si"
 MARCA_A_MANO = "Revisar a mano"  # se envio, pero algo quedo para hacerlo a mano (ej. una cedula)
 MARCA_NO_ENCONTRADO = "No encontrado"  # formulario que no existe para esa persona (ej. el 4)
@@ -31,6 +40,10 @@ class Usuario:
     formulario2: str = ""  # valor de la columna E
     formulario3: str = ""  # valor de la columna F
     formulario4: str = ""  # valor de la columna G
+    propietario: str = ""  # columna H
+    documento: str = ""  # columna I
+    anexo: str = ""  # columna J
+    hoja: str = ""  # columna K
 
     def marca(self, numero: int) -> str:
         """Lo que dice el Excel para el formulario `numero` (vacio = falta hacerlo)."""
@@ -46,6 +59,17 @@ class Usuario:
             if not fue_enviado(marca):
                 return None
         return None
+
+
+    def terminado(self) -> bool:
+        """Todos los formularios enviados (uno opcional como el 4 puede ser 'No encontrado')."""
+        for numero in sorted(COLUMNA_FORMULARIO):
+            marca = self.marca(numero)
+            opcional_sin_formulario = (numero in FORMULARIOS_OPCIONALES
+                                       and marca.lower() == MARCA_NO_ENCONTRADO.lower())
+            if not (fue_enviado(marca) or opcional_sin_formulario):
+                return False
+        return True
 
 
 def fue_enviado(marca: str) -> bool:
@@ -69,13 +93,14 @@ def _texto(valor) -> str:
 def cargar_tabla() -> pd.DataFrame:
     """Lee el Excel UNA sola vez: nombre, usuario, casa, marcas de cada formulario y la fila real de Excel."""
     crudo = pd.read_excel(config.EXCEL_PATH, header=0, dtype=object)
-    while len(crudo.columns) < max(COLUMNA_FORMULARIO.values()):  # las columnas D a G pueden no existir todavia
+    while len(crudo.columns) < max(*COLUMNA_FORMULARIO.values(), *COLUMNA_DATO.values()):  # D a I pueden no existir
         crudo[f"_vacia_{len(crudo.columns)}"] = None
     tabla = pd.DataFrame({
         "nombre": crudo.iloc[:, COL_NOMBRE - 1],
         "usuario": crudo.iloc[:, COL_USUARIO - 1],
         "casa": crudo.iloc[:, COL_CASA - 1],
         **{f"formulario{n}": crudo.iloc[:, col - 1] for n, col in COLUMNA_FORMULARIO.items()},
+        **{campo: crudo.iloc[:, col - 1] for campo, col in COLUMNA_DATO.items()},
     }).map(_texto)
     tabla["fila"] = crudo.index + 2  # la fila 1 son los encabezados
     guardar_pendientes()  # marcas de una corrida anterior en la que el Excel estaba abierto
@@ -84,14 +109,16 @@ def cargar_tabla() -> pd.DataFrame:
 
 def pendientes(tabla: pd.DataFrame) -> list[Usuario]:
     """Usuarios con algo por hacer, en el orden del Excel: tienen un formulario sin marca y todos
-    los anteriores enviados. Una marca como 'Tiene otro' o 'No encontrado' detiene a esa persona.
+    los anteriores enviados, o ya terminaron los formularios y falta llenar su fila en la hoja de Google.
+    Una marca como 'Tiene otro' o 'No encontrado' detiene a esa persona.
     """
     usuarios = [
         Usuario(fila=int(f.fila), nombre=f.nombre, usuario=f.usuario, casa=f.casa,
-                **{f"formulario{n}": getattr(f, f"formulario{n}") for n in COLUMNA_FORMULARIO})
+                **{f"formulario{n}": getattr(f, f"formulario{n}") for n in COLUMNA_FORMULARIO},
+                **{campo: getattr(f, campo) for campo in COLUMNA_DATO})
         for f in tabla[tabla["usuario"] != ""].itertuples(index=False)
     ]
-    return [u for u in usuarios if u.siguiente() is not None]
+    return [u for u in usuarios if u.siguiente() is not None or (u.terminado() and not u.hoja)]
 
 
 def marcar_realizado(fila: int):
@@ -145,6 +172,7 @@ def guardar_pendientes(esperar: bool = False) -> bool:
 def aplicar_pendientes(tabla: pd.DataFrame) -> pd.DataFrame:
     """Pone en la tabla leida las marcas que aun no llegaron al Excel (para no repetir formularios)."""
     campo = {col: f"formulario{n}" for n, col in COLUMNA_FORMULARIO.items()}
+    campo.update({col: nombre for nombre, col in COLUMNA_DATO.items()})
     for fila, columna, valor in _leer_pendientes():
         if columna in campo:
             tabla.loc[tabla["fila"] == fila, campo[columna]] = valor

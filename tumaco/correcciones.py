@@ -116,6 +116,11 @@ PREGUNTA_PROPIETARIO = {
     1: f"{FORM} > section:nth-child(6) > fieldset:nth-child(2)",
 }
 
+# PERSONA ATENDIDA: documento, que se guarda en la columna I del Excel para la hoja de Google
+CAMPO_DOCUMENTO = {
+    1: f"{FORM} > section:nth-child(5) > label:nth-child(3)",
+}
+
 # Seccion donde se cargan los documentos anexos, por formulario
 DOCUMENTOS = {
     1: f"{FORM} > section:nth-child(11)",
@@ -148,6 +153,7 @@ class Resultado:
     cambios: list = field(default_factory=list)  # resumen de cada cambio hecho
     cedulas: dict = field(default_factory=dict)  # lado ('cara'/'reverso') -> jpg ajustado
     revisar: list = field(default_factory=list)  # lo que no se pudo hacer y queda para hacer a mano
+    anexo: str | None = None  # documento anexo: "Si" si se conservo, "No" si se elimino o no habia
 
 
 def aplicar(page: Page, numero_formulario: int, usuario=None) -> Resultado:
@@ -203,8 +209,10 @@ def aplicar(page: Page, numero_formulario: int, usuario=None) -> Resultado:
                 resultado.revisar.append(problema)
     if numero_formulario in DOCUMENTOS:
         print("\nDocumentos anexos:")
-        for doc in revisar_documentos(page, DOCUMENTOS[numero_formulario]):
+        documentos = revisar_documentos(page, DOCUMENTOS[numero_formulario])
+        for doc in documentos:
             cambios.append(f"{doc['pregunta']}: {doc['archivo']} -> {doc['decision']}")
+        resultado.anexo = "Si" if any(d["decision"] == "conservar" for d in documentos) else "No"
     return resultado
 
 
@@ -280,6 +288,33 @@ def es_propietario(page: Page, numero_formulario: int) -> tuple[str, str] | None
     if not opcion:
         return "Sin respuesta", ""
     return ("Si" if norm(opcion).startswith("propietari") else "No"), opcion
+
+
+def hay_documento_anexo(page: Page, numero_formulario: int) -> str | None:
+    """'Si' si el formulario tiene hoy un documento anexo cargado, 'No' si no (sin preguntar nada).
+    Sirve para completar la columna J de formularios hechos antes de guardar ese dato."""
+    selector = DOCUMENTOS.get(numero_formulario)
+    seccion = page.locator(selector) if selector else None
+    if seccion is None or not seccion.count():
+        return None
+    preguntas = seccion.locator("label:has(input[type=file])")
+    cargados = [preguntas.nth(i).evaluate(_JS_INFO_DOCUMENTO)["archivo"] for i in range(preguntas.count())]
+    return "Si" if any(cargados) else "No"
+
+
+def leer_documento(page: Page, numero_formulario: int) -> str | None:
+    """Documento de la persona atendida, solo los numeros (ej. '596318 47' -> '59631847').
+
+    None si el formulario no tiene ese campo configurado o no se encontro.
+    """
+    selector = CAMPO_DOCUMENTO.get(numero_formulario)
+    if not selector:
+        return None
+    campo = page.locator(selector).locator("input").first
+    if not campo.count():
+        print(f"   [!] No encontre el campo de documento: {selector}")
+        return None
+    return "".join(c for c in campo.input_value() if c.isdigit())
 
 
 # ---------- Campos de texto ----------
