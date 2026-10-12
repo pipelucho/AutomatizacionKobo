@@ -1,10 +1,12 @@
 """Correcciones que se aplican dentro del formulario de edicion (Enketo) de cada formulario."""
+import base64
 import json
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from playwright.sync_api import Locator, Page, TimeoutError
 
-from . import config
+from . import cedula, config
 from .humano import clic, escribir, pausa
 from .texto import norm
 
@@ -16,7 +18,6 @@ MAYUSCULAS = {
         f"{FORM} > section:nth-child(4) > label:nth-child(8)",
         f"{FORM} > section:nth-child(5) > label:nth-child(5)",
         f"{FORM} > section:nth-child(5) > label:nth-child(6)",
-        f"{FORM} > section:nth-child(10) > section.or-group.or-branch.or-appearance-field-list > label:nth-child(2)",
     ],
     2: [
         f"{FORM} > section:nth-child(5) > label:nth-child(5)",
@@ -45,6 +46,8 @@ VALORES_DEL_EXCEL = {
     1: [
         # PERSONA ATENDIDA: nombre
         (f"{FORM} > section:nth-child(5) > label:nth-child(2)", "nombre"),
+        # PERSONA ATENDIDA (junto a su firma): nombre
+        (f"{FORM} > section:nth-child(10) > section.or-group.or-branch.or-appearance-field-list > label:nth-child(2)", "nombre"),
     ],
     2: [
         (f"{FORM} > section:nth-child(5) > label:nth-child(2)", "nombre"),
@@ -69,18 +72,34 @@ FIRMAS = {
     2: {"seccion": f"{FORM} > section:nth-child(5) > section:nth-child(18)", "trazos": "contratista.json"},  # misma firma
 }
 
+# Fotos de la cedula que se recortan al borde del documento y se enderezan: (pregunta, lado)
+CEDULAS = {
+    2: [
+        (f"{FORM} > section:nth-child(6) > label:nth-child(2)", "cara"),
+        (f"{FORM} > section:nth-child(6) > label:nth-child(3)", "reverso"),
+    ],
+}
+
 CONFIRMAR_ELIMINAR = (
     "body > div.vex.vex-theme-plain > div > form > div.vex-dialog-buttons"
     " > button.btn.btn-primary.small.vex-dialog-button.vex-first"
 )
 
 
-def aplicar(page: Page, numero_formulario: int, usuario=None) -> list[str]:
-    """Aplica las correcciones del formulario y devuelve un resumen de lo que cambio.
+@dataclass
+class Resultado:
+    cambios: list = field(default_factory=list)  # resumen de cada cambio hecho
+    cedulas: dict = field(default_factory=dict)  # lado ('cara'/'reverso') -> jpg ajustado
+    revisar: list = field(default_factory=list)  # lo que no se pudo hacer y queda para hacer a mano
+
+
+def aplicar(page: Page, numero_formulario: int, usuario=None) -> Resultado:
+    """Aplica las correcciones del formulario: que cambio, cedulas ajustadas y que revisar a mano.
 
     `usuario` (excel.Usuario) aporta los datos corregidos que se escriben tal cual en Kobo.
     """
-    cambios = []
+    resultado = Resultado()
+    cambios = resultado.cambios
     if usuario is not None:
         print("\nDatos del Excel:")
         for selector, atributo in VALORES_DEL_EXCEL.get(numero_formulario, []):
@@ -108,16 +127,28 @@ def aplicar(page: Page, numero_formulario: int, usuario=None) -> list[str]:
         print("\nFirma del responsable contratista:")
         if rehacer_firma(page, firma["seccion"], firma["trazos"]):
             cambios.append("Firma responsable contratista: redibujada")
+    if numero_formulario in CEDULAS:
+        print("\nFotos de la cedula:")
+        for selector, lado in CEDULAS[numero_formulario]:
+            cambio, jpg, problema = ajustar_cedula(page, selector, lado, usuario)
+            if cambio:
+                cambios.append(cambio)
+            if jpg:
+                resultado.cedulas[lado] = jpg
+            if problema:
+                print(f"   [!] {problema[0].upper() + problema[1:]}: se deja la original para hacerlo a mano")
+                resultado.revisar.append(problema)
     if numero_formulario in DOCUMENTOS:
         print("\nDocumentos anexos:")
         for doc in revisar_documentos(page, DOCUMENTOS[numero_formulario]):
             cambios.append(f"{doc['pregunta']}: {doc['archivo']} -> {doc['decision']}")
-    return cambios
+    return resultado
 
 
 def tiene_correcciones(numero_formulario: int) -> bool:
     """True si el formulario ya tiene correcciones configuradas (solo entonces se envia a Kobo)."""
-    return any(numero_formulario in m for m in (MAYUSCULAS, VALORES_FIJOS, VALORES_DEL_EXCEL, DOCUMENTOS, FIRMAS))
+    return any(numero_formulario in m for m in (MAYUSCULAS, VALORES_FIJOS, VALORES_DEL_EXCEL, DOCUMENTOS, FIRMAS,
+                                                 CEDULAS))
 
 
 def inventario_campos(page: Page, numero_formulario: int) -> Path:
@@ -221,14 +252,13 @@ def rehacer_firma(page: Page, selector_seccion: str, archivo_trazos: str) -> boo
         return False
     lienzo = pregunta.locator("canvas").first
     lienzo.evaluate("el => el.scrollIntoView({block: 'center'})")
-    pausa(page, 0.5, 1.0)
+    pausa(page, 0.2, 0.4)
 
     # 1. Borrar la firma actual
     clic(pregunta.locator("div.draw-widget__footer > button").first)
     confirmar = page.locator(CONFIRMAR_ELIMINAR)
     try:
         confirmar.wait_for(timeout=5_000)
-        pausa(page, 0.3, 0.7)
         clic(confirmar)
         confirmar.wait_for(state="detached", timeout=10_000)
         print("   - Firma anterior borrada")
@@ -237,7 +267,7 @@ def rehacer_firma(page: Page, selector_seccion: str, archivo_trazos: str) -> boo
 
     # 2. Dibujarla centrada en el lienzo, ocupando hasta el 80% del espacio
     lienzo.evaluate("el => el.scrollIntoView({block: 'center'})")
-    pausa(page, 0.4, 0.8)
+    pausa(page, 0.1, 0.2)
     caja = lienzo.bounding_box()
     escala = min(0.8 * caja["width"] / firma["ancho"], 0.8 * caja["height"] / firma["alto"])
     x0 = caja["x"] + (caja["width"] - firma["ancho"] * escala) / 2
@@ -250,11 +280,147 @@ def rehacer_firma(page: Page, selector_seccion: str, archivo_trazos: str) -> boo
         page.mouse.move(*punto(trazo[0]))
         page.mouse.down()
         for p in trazo[1:]:
-            page.mouse.move(*punto(p), steps=3)
+            page.mouse.move(*punto(p))
         page.mouse.up()
-        pausa(page, 0.05, 0.2)
-    pausa(page, 0.8, 1.2)
+        pausa(page, 0.01, 0.04)
+    pausa(page, 0.2, 0.4)  # que el lienzo guarde la firma
     print(f"   * Firma dibujada ({len(firma['trazos'])} trazos)")
+    return True
+
+
+# ---------- Fotos de la cedula ----------
+
+def ajustar_cedula(page: Page, selector: str, lado: str, usuario=None) -> tuple[str | None, bytes | None, str | None]:
+    """Recorta la foto de la cedula al borde del documento, la endereza y la vuelve a subir.
+
+    Devuelve (cambio, jpg ajustado, problema):
+    - sin foto cargada: (None, None, None) -> se salta este paso.
+    - ajustada y subida: (resumen, jpg, None).
+    - hay foto pero no se pudo ajustar con seguridad: (None, None, motivo) -> se deja la
+      original y el motivo se anota en el Excel para hacerlo a mano.
+    El original y el ajuste quedan guardados en salida/cedulas/.
+    """
+    pregunta = page.locator(selector).first
+    if not pregunta.count():
+        return None, None, f"no encontre el campo de la cedula {lado}"
+    info = pregunta.evaluate(_JS_INFO_DOCUMENTO)
+    if not info["archivo"]:
+        print(f"   - Cedula {lado}: sin foto cargada, se salta")
+        return None, None, None
+    if not info["imagen"]:
+        return None, None, f"la cedula {lado} no es una imagen ({info['archivo']})"
+
+    pregunta.scroll_into_view_if_needed()
+    print(f"   - Cedula {lado}: descargando {info['archivo']}...")
+    esperar_imagen(page, pregunta)  # las fotos de celular son pesadas: que termine de cargar
+    info = pregunta.evaluate(_JS_INFO_DOCUMENTO)
+    datos = _descargar_imagen(page, pregunta, info["imagen"]) if info["imagen"] else None
+    if not datos:
+        return None, None, f"no se pudo descargar la cedula {lado}"
+    foto = cedula.leer(datos)
+    if foto is None:
+        return None, None, f"la cedula {lado} no es una imagen valida"
+    if "-ajustada" in info["archivo"]:  # ya se ajusto en una corrida anterior: no se recorta otra vez
+        print(f"   - Cedula {lado}: ya estaba ajustada ({info['archivo']})")
+        return None, cedula.a_jpg(foto), None
+
+    carpeta = config.OUTPUT_DIR / "cedulas"
+    carpeta.mkdir(parents=True, exist_ok=True)
+    prefijo = f"{getattr(usuario, 'usuario', '') or 'sin_usuario'}_{lado}"
+    (carpeta / f"{prefijo}_original{Path(info['archivo']).suffix or '.jpg'}").write_bytes(datos)
+
+    resultado = cedula.enderezar_cedula(foto, lado)
+    if resultado is None:
+        return None, None, f"no se encontro el borde de la cedula {lado} en la foto"
+    ajustada, seguro, nota = resultado
+    if not seguro:
+        (carpeta / f"{prefijo}_dudosa.jpg").write_bytes(cedula.a_jpg(ajustada))
+        return None, None, f"no es seguro hacia donde va arriba la cedula {lado}"
+
+    jpg = cedula.a_jpg(ajustada)
+    (carpeta / f"{prefijo}_ajustada.jpg").write_bytes(jpg)
+    nombre = f"{Path(info['archivo']).stem}-ajustada.jpg"
+    if not reemplazar_archivo(page, pregunta, nombre, jpg):
+        return None, None, f"no se pudo subir la cedula {lado} ajustada"
+    print(f"   * Cedula {lado}: recortada y enderezada ({nota})")
+    return f"Cedula {lado}: {info['archivo']} -> {nombre}", jpg, None
+
+
+def _descargar_imagen(page: Page, pregunta: Locator, src: str, intentos: int = 4) -> bytes | None:
+    """Bytes de la imagen que muestra el formulario (enlace de Kobo, blob: o data:).
+
+    Prueba varias formas y reintenta con esperas crecientes (Kobo a veces tarda o falla una vez).
+    """
+    if src.startswith("data:"):
+        return base64.b64decode(src.split(",", 1)[1])
+    formas = [
+        ("navegador", lambda: base64.b64decode(page.evaluate(_JS_LEER_URL, src) or "")),
+        ("sesion de Kobo", lambda: _bajar_con_sesion(page, src)),
+        ("imagen cargada", lambda: base64.b64decode(pregunta.evaluate(_JS_LEER_IMG) or "")),
+    ]
+    if not src.startswith("blob:"):  # un enlace normal: primero con la sesion (no depende de CORS)
+        formas.insert(0, formas.pop(1))
+    for intento in range(1, intentos + 1):
+        for nombre, forma in formas:
+            try:
+                datos = forma()
+                if datos and len(datos) > 1000:
+                    return datos
+            except Exception as e:
+                print(f"   (descarga por {nombre} fallo: {str(e).splitlines()[0][:120]})")
+        if intento < intentos:
+            espera = 2 * intento
+            print(f"   (no se pudo descargar la imagen, reintento {intento + 1}/{intentos} en {espera} s)")
+            page.wait_for_timeout(espera * 1000)
+    return None
+
+
+def _bajar_con_sesion(page: Page, src: str) -> bytes | None:
+    resp = page.request.get(src, timeout=90_000)  # usa la sesion de Kobo del navegador
+    if not resp.ok:
+        raise RuntimeError(f"Kobo respondio {resp.status}")
+    return resp.body()
+
+
+def esperar_imagen(page: Page, pregunta: Locator, timeout_ms: int = 30_000) -> bool:
+    """Espera a que la vista previa de la imagen de la pregunta este completamente cargada."""
+    try:
+        page.wait_for_function(
+            "(el) => { const i = el.querySelector('.file-preview img');"
+            " return !!i && !!i.src && i.complete && i.naturalWidth > 0; }",
+            arg=pregunta.element_handle(), timeout=timeout_ms, polling=300)
+        return True
+    except TimeoutError:
+        print("   (la vista previa de la imagen no termino de cargar)")
+        return False
+
+
+def reemplazar_archivo(page: Page, pregunta: Locator, nombre: str, datos: bytes) -> bool:
+    """Quita el archivo cargado (boton + Aceptar) y sube el nuevo en la misma pregunta. True si quedo."""
+    if pregunta.locator(".file-preview img, .fake-file-input").count():
+        boton = pregunta.locator(":scope > div > button").first
+        if boton.count():
+            clic(boton)
+            confirmar = page.locator(CONFIRMAR_ELIMINAR)
+            try:
+                confirmar.wait_for(timeout=5_000)
+                pausa(page, 0.3, 0.7)
+                clic(confirmar)
+                confirmar.wait_for(state="detached", timeout=10_000)
+            except TimeoutError:
+                pass  # algunos campos reemplazan sin pedir confirmacion
+    entrada = pregunta.locator("input[type=file]").first
+    entrada.set_input_files({"name": nombre, "mimeType": "image/jpeg", "buffer": datos})
+    # Esperar a que Enketo muestre el archivo nuevo
+    try:
+        page.wait_for_function(
+            "([el, n]) => (el.querySelector('.fake-file-input')?.value || el.querySelector('.fake-file-input')?.innerText || '').includes(n.split('.')[0])",
+            arg=[pregunta.element_handle(), nombre], timeout=30_000)
+    except TimeoutError:
+        print(f"   [!] Enketo no mostro el archivo nuevo ({nombre})")
+        return False
+    esperar_imagen(page, pregunta)  # que la foto nueva ya se vea antes de seguir (PDF y envio)
+    pausa(page, 0.5, 1.0)
     return True
 
 
@@ -275,8 +441,10 @@ def revisar_documentos(page: Page, selector_seccion: str) -> list[dict]:
     for i in range(preguntas.count()):
         pregunta = preguntas.nth(i)
         info = pregunta.evaluate(_JS_INFO_DOCUMENTO)
+        if not info["visible"]:
+            continue  # pregunta que no aplica en este registro
         if not info["archivo"]:
-            print(f"   - {info['pregunta']}: sin documento cargado")
+            print(f"   - {info['pregunta']}: sin documento cargado, se continua")
             continue
 
         pregunta.scroll_into_view_if_needed()
@@ -308,8 +476,12 @@ _JS_INFO_DOCUMENTO = r"""
 (label) => {
   const texto = el => (el ? (el.value || el.innerText || el.textContent || '') : '').trim();
   const input = label.querySelector('input[type=file]');
-  const img = label.querySelector('.file-preview img');
-  const enlace = label.querySelector('a.btn-download[href], .file-feedback a[href], a[download][href]');
+  // Enketo deja el boton de descarga y la vista previa aunque no haya archivo: solo cuentan con direccion real
+  const img = [...label.querySelectorAll('.file-preview img')].find(i => (i.getAttribute('src') || '').trim());
+  const enlace = [...label.querySelectorAll('a.btn-download, .file-feedback a, a[download]')].find(a => {
+    const h = (a.getAttribute('href') || '').trim();
+    return h && h !== '#' && !h.startsWith('javascript') && a.href !== location.href;
+  });
   const archivo = texto(label.querySelector('.fake-file-input'))
     || (input && input.getAttribute('data-loaded-file-name'))
     || (img || enlace ? 'documento cargado' : '');
@@ -317,7 +489,8 @@ _JS_INFO_DOCUMENTO = r"""
     pregunta: texto(label.querySelector('.question-label')) || 'Documento',
     archivo,
     imagen: img ? img.src : null,
-    enlace: enlace && enlace.getAttribute('href') !== '#' ? enlace.href : null,
+    enlace: enlace ? enlace.href : null,
+    visible: label.offsetParent !== null,
   };
 }
 """
@@ -428,5 +601,33 @@ _JS_INVENTARIO = r"""
       visible: q.offsetParent !== null,
     };
   });
+}
+"""
+
+# Descarga una imagen desde la pagina (sirve para blob: y enlaces del mismo sitio) -> base64
+_JS_LEER_URL = r"""
+async (src) => {
+  let resp;
+  try { resp = await fetch(src, { credentials: 'include' }); }
+  catch (e) { resp = await fetch(src); }  // otro dominio que no acepta credenciales
+  if (!resp.ok) throw new Error('respuesta ' + resp.status);
+  const blob = await resp.blob();
+  return await new Promise(ok => {
+    const r = new FileReader();
+    r.onload = () => ok(String(r.result).split(',')[1] || null);
+    r.readAsDataURL(blob);
+  });
+}
+"""
+
+# Ultimo recurso: copia la imagen ya cargada en la vista previa (a tamaño real) -> base64 JPG
+_JS_LEER_IMG = r"""
+(el) => {
+  const i = el.querySelector('.file-preview img');
+  if (!i || !i.complete || !i.naturalWidth) return null;
+  const c = document.createElement('canvas');
+  c.width = i.naturalWidth; c.height = i.naturalHeight;
+  c.getContext('2d').drawImage(i, 0, 0);
+  return c.toDataURL('image/jpeg', 0.95).split(',')[1];
 }
 """

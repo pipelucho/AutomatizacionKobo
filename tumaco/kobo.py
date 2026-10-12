@@ -363,7 +363,7 @@ class Kobo:
         self._esperar_tabla_estable(antes)
         return True
 
-    def _esperar_red(self, timeout_ms: int = 15_000):
+    def _esperar_red(self, timeout_ms: int = 4_000):
         try:
             self.page.wait_for_load_state("networkidle", timeout=timeout_ms)
         except TimeoutError:

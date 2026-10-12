@@ -33,6 +33,16 @@ def guardar_pdf(page: Page, carpeta: Path) -> Path:
     titulo = nombre_valido(page.title()) or "formulario"
     destino = carpeta / f"{titulo}.pdf"
 
+    # Que las fotos de documentos anexos (cedulas) esten cargadas antes de imprimir.
+    # Solo esas: otras imagenes de la pagina pueden no cargar nunca y harian esperar de mas.
+    try:
+        page.wait_for_function(
+            "() => [...document.querySelectorAll('.file-preview img')].filter(i => i.getAttribute('src'))"
+            ".every(i => i.complete && i.naturalWidth > 0)",
+            timeout=20_000, polling=300)
+    except Exception:
+        print("   (alguna foto de documento no termino de cargar; se imprime igual)")
+
     # Activar el modo impresion para que el formulario acomode su diseño como con Ctrl+P
     page.evaluate("() => window.dispatchEvent(new Event('beforeprint'))")
     page.emulate_media(media="print")
@@ -60,4 +70,23 @@ def guardar_pdf(page: Page, carpeta: Path) -> Path:
         print(f"   (se reemplaza el PDF anterior: {destino.name})")
     destino.write_bytes(base64.b64decode(resultado["data"]))
     print(f"   PDF guardado: {destino}")
+    return destino
+
+
+def guardar_documento(carpeta: Path, cara: bytes, reverso: bytes) -> Path:
+    """DOCUMENTO.pdf: una hoja carta con la cara de la cedula arriba y el reverso abajo, centradas."""
+    from io import BytesIO
+
+    from PIL import Image
+
+    dpi = 150
+    hoja = Image.new("RGB", (int(8.5 * dpi), int(11 * dpi)), "white")
+    ancho = int(4.7 * dpi)  # ~12 cm, como el ejemplo
+    for datos, arriba in ((cara, 1.0), (reverso, 6.7)):  # pulgadas desde el borde superior
+        img = Image.open(BytesIO(datos)).convert("RGB")
+        img = img.resize((ancho, round(ancho * img.height / img.width)), Image.LANCZOS)
+        hoja.paste(img, ((hoja.width - ancho) // 2, int(arriba * dpi)))
+    destino = carpeta / "DOCUMENTO.pdf"
+    hoja.save(destino, "PDF", resolution=dpi, quality=90)
+    print(f"   Cedula guardada en un solo PDF: {destino}")
     return destino
