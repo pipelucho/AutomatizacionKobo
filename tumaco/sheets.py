@@ -74,10 +74,17 @@ def _id_hoja() -> str:
 def leer_filas(hoja: Page) -> list[list[str]]:
     """Contenido actual de la pestana (CSV descargado con la sesion del usuario)."""
     gid = config.GOOGLE_SHEET_URL.split("gid=")[1]
-    resp = hoja.context.request.get(f"https://docs.google.com/spreadsheets/d/{_id_hoja()}/export?format=csv&gid={gid}")
-    if not resp.ok:
-        raise RuntimeError(f"No se pudo leer la hoja (HTTP {resp.status})")
-    return list(csv.reader(io.StringIO(resp.text())))
+    url = f"https://docs.google.com/spreadsheets/d/{_id_hoja()}/export?format=csv&gid={gid}"
+    # 429 = Google pide esperar (se lee la hoja muchas veces seguidas); 5xx = falla pasajera: se reintenta
+    for espera in (20, 40, 60, None):
+        resp = hoja.context.request.get(url)
+        if resp.ok:
+            return list(csv.reader(io.StringIO(resp.text())))
+        if espera is None or not (resp.status == 429 or resp.status >= 500):
+            break
+        print(f"   (Google respondio HTTP {resp.status} al leer la hoja: se espera {espera} s y se reintenta)")
+        time.sleep(espera)
+    raise RuntimeError(f"No se pudo leer la hoja (HTTP {resp.status})")
 
 
 def _celda(filas, fila: int, col: str) -> str:
