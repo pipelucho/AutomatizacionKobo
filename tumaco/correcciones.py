@@ -375,8 +375,10 @@ def observacion_hoja(page: Page, usuario, envio: dict, nombre_final: str) -> str
     notas = notas_formulario1(envio)
     propuesta = proponer_observacion(notas)
     otra_persona = bool(nombre_final) or getattr(usuario, "propietario", "").lower() == "no"
-    if not (propuesta or otra_persona) or not config.PREGUNTAR_DUDAS:
-        return propuesta if not config.PREGUNTAR_DUDAS else ""
+    if not (propuesta or otra_persona):
+        return "N/A"  # CONFIRMADO sin nada que explicar: como lo escriben los demas equipos
+    if not config.PREGUNTAR_DUDAS:
+        return propuesta
     print("   ? Observacion para la hoja (columna L) -> decide en la ventana del navegador...")
     elegidos = ventanas.revisar_cambios(
         page, "Observación para la hoja de Google (columna L)",

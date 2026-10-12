@@ -1,7 +1,7 @@
 import sys
 import time
 
-from tumaco import casos, config, correcciones, excel, pdf, registro, sheets
+from tumaco import casos, config, correcciones, excel, firmas, pdf, registro, sheets
 from tumaco.browser import abrir_navegador
 from tumaco.kobo import Kobo
 
@@ -179,6 +179,14 @@ def procesar_formulario(kobo: Kobo, usuario: excel.Usuario, numero: int) -> tupl
         t.marcar("envio")
         if enviado:
             guardar_decisiones(usuario, numero, resultado)
+            # La firma que quedo en Kobo debe ser la del bot: a veces no se pudo borrar la de campo y el
+            # dibujo no se guardo (paso con el F4 de 299). Si no lo es, queda para revisar a mano.
+            if numero in correcciones.FIRMAS:
+                quedo = kobo.firma_actual(encontrado, correcciones.FIRMAS[numero]["xpath"])
+                ok, como = firmas.es_la_del_bot(quedo, correcciones.FIRMAS[numero]["trazos"])
+                if not ok:
+                    print(f"   [!] La firma del contratista que quedo en Kobo no es la del bot ({como})")
+                    nota = (nota + "; " if nota else "Revisar a mano: ") + "la firma del contratista no quedo"
         # Columna J: solo si quedo enviado, para que coincida con lo que quedo en Kobo
         if enviado and resultado.anexo:
             excel.marcar(usuario.fila, resultado.anexo, excel.COL_ANEXO)
