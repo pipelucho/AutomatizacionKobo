@@ -26,6 +26,8 @@ def decidir_nombre(kobo: str, excel: str, hoja: str = "") -> tuple[str, str | No
     kobo, excel, hoja = limpio(kobo), limpio(excel), limpio(hoja)
     if not excel:
         return kobo, None
+    if not re.search(r"[A-ZÑÁÉÍÓÚ]{2,}", kobo):  # sin letras (ej. la cedula escrita como nombre): no es un nombre
+        return excel, None
     if not kobo or similitud_nombre(kobo, excel) >= UMBRAL_MISMO_NOMBRE:
         return excel, None
     if hoja and similitud_nombre(kobo, hoja) >= UMBRAL_MISMO_NOMBRE:
