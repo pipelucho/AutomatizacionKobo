@@ -46,7 +46,8 @@ def leer_log() -> tuple[Path, dict]:
 
 def carpeta(usuario: excel.Usuario) -> Path | None:
     """Carpeta de la persona sin crearla ni renombrarla (solo para revisar)."""
-    encontradas = sorted(config.CONTINGENCIAL_DIR.glob(f"{usuario.usuario}_*"))
+    encontradas = sorted([*config.CONTINGENCIAL_DIR.glob(f"{usuario.usuario}_*"),
+                          *config.TERMINADOS_DIR.glob(f"{usuario.usuario}_*")])
     return encontradas[0] if encontradas else None
 
 

@@ -165,6 +165,11 @@ def procesar_formulario(kobo: Kobo, usuario: excel.Usuario, numero: int) -> tupl
             usuario.anexo = resultado.anexo
             print(f"Excel: fila {usuario.fila}, columna {excel.letra(excel.COL_ANEXO)} (documento anexo) = "
                   f"'{resultado.anexo}'")
+        if enviado and resultado.soporte:  # texto de la ventana del documento, para la columna J de la hoja
+            excel.marcar(usuario.fila, resultado.soporte, excel.COL_SOPORTE)
+            usuario.soporte = resultado.soporte
+            print(f"Excel: fila {usuario.fila}, columna {excel.letra(excel.COL_SOPORTE)} (soportes hoja) = "
+                  f"'{resultado.soporte}'")
     finally:
         # Cerrar SIEMPRE la pestaña de edicion (tambien si hubo error) para no acumular pestañas.
         # Un fallo aqui no debe hacer perder un envio que Kobo ya confirmo.

@@ -15,16 +15,19 @@ COL_ANEXO = 10  # J: si se conservo el documento anexo del formulario 1 (Si / No
 COL_HOJA = 11  # K: "Si" cuando la fila del usuario quedo llena y verificada en la hoja de Google
 COL_NOMBRE_FINAL = 12  # L: nombre de quien atendio (Kobo) cuando es otra persona que la del Excel
 COL_CASA_FINAL = 13  # M: casa que quedo en Kobo cuando no es la del Excel (el Excel estaba mal)
+COL_SOPORTE = 14  # N: texto de soportes para la columna J de la hoja (escrito en la ventana del documento)
 # Datos del formulario 1 que se guardan para usarlos despues en la hoja de Google (campo -> columna)
 COLUMNA_DATO = {"propietario": COL_PROPIETARIO, "documento": COL_DOCUMENTO, "anexo": COL_ANEXO,
-                "hoja": COL_HOJA, "nombre_final": COL_NOMBRE_FINAL, "casa_final": COL_CASA_FINAL}
+                "hoja": COL_HOJA, "nombre_final": COL_NOMBRE_FINAL, "casa_final": COL_CASA_FINAL,
+                "soporte": COL_SOPORTE}
 # Formularios que algunas personas no tienen: "No encontrado" no detiene a la persona
 FORMULARIOS_OPCIONALES = {4}
 COLUMNA_FORMULARIO = {1: COL_REALIZADO, 2: COL_FORMULARIO_2, 3: COL_FORMULARIO_3, 4: COL_FORMULARIO_4}
 ENCABEZADOS = {COL_REALIZADO: "REALIZADO:", COL_FORMULARIO_2: "FORMULARIO 2:", COL_FORMULARIO_3: "FORMULARIO 3:",
               COL_FORMULARIO_4: "FORMULARIO 4:", COL_PROPIETARIO: "PROPIETARIO:",
               COL_DOCUMENTO: "DOCUMENTO:", COL_ANEXO: "DOCUMENTO ANEXO:", COL_HOJA: "HOJA:",
-              COL_NOMBRE_FINAL: "NOMBRE FINAL:", COL_CASA_FINAL: "CASA FINAL:"}
+              COL_NOMBRE_FINAL: "NOMBRE FINAL:", COL_CASA_FINAL: "CASA FINAL:",
+              COL_SOPORTE: "SOPORTES HOJA:"}
 MARCA_REALIZADO = "Si"
 MARCA_A_MANO = "Revisar a mano"  # se envio, pero algo quedo para hacerlo a mano (ej. una cedula)
 MARCA_NO_ENCONTRADO = "No encontrado"  # formulario que no existe para esa persona (ej. el 4)
@@ -49,6 +52,7 @@ class Usuario:
     hoja: str = ""  # columna K
     nombre_final: str = ""  # columna L
     casa_final: str = ""  # columna M
+    soporte: str = ""  # columna N
     # Datos iniciales del usuario en la hoja de Google (no se guardan en el Excel)
     ref_nombre: str = ""
     ref_direccion: str = ""

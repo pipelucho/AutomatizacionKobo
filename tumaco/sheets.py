@@ -142,8 +142,9 @@ def valores_usuario(usuario, direccion_inicial: str) -> dict[str, str]:
         COL_DOCUMENTO: usuario.documento,
         COL_DIRECCION: direccion,
         COL_VERIFICACION: "CONFIRMADO" if usuario.propietario.lower() == "si" else "INCORPORADO",
-        COL_SOPORTE: ("CEDULA DE CIUDADANIA Y RECIBO DE ENERGIA" if usuario.anexo.lower() == "si"
-                      else "CEDULA DE CIUDADANIA"),
+        # El texto escrito en la ventana del documento (columna N); si no hubo ventana, el de siempre
+        COL_SOPORTE: (getattr(usuario, "soporte", "") or
+                      (reglas.SOPORTE_CON_ANEXO if usuario.anexo.lower() == "si" else reglas.SOPORTE_SIN_ANEXO)),
         COL_RESPONSABLE: RESPONSABLE,
     }
 

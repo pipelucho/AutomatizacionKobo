@@ -76,3 +76,9 @@ def casa_corta(texto: str) -> str:
     """'CASA 298 SECTOR 1' -> 'CASA 298'; 'CASA 317 A LA LIBERTAD' -> 'CASA 317 A'."""
     m = re.search(r"\bCASA\s*(\d+)(?:\s?([A-Z])(?![A-Z0-9]))?", normalizar_direccion(texto))
     return f"CASA {m.group(1)}" + (f" {m.group(2)}" if m.group(2) else "") if m else ""
+
+
+# Columna J de la hoja (justificacion / soporte): texto por defecto segun el documento anexo del formulario 1.
+# En la ventana del documento se puede cambiar por el soporte real (queda en la columna N del Excel).
+SOPORTE_CON_ANEXO = "CEDULA DE CIUDADANIA Y RECIBO DE ENERGIA"
+SOPORTE_SIN_ANEXO = "CEDULA DE CIUDADANIA"

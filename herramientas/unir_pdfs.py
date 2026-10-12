@@ -17,8 +17,10 @@ from tumaco import config, pdf  # noqa: E402
 
 def main():
     nombres = sys.argv[1:]
-    carpetas = ([config.CONTINGENCIAL_DIR / n for n in nombres] if nombres
-                else sorted(c for c in config.CONTINGENCIAL_DIR.iterdir() if c.is_dir()))
+    bases = [b for b in (config.CONTINGENCIAL_DIR, config.TERMINADOS_DIR) if b.is_dir()]
+    carpetas = ([next((b / n for b in bases if (b / n).is_dir()), bases[0] / n) for n in nombres] if nombres
+                else sorted((c for b in bases for c in b.iterdir() if c.is_dir() and c != config.TERMINADOS_DIR),
+                            key=lambda c: c.name))
     for carpeta in carpetas:
         print(carpeta.name)
         pdf.unir_pdfs(carpeta)

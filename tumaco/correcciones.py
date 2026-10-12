@@ -146,6 +146,8 @@ CEDULAS = {
     ],
 }
 
+SOPORTE_CON_ANEXO, SOPORTE_SIN_ANEXO = reglas.SOPORTE_CON_ANEXO, reglas.SOPORTE_SIN_ANEXO
+
 CONFIRMAR_ELIMINAR = (
     "body > div.vex.vex-theme-plain > div > form > div.vex-dialog-buttons"
     " > button.btn.btn-primary.small.vex-dialog-button.vex-first"
@@ -158,6 +160,7 @@ class Resultado:
     cedulas: dict = field(default_factory=dict)  # lado ('cara'/'reverso') -> jpg ajustado
     revisar: list = field(default_factory=list)  # lo que no se pudo hacer y queda para hacer a mano
     anexo: str | None = None  # documento anexo: "Si" si se conservo, "No" si se elimino o no habia
+    soporte: str = ""  # texto para la columna J de la hoja, escrito en la ventana del documento
     avisos: list = field(default_factory=list)  # (tipo, texto): decisiones de nombre/casa para verificar
     nombre_final: str = ""  # nombre que quedo cuando Kobo es otra persona que la del Excel
     casa_final: str = ""  # casa que quedo en la direccion (ej. 'CASA 127')
@@ -244,7 +247,10 @@ def aplicar(page: Page, numero_formulario: int, usuario=None) -> Resultado:
         documentos = revisar_documentos(page, DOCUMENTOS[numero_formulario])
         for doc in documentos:
             cambios.append(f"{doc['pregunta']}: {doc['archivo']} -> {doc['decision']}")
+            if doc.get("problema"):
+                resultado.revisar.append(doc["problema"])
         resultado.anexo = "Si" if any(d["decision"] == "conservar" for d in documentos) else "No"
+        resultado.soporte = next((d["soporte"] for d in reversed(documentos) if d.get("soporte")), "")
     # Campos que se escribieron pero al releerlos no quedaron bien: se envia igual y queda para revisar
     resultado.revisar.extend(_NO_QUEDARON)
     return resultado
@@ -835,17 +841,43 @@ def revisar_documentos(page: Page, selector_seccion: str) -> list[dict]:
 
         pregunta.scroll_into_view_if_needed()
         print(f"   ? {info['pregunta']}: {info['archivo']} -> esperando tu decision en el navegador...")
-        page.evaluate(_JS_MODAL, info)
+        page.evaluate(_JS_MODAL, {**info, "soportes": {"conservar": SOPORTE_CON_ANEXO, "eliminar": SOPORTE_SIN_ANEXO}})
         page.wait_for_function("() => window.__tumacoDecision", timeout=0, polling=500)
-        decision = page.evaluate("() => { const d = window.__tumacoDecision; delete window.__tumacoDecision; return d; }")
+        respuesta = json.loads(page.evaluate(
+            "() => { const d = window.__tumacoDecision; delete window.__tumacoDecision; return d; }"))
+        decision = respuesta["decision"]
+        soporte = " ".join(respuesta.get("soporte", "").split()).upper()
 
+        problema = ""
         if decision == "eliminar":
             eliminar_documento(page, pregunta)
             print(f"   * {info['pregunta']}: ELIMINADO ({info['archivo']})")
         else:
             print(f"   - {info['pregunta']}: se conserva ({info['archivo']})")
-        resultados.append({"pregunta": info["pregunta"], "archivo": info["archivo"], "decision": decision})
+            giro = int(respuesta.get("giro") or 0) % 360
+            if giro and info["imagen"]:
+                problema = girar_documento(page, pregunta, info, giro)
+        if soporte:
+            print(f"   - Soportes para la hoja (columna J): {soporte}")
+        resultados.append({"pregunta": info["pregunta"], "archivo": info["archivo"], "decision": decision,
+                           "soporte": soporte, "problema": problema})
     return resultados
+
+
+def girar_documento(page: Page, pregunta: Locator, info: dict, giro: int) -> str:
+    """Reemplaza el documento por su version girada `giro` grados (sentido del reloj). '' si quedo bien."""
+    datos = _descargar_imagen(page, pregunta, info["imagen"])
+    foto = cedula.leer(datos) if datos else None
+    if foto is None:
+        print("   [!] No se pudo descargar el documento para girarlo")
+        return "no se pudo girar el documento anexo"
+    rotacion = {90: cv2.ROTATE_90_CLOCKWISE, 180: cv2.ROTATE_180, 270: cv2.ROTATE_90_COUNTERCLOCKWISE}[giro]
+    jpg = cedula.a_jpg(cv2.rotate(foto, rotacion), ancho_maximo=2200)
+    nombre = f"{Path(info['archivo']).stem}-girada.jpg"
+    if not reemplazar_archivo(page, pregunta, nombre, jpg):
+        return "no se pudo subir el documento anexo girado"
+    print(f"   * {info['pregunta']}: girado {giro}° y vuelto a subir ({nombre})")
+    return ""
 
 
 def eliminar_documento(page: Page, pregunta: Locator):
@@ -901,6 +933,10 @@ _JS_MODAL = r"""
           <label style="font-size:16px;cursor:pointer"><input type="radio" name="tm-decision" value="conservar"> Si, conservar</label>
           <label style="font-size:16px;cursor:pointer"><input type="radio" name="tm-decision" value="eliminar"> No, eliminar</label>
           <button id="tm-ok" disabled style="margin-left:auto;padding:10px 22px;font-size:15px;border:0;border-radius:6px;background:#1976d2;color:#fff;cursor:pointer;opacity:.5">Continuar</button>
+          <label style="flex-basis:100%;font-size:14px;color:#333">Soportes para la hoja de Google (columna J):
+            <input id="tm-soporte" type="text" placeholder="Elige conservar o eliminar"
+                   style="display:block;width:100%;margin-top:6px;padding:8px;font-size:15px;border:1px solid #bbb;border-radius:4px">
+          </label>
         </div>
       </div>
     </div>`;
@@ -909,12 +945,42 @@ _JS_MODAL = r"""
   m.querySelector('#tm-archivo').textContent = info.archivo;
 
   const vista = m.querySelector('#tm-vista');
+  let giro = 0;  // grados en sentido del reloj para dejar el documento derecho
   if (info.imagen) {
-    const img = document.createElement('img');
+    const barra = document.createElement('div');
+    barra.style.cssText = 'display:flex;gap:8px;justify-content:center;align-items:center;margin-bottom:8px;font-size:14px';
+    const estado = document.createElement('span');
+    const img = new Image();
+    const lienzo = document.createElement('canvas');  // se dibuja girado: ocupa el espacio real y muestra como quedara
+    const orientar = () => {
+      estado.textContent = giro ? `Girado ${giro}°` : 'Sin girar';
+      if (!img.naturalWidth) return;
+      const vertical = giro % 180 !== 0;
+      const escala = Math.min(1, 1400 / Math.max(img.naturalWidth, img.naturalHeight));
+      const w = img.naturalWidth * escala, h = img.naturalHeight * escala;
+      lienzo.width = Math.round(vertical ? h : w);
+      lienzo.height = Math.round(vertical ? w : h);
+      const ctx = lienzo.getContext('2d');
+      ctx.translate(lienzo.width / 2, lienzo.height / 2);
+      ctx.rotate(giro * Math.PI / 180);
+      ctx.drawImage(img, -w / 2, -h / 2, w, h);
+    };
+    for (const [texto, paso] of [['⟲ Girar a la izquierda', -90], ['⟳ Girar a la derecha', 90]]) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = texto;
+      b.style.cssText = 'padding:7px 12px;font-size:14px;border-radius:6px;border:1px solid #bbb;background:#fff;cursor:pointer';
+      b.onclick = () => { giro = (giro + paso + 360) % 360; orientar(); };
+      barra.appendChild(b);
+    }
+    barra.appendChild(estado);
+    vista.appendChild(barra);
+    img.onload = orientar;
     img.src = info.imagen;
-    img.style.cssText = 'max-width:100%;max-height:62vh;cursor:zoom-in';
-    img.onclick = () => window.open(info.imagen, '_blank');
-    vista.appendChild(img);
+    lienzo.style.cssText = 'display:block;margin:0 auto;max-width:100%;max-height:56vh;cursor:zoom-in';
+    lienzo.onclick = () => window.open(info.imagen, '_blank');
+    vista.appendChild(lienzo);
+    orientar();
   } else if (info.enlace) {
     const frame = document.createElement('iframe');
     frame.src = info.enlace;
@@ -933,11 +999,17 @@ _JS_MODAL = r"""
   }
 
   const ok = m.querySelector('#tm-ok');
-  m.querySelectorAll('input[name=tm-decision]').forEach(r => r.onchange = () => { ok.disabled = false; ok.style.opacity = 1; });
+  const soporte = m.querySelector('#tm-soporte');
+  let editado = false;  // si lo escribiste tu, cambiar la opcion ya no lo reemplaza
+  soporte.oninput = () => { editado = true; };
+  m.querySelectorAll('input[name=tm-decision]').forEach(r => r.onchange = () => {
+    ok.disabled = false; ok.style.opacity = 1;
+    if (!editado) soporte.value = info.soportes[r.value] || '';
+  });
   ok.onclick = () => {
     const elegido = m.querySelector('input[name=tm-decision]:checked');
     if (!elegido) return;
-    window.__tumacoDecision = elegido.value;
+    window.__tumacoDecision = JSON.stringify({decision: elegido.value, soporte: soporte.value.trim(), giro});
     m.remove();
   };
 }

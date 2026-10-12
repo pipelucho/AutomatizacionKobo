@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 from playwright.sync_api import Error, Page, TimeoutError
 
-from . import config
+from . import config, ventanas
 from .humano import clic, escribir, pausa
 from .texto import digitos, mismo_documento, norm, numeros_casa, similitud_nombre, terminos_busqueda_nombre
 
@@ -42,6 +42,9 @@ class Coincidencia:
     usuario_ok: bool = False  # el No. de usuario coincide
     casa: str = ""  # direccion segun Kobo
     documento_ok: bool = False  # el documento coincide con el del formulario 1 (columna I del Excel)
+    documento: str = ""  # documento segun Kobo
+    usuario: str = ""  # No. de usuario segun Kobo
+    filtro: tuple = ()  # (columna, valor) con el que se encontro: para volver a esa tabla si se elige despues
 
     @property
     def puntaje(self) -> float:
@@ -185,6 +188,9 @@ class Kobo:
             orden = ["usuario", "casa", "nombre"]
             columnas = {campo: self._columna(encabezados, campo, CLAVES_COLUMNA[campo], preguntar=False)
                         for campo in orden}
+            # El documento no se busca en el formulario 1 (de ahi sale), pero se muestra al elegir entre registros
+            columnas["documento"] = self._columna(encabezados, "documento", "persona atendida+documento",
+                                                  preguntar=False)
 
         valores = {
             "documento": [getattr(usuario, "documento", "")],
@@ -194,6 +200,7 @@ class Kobo:
         }
         n = 0
         mas_parecida, dudas = None, []
+        vistas = {}  # candidatas de todos los intentos (para elegir en la ventana si no hubo una segura)
         for campo in orden:
             col = columnas.get(campo)
             if col is None and not plan:
@@ -217,14 +224,28 @@ class Kobo:
                     print(f"   Usuario encontrado en la fila {elegida.indice + 1}.")
                     return elegida
                 for c in candidatas:
+                    vistas.setdefault(json.dumps(c.datos, sort_keys=True, ensure_ascii=False), c)
                     if mas_parecida is None or c.puntaje > mas_parecida.puntaje:
                         mas_parecida = c
-                self._filtrar(col, "")
                 if empatadas:  # registro repetido en Kobo: buscar por otro dato traeria lo mismo
+                    elegida = self._elegir_registro(usuario, empatadas, "hay varios registros que coinciden casi igual")
+                    if elegida:
+                        return elegida
                     dudas = empatadas
+                self._filtrar(col, "")
+                if dudas:
                     break
             if dudas:
                 break
+
+        # Coincide el usuario o el documento pero no lo suficiente para estar seguros (ej. quien atendio es
+        # otra persona y la casa esta mal digitada): se pregunta en vez de marcar "No encontrado"
+        probables = [c for c in vistas.values() if (c.usuario_ok or c.documento_ok) and not c.confirmada]
+        if not dudas and probables:
+            elegida = self._elegir_registro(usuario, sorted(probables, key=lambda c: c.puntaje, reverse=True)[:6],
+                                            "coincide el usuario o el documento, pero no el nombre ni la casa")
+            if elegida:
+                return elegida
 
         if dudas:
             self.motivo = "Dudoso: varios registros iguales en Kobo (" + " / ".join(
@@ -269,6 +290,9 @@ class Kobo:
                 usuario_ok=bool(usuario.usuario) and digitos(usuario.usuario) in digitos(usuario_kobo, todos=True),
                 casa=casa_kobo.strip(),
                 documento_ok=bool(documento_excel) and mismo_documento(documento_excel, celda(celdas, "documento")),
+                documento=celda(celdas, "documento").strip(),
+                usuario=usuario_kobo.strip(),
+                filtro=(col, valor),
             ))
 
         criterio = "con nombre parecido a" if campo == "nombre" else "con valor exacto"
@@ -295,6 +319,39 @@ class Kobo:
             return None, empatadas
         print(f"   Elegido: {mejor.nombre} | {mejor.casa} (el que mas coincide con el Excel)")
         return mejor, []
+
+    def _elegir_registro(self, usuario, candidatas: list[Coincidencia], motivo: str) -> Coincidencia | None:
+        """Ventana para elegir cual registro de Kobo es la persona (o ninguno). Deja la tabla filtrada
+        con el elegido, listo para abrir su edicion. Con PREGUNTAR_DUDAS=0 no pregunta."""
+        if not config.PREGUNTAR_DUDAS:
+            return None
+        print(f"   ? {motivo} -> elige el registro en la ventana del navegador...")
+        fecha = next((h for h in candidatas[0].datos if "submission_time" in h), None)
+        opciones = [[c.nombre, c.usuario, c.casa, c.documento, c.datos.get(fecha, "") if fecha else "",
+                     self._resumen(c).split(" | ", 3)[-1]] for c in candidatas]
+        i = ventanas.elegir(
+            self.page, f"¿Cuál registro de Kobo es {usuario.nombre}?",
+            [f"Excel: {usuario.nombre} | usuario {usuario.usuario} | casa {usuario.casa or '-'} | "
+             f"documento {getattr(usuario, 'documento', '') or '-'}",
+             f"Hoja (usuario inicial): {getattr(usuario, 'ref_nombre', '') or '-'}", f"Motivo: {motivo}"],
+            ["Nombre en Kobo", "Usuario", "Dirección", "Documento", "Enviado", "Coincide"], opciones)
+        if i is None:
+            print("   - Ninguno (decidido en la ventana)")
+            return None
+        c = candidatas[i]
+        print(f"   - Elegido en la ventana: {c.nombre} | {c.casa}")
+        return self._reubicar(c)
+
+    def _reubicar(self, c: Coincidencia) -> Coincidencia | None:
+        """Vuelve a filtrar la tabla como cuando se encontro el registro y actualiza su fila."""
+        self._filtrar(*c.filtro)
+        filas = self.leer_tabla()
+        for i, celdas in enumerate(filas["filas"]):
+            if dict(zip(filas["encabezados"], celdas)) == c.datos:
+                c.indice = i
+                return c
+        print("   [!] No pude volver a ubicar el registro elegido en la tabla")
+        return None
 
     @staticmethod
     def _resumen(c: Coincidencia) -> str:
@@ -493,13 +550,15 @@ def _esperar_resultado_envio(edicion: Page, limite_s: int = 120):
                 return "ok", "(Kobo cerro la pestaña de edicion)"
             if "/thanks" in edicion.url or "/edit/" not in edicion.url:
                 return "ok", f"(Kobo confirmo el envio: {edicion.url})"
+            # Tiempos cortos: si Kobo redirige mientras tanto, el dialogo desaparece y Playwright
+            # esperaria 30 s por el (era el 'envio 33s' de los registros)
             dialogo = edicion.locator(".vex-dialog-message")
             if dialogo.count() and dialogo.first.is_visible():
-                texto = " ".join(dialogo.first.inner_text().split())
+                texto = " ".join(dialogo.first.inner_text(timeout=2_000).split())
                 aceptar = edicion.locator(".vex-dialog-buttons .btn-primary")
                 if aceptar.count() and aceptar.first.is_visible():
                     pausa(edicion, 0.5, 1.0)
-                    clic(aceptar.first)
+                    aceptar.first.click(timeout=2_000)
                 if any(p in norm(texto) for p in map(norm, en_curso)):
                     edicion.wait_for_timeout(500)
                     continue  # esperar la redireccion a /thanks

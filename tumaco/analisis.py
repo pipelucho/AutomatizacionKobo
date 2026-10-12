@@ -92,9 +92,14 @@ def buscar_envio(envios: list[dict], campos: dict, usuario: excel.Usuario) -> tu
     if not validos:
         return None, "ningun registro de Kobo coincide por usuario, casa o documento", ajenos
     nota = ""
-    if len(validos) > 1:
-        otros = "; ".join(_describir(e, campos) for e, _ in validos[1:4])
-        nota = f"hay otro registro que tambien coincide (posible duplicado): {otros}"
+    # Duplicado de verdad: otro registro con el mismo usuario o documento (no basta un vecino con el mismo
+    # apellido y la misma casa, como Biani y Evangelista Portocarrero en la casa 27)
+    otros = [e for e, _ in validos[1:]
+             if re.sub(r"\D", "", val(e, "usuario")) == usuario.usuario
+             or (usuario.documento and mismo_documento(usuario.documento, val(e, "documento")))]
+    if otros:
+        nota = ("hay otro registro que tambien coincide (posible duplicado): "
+                + "; ".join(_describir(e, campos) for e in otros[:3]))
     return validos[0][0], nota, ajenos
 
 
