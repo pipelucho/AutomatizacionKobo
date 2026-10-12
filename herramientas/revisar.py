@@ -26,7 +26,8 @@ AVISOS = ("decidido en la ventana", "No encontrado", "Dudoso", "Revisar a mano",
 
 
 def leer_log() -> tuple[Path, dict]:
-    log = sorted((config.OUTPUT_DIR / "logs").glob("corrida_*.log"))[-1]
+    # La corrida que termino de ultima (por fecha de modificacion; una corrida que fallo al abrir no cuenta)
+    log = max((config.OUTPUT_DIR / "logs").glob("corrida_*.log"), key=lambda p: p.stat().st_mtime)
     personas, actual = {}, None
     for linea in log.read_text(encoding="utf-8", errors="replace").splitlines():
         if m := PERSONA.match(linea):
