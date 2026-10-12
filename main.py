@@ -104,7 +104,9 @@ def procesar_formulario(kobo: Kobo, usuario: excel.Usuario, numero: int) -> tupl
     t = Tiempos()
     kobo.abrir_datos(config.FORMULARIOS[numero - 1])
     t.marcar("abrir datos")
-    encontrado = kobo.buscar_usuario(usuario, etiqueta=f"form{numero}")
+    decidido = usuario.registro_decidido(numero)  # columna O: registro ya revisado, sin buscar ni preguntar
+    encontrado = (kobo.registro_por_id(decidido) if decidido
+                  else kobo.buscar_usuario(usuario, etiqueta=f"form{numero}"))
     t.marcar("buscar")
     if not encontrado:
         return NO_ENCONTRADO, ""

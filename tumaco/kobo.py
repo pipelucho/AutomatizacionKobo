@@ -377,6 +377,35 @@ class Kobo:
 
     # ---------- Edicion ----------
 
+    def _uid_formulario(self) -> str:
+        m = re.search(r"/forms/([A-Za-z0-9]+)", self._url_datos.get(self.formulario, "") or self.page.url)
+        if not m:
+            raise RuntimeError("no se pudo saber el identificador del formulario en Kobo")
+        return m.group(1)
+
+    def registro_por_id(self, _id: str) -> Coincidencia:
+        """Registro ya decidido (columna O del Excel): se usa tal cual, sin buscarlo en la tabla.
+        Si no existe en este formulario es un error (no un 'No encontrado'): se revisa la columna O."""
+        resp = self.page.request.get(f"{config.KOBO_URL}/api/v2/assets/{self._uid_formulario()}/data/{_id}/",
+                                     params={"format": "json"})
+        if not resp.ok:
+            raise RuntimeError(f"el registro {_id} de la columna O no existe en este formulario (HTTP {resp.status})")
+        envio = resp.json()
+        resumen = " | ".join(f"{k.split('/')[-1]}: {v}" for k, v in envio.items()
+                             if isinstance(v, str) and re.search(r"(^|_)(nombre|no_usuario|direccion|documento)(_|$)", k.split("/")[-1])
+                             and "contratista" not in k)[:300]
+        print(f"   Registro decidido en el Excel (columna O): _id {_id}\n   {resumen}")
+        return Coincidencia(indice=-1, datos={"_id": str(_id)}, sim_nombre=1.0, casa_ok=True)
+
+    def _abrir_edicion_por_api(self, _id: str) -> Page:
+        resp = self.page.request.get(f"{config.KOBO_URL}/api/v2/assets/{self._uid_formulario()}/data/{_id}/enketo/edit/",
+                                     params={"return_url": "false"})
+        if not resp.ok:
+            raise RuntimeError(f"Kobo no dio el enlace de edicion del registro {_id} (HTTP {resp.status})")
+        edicion = self.page.context.new_page()
+        edicion.goto(resp.json()["url"])
+        return edicion
+
     def firma_actual(self, c: Coincidencia, xpath: str) -> bytes | None:
         """Imagen que tiene hoy el registro en el campo de firma `xpath` (por la API de Kobo).
 
@@ -407,15 +436,19 @@ class Kobo:
 
         Kobo abre el formulario de edicion (Enketo) en una pestana nueva; se devuelve esa pagina.
         """
-        fila = self.page.locator(".rt-tbody .rt-tr-group").nth(c.indice)
-        boton = fila.locator(".rt-td.rt-sub-actions button:nth-child(3)")
-        print(f"Abriendo edicion de la fila {c.indice + 1}...")
-        try:
-            with self.page.context.expect_page(timeout=15_000) as nueva:
-                clic(boton)
-            edicion = nueva.value
-        except TimeoutError:
-            edicion = self.page  # se abrio en la misma pestana
+        if c.indice < 0:  # registro decidido por su _id (columna O): se abre por la API
+            print(f"Abriendo edicion del registro {c.datos['_id']}...")
+            edicion = self._abrir_edicion_por_api(c.datos["_id"])
+        else:
+            fila = self.page.locator(".rt-tbody .rt-tr-group").nth(c.indice)
+            boton = fila.locator(".rt-td.rt-sub-actions button:nth-child(3)")
+            print(f"Abriendo edicion de la fila {c.indice + 1}...")
+            try:
+                with self.page.context.expect_page(timeout=15_000) as nueva:
+                    clic(boton)
+                edicion = nueva.value
+            except TimeoutError:
+                edicion = self.page  # se abrio en la misma pestana
         edicion.bring_to_front()
         maximizar(edicion)  # en ventana pequena la firma queda cortada y no se dibuja completa
         edicion.wait_for_load_state("domcontentloaded")

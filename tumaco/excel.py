@@ -1,4 +1,5 @@
 import json
+import re
 from dataclasses import dataclass
 
 import openpyxl
@@ -16,10 +17,13 @@ COL_HOJA = 11  # K: "Si" cuando la fila del usuario quedo llena y verificada en 
 COL_NOMBRE_FINAL = 12  # L: nombre de quien atendio (Kobo) cuando es otra persona que la del Excel
 COL_CASA_FINAL = 13  # M: casa que quedo en Kobo cuando no es la del Excel (el Excel estaba mal)
 COL_SOPORTE = 14  # N: texto de soportes para la columna J de la hoja (escrito en la ventana del documento)
+# O: registro de Kobo ya decidido para un formulario ('F1=829157463; F2=...'): el bot lo abre directo por su
+# _id, sin buscarlo en la tabla ni preguntar (para casos revisados a mano, ej. quien atendio es otra persona)
+COL_REGISTRO = 15
 # Datos del formulario 1 que se guardan para usarlos despues en la hoja de Google (campo -> columna)
 COLUMNA_DATO = {"propietario": COL_PROPIETARIO, "documento": COL_DOCUMENTO, "anexo": COL_ANEXO,
                 "hoja": COL_HOJA, "nombre_final": COL_NOMBRE_FINAL, "casa_final": COL_CASA_FINAL,
-                "soporte": COL_SOPORTE}
+                "soporte": COL_SOPORTE, "registro": COL_REGISTRO}
 # Formularios que algunas personas no tienen: "No encontrado" no detiene a la persona
 FORMULARIOS_OPCIONALES = {4}
 COLUMNA_FORMULARIO = {1: COL_REALIZADO, 2: COL_FORMULARIO_2, 3: COL_FORMULARIO_3, 4: COL_FORMULARIO_4}
@@ -27,7 +31,7 @@ ENCABEZADOS = {COL_REALIZADO: "REALIZADO:", COL_FORMULARIO_2: "FORMULARIO 2:", C
               COL_FORMULARIO_4: "FORMULARIO 4:", COL_PROPIETARIO: "PROPIETARIO:",
               COL_DOCUMENTO: "DOCUMENTO:", COL_ANEXO: "DOCUMENTO ANEXO:", COL_HOJA: "HOJA:",
               COL_NOMBRE_FINAL: "NOMBRE FINAL:", COL_CASA_FINAL: "CASA FINAL:",
-              COL_SOPORTE: "SOPORTES HOJA:"}
+              COL_SOPORTE: "SOPORTES HOJA:", COL_REGISTRO: "REGISTRO KOBO:"}
 MARCA_REALIZADO = "Si"
 MARCA_A_MANO = "Revisar a mano"  # se envio, pero algo quedo para hacerlo a mano (ej. una cedula)
 MARCA_NO_ENCONTRADO = "No encontrado"  # formulario que no existe para esa persona (ej. el 4)
@@ -53,9 +57,14 @@ class Usuario:
     nombre_final: str = ""  # columna L
     casa_final: str = ""  # columna M
     soporte: str = ""  # columna N
+    registro: str = ""  # columna O: registros de Kobo ya decididos ('F1=829157463; F2=...')
     # Datos iniciales del usuario en la hoja de Google (no se guardan en el Excel)
     ref_nombre: str = ""
     ref_direccion: str = ""
+
+    def registro_decidido(self, numero: int) -> str:
+        """_id de Kobo anotado en la columna O para el formulario `numero` ('' si no hay)."""
+        return dict(re.findall(r"F\s*(\d)\s*[=:]\s*(\d+)", self.registro.upper())).get(str(numero), "")
 
     def marca(self, numero: int) -> str:
         """Lo que dice el Excel para el formulario `numero` (vacio = falta hacerlo)."""
