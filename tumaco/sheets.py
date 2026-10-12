@@ -84,8 +84,10 @@ def leer_filas(hoja: Page) -> list[list[str]]:
             return list(csv.reader(io.StringIO(resp.text())))
         if espera is None or not (resp.status == 429 or resp.status >= 500):
             break
-        print(f"   (Google respondio HTTP {resp.status} al leer la hoja: se espera {espera} s y se reintenta)")
-        time.sleep(espera)
+        print(f"   (Google respondio HTTP {resp.status} al leer la hoja: se espera {espera} s y se reintenta; "
+              f"no cierres nada, el bot sigue solo)")
+        # Espera de Playwright (no time.sleep): la conexion con los navegadores sigue atendida mientras tanto
+        hoja.wait_for_timeout(espera * 1000)
     raise RuntimeError(f"No se pudo leer la hoja (HTTP {resp.status})")
 
 
@@ -226,12 +228,19 @@ def actualizar_usuario(hoja: Page, usuario, retirado: bool = False) -> bool:
     return verificar(hoja, fila, valores)
 
 
+def _igual(columna: str, hay: str, esperado: str) -> bool:
+    """El documento puede verse con puntos ('13.015.205') segun el formato de la columna: se comparan los digitos."""
+    if columna == COL_DOCUMENTO:
+        return re.sub(r"\D", "", hay) == re.sub(r"\D", "", esperado)
+    return hay == esperado
+
+
 def verificar(hoja: Page, fila: int, valores: dict[str, str], espera_s: int = 30) -> bool:
     """Relee la hoja hasta que la fila tenga los valores escritos (Google guarda en segundos)."""
     limite = time.monotonic() + espera_s
     while True:
         filas = leer_filas(hoja)
-        distintos = {c: (_celda(filas, fila, c), v) for c, v in valores.items() if _celda(filas, fila, c) != v}
+        distintos = {c: (_celda(filas, fila, c), v) for c, v in valores.items() if not _igual(c, _celda(filas, fila, c), v)}
         if not distintos:
             print("   Hoja: fila verificada, quedo con todos los valores.")
             return True
