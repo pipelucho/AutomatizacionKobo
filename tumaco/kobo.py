@@ -8,7 +8,7 @@ from playwright.sync_api import Error, Page, TimeoutError
 from . import config, ventanas
 from .browser import maximizar
 from .humano import clic, escribir, pausa
-from .texto import (digitos, documento_distinto, mismo_documento, norm, numeros_casa, similitud_nombre,
+from .texto import (digitos, documento_distinto, mismo_documento, norm, numeros_casa, sector, similitud_nombre,
                     terminos_busqueda_nombre)
 
 LOGIN_TIMEOUT_MS = 5 * 60 * 1000  # tiempo para iniciar sesion a mano si hace falta
@@ -59,6 +59,7 @@ class Coincidencia:
     usuario: str = ""  # No. de usuario segun Kobo
     filtro: tuple = ()  # (columna, valor) con el que se encontro: para volver a esa tabla si se elige despues
     documento_distinto: bool = False  # su documento es claramente de otra persona (no un error de una cifra)
+    otro_sector: bool = False  # su barrio es de otro sector que la direccion inicial de la hoja (su casa no cuenta)
 
     @property
     def puntaje(self) -> float:
@@ -218,7 +219,7 @@ class Kobo:
             "documento": [getattr(usuario, "documento", "")],
             "usuario": [usuario.usuario],
             "casa": [usuario.casa],
-            "nombre": terminos_busqueda_nombre(usuario.nombre),
+            "nombre": _terminos_nombre(usuario),
         }
         n = 0
         mas_parecida, dudas = None, []
@@ -289,11 +290,15 @@ class Kobo:
             i = columnas.get(campo_col)
             return celdas[i] if i is not None and i < len(celdas) else ""
 
+        nombres = nombres_referencia(usuario)
+        sector_usuario = sector(getattr(usuario, "ref_direccion", ""))
+        col_barrio = next((i for i, h in enumerate(encabezados) if norm(h).endswith("/ barrio")), None)
+        col_lugar = next((i for i, h in enumerate(encabezados) if norm(h).endswith("/ lugar")), None)
         candidatas = []
         for i, celdas in enumerate(tabla["filas"]):
             buscada = celdas[col] if col < len(celdas) else ""
             if campo == "nombre":
-                coincide = similitud_nombre(usuario.nombre, buscada) >= UMBRAL_NOMBRE
+                coincide = max(similitud_nombre(n, buscada) for n in nombres) >= UMBRAL_NOMBRE
             elif campo == "documento":
                 coincide = mismo_documento(valor, buscada)
             else:
@@ -302,13 +307,17 @@ class Kobo:
                 continue
             nombre_kobo, casa_kobo, usuario_kobo = celda(celdas, "nombre"), celda(celdas, "casa"), celda(celdas, "usuario")
             documento_excel = getattr(usuario, "documento", "")
+            # Misma casa en otro sector (ej. Casa 61 de La Libertad y de El Triunfo): la casa no cuenta
+            barrio = next((celdas[c] for c in (col_barrio, col_lugar) if c is not None and c < len(celdas) and celdas[c].strip()), "")
+            otro_sector = bool(sector_usuario and sector(barrio) and sector(barrio) != sector_usuario)
             candidatas.append(Coincidencia(
                 indice=i,
                 datos=dict(zip(encabezados, celdas)),
-                sim_nombre=similitud_nombre(usuario.nombre, nombre_kobo),
-                casa_ok=bool(usuario.casa) and digitos(usuario.casa) in digitos(casa_kobo, todos=True),
+                sim_nombre=max(similitud_nombre(n, nombre_kobo) for n in nombres),
+                casa_ok=(bool(usuario.casa) and digitos(usuario.casa) in digitos(casa_kobo, todos=True)
+                         and not otro_sector),
                 nombre=nombre_kobo.strip(),
-                casa_exacta=bool(numeros_casa(usuario.casa) & numeros_casa(casa_kobo)),
+                casa_exacta=bool(numeros_casa(usuario.casa) & numeros_casa(casa_kobo)) and not otro_sector,
                 usuario_ok=bool(usuario.usuario) and digitos(usuario.usuario) in digitos(usuario_kobo, todos=True),
                 casa=casa_kobo.strip(),
                 documento_ok=bool(documento_excel) and mismo_documento(documento_excel, celda(celdas, "documento")),
@@ -316,6 +325,7 @@ class Kobo:
                 usuario=usuario_kobo.strip(),
                 filtro=(col, valor),
                 documento_distinto=documento_distinto(documento_excel, celda(celdas, "documento")),
+                otro_sector=otro_sector,
             ))
 
         criterio = "con nombre parecido a" if campo == "nombre" else "con valor exacto"
@@ -380,6 +390,8 @@ class Kobo:
     def _resumen(c: Coincidencia) -> str:
         marcas = [m for m, ok in (("documento coincide", c.documento_ok), ("usuario coincide", c.usuario_ok),
                                   ("casa exacta" if c.casa_exacta else "casa parecida", c.casa_ok)) if ok]
+        if c.otro_sector:
+            marcas.append("OTRO SECTOR (la casa no cuenta)")
         return " | ".join([c.nombre or "?", c.casa or "?", f"nombre {c.sim_nombre:.0%}", *marcas])
 
     # ---------- Edicion ----------
@@ -725,3 +737,22 @@ _JS_MARCAR_FILTRO = r"""
   return true;
 }
 """
+
+
+def nombres_referencia(usuario) -> list[str]:
+    """Nombres con los que se compara a la persona: el del Excel, el final (quien atendio) y el inicial de la
+    hoja de Google (puede ser el titular, o el nombre sin cortar ni letras danadas)."""
+    vistos, salida = set(), []
+    for n in (usuario.nombre, getattr(usuario, "nombre_final", ""), getattr(usuario, "ref_nombre", "")):
+        clave = norm(n)
+        if clave and clave not in vistos:
+            vistos.add(clave)
+            salida.append(n)
+    return salida
+
+
+def _terminos_nombre(usuario) -> list[str]:
+    """Terminos para buscar por nombre: los del Excel y hasta 2 mas del nombre inicial de la hoja."""
+    terminos = terminos_busqueda_nombre(usuario.nombre)
+    extra = [t for t in terminos_busqueda_nombre(getattr(usuario, "ref_nombre", "")) if t not in terminos]
+    return terminos + extra[:2]

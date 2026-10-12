@@ -1,9 +1,10 @@
 import sys
 import time
 
-from tumaco import casos, config, correcciones, excel, firmas, pdf, registro, sheets
+from tumaco import casos, config, correcciones, excel, firmas, pdf, registro, sheets, ventanas
 from tumaco.browser import abrir_navegador
 from tumaco.kobo import Kobo
+from tumaco.texto import digitos
 
 
 ENVIADO, OTRO, PENDIENTE, NO_ENCONTRADO, RETIRADO = "enviado", "otro", "pendiente", "no encontrado", "retirado"
@@ -80,8 +81,10 @@ def guardar_decisiones(usuario: excel.Usuario, numero: int, resultado):
             print(f"Excel: fila {usuario.fila}, columna {excel.letra(columna)} ({campo.replace('_', ' ')}) = '{valor}'")
 
 
-def cargar_referencias(hoja: sheets.Hoja, usuarios: list[excel.Usuario]):
-    """Nombre y direccion iniciales de cada usuario segun la hoja de Google, para decidir nombre y casa."""
+def cargar_referencias(page, hoja: sheets.Hoja, usuarios: list[excel.Usuario], todos: list[excel.Usuario]):
+    """Nombre y direccion iniciales de cada usuario segun la hoja de Google: se usan para buscarlo en Kobo
+    (nombre y sector) y para decidir nombre y casa. Antes se revisa que el No. de usuario del Excel sea de
+    esa persona en la hoja; si no, se propone el correcto en una ventana."""
     try:
         refs = sheets.referencias(sheets.leer_filas(hoja.pestana()))
     except Exception as e:
@@ -89,10 +92,55 @@ def cargar_referencias(hoja: sheets.Hoja, usuarios: list[excel.Usuario]):
               f"    Sin ella, el bot no cambia nombres ni casas que no coincidan: los deja y avisa.")
         return
     for u in usuarios:
-        ref = refs.get(u.usuario, {})
-        u.ref_nombre, u.ref_direccion = ref.get("nombre", ""), ref.get("direccion", "")
+        ref = refs.get(u.usuario)
+        if not (ref and sheets.es_de_la_persona(ref, u)):
+            ref = revisar_numero(page, u, refs, todos)
+        if ref:
+            u.ref_nombre, u.ref_direccion = ref["nombre"], ref["direccion"]
     print(f"Hoja de Google: datos iniciales de {sum(1 for u in usuarios if u.ref_nombre)} de {len(usuarios)} "
-          f"usuario(s) para comparar nombre y casa.")
+          f"usuario(s) para buscar en Kobo y comparar nombre y casa.")
+
+
+def revisar_numero(page, usuario: excel.Usuario, refs: dict, todos: list[excel.Usuario]) -> dict | None:
+    """El No. de usuario del Excel no es de esta persona en la hoja (o no esta): busca la fila de la hoja que si
+    parece suya y la propone en una ventana. Devuelve los datos iniciales que quedan (None = sin datos de la hoja,
+    para no buscar en Kobo con el nombre de otra persona)."""
+    actual = refs.get(usuario.usuario)
+    en_hoja = (f"en la hoja el {usuario.usuario} es '{actual['nombre']}' ({actual['direccion']})" if actual
+               else f"el {usuario.usuario} no esta en la hoja")
+    print(f"\n[!] Usuario {usuario.usuario} {usuario.nombre} casa {usuario.casa} (fila {usuario.fila}): {en_hoja}.")
+    otros = {u.usuario: u for u in todos if u.fila != usuario.fila}
+    # Un numero que en el Excel ya es de otra persona que si cuadra con su fila de la hoja va al final
+    propuestas = sorted(sheets.proponer_usuarios(refs, usuario),
+                        key=lambda p: p[0] in otros and sheets.es_de_la_persona(p[1], otros[p[0]]))
+    lineas = []
+    for numero, ref, sim, casa in propuestas:
+        otro = otros.get(numero)
+        lineas.append(f"Hoja {numero}: {ref['nombre']} | {ref['direccion']} | nombre {sim:.0%}"
+                      + (" | misma casa" if casa else "")
+                      + (f" | en el Excel ya es de {otro.nombre} (fila {otro.fila})" if otro else ""))
+    print("    En la hoja se parece a: " + (" / ".join(lineas) if lineas else "(ninguna otra fila)"))
+    if not config.PREGUNTAR_DUDAS:
+        print("    Revisa el No. de usuario en el Excel (columna B). Se busca en Kobo sin los datos de la hoja.")
+        return None
+    print("    ? Decide en la ventana del navegador...")
+    elegidos = ventanas.revisar_cambios(
+        page, f"No. de usuario de {usuario.nombre}: el Excel y la hoja de Google no coinciden",
+        [f"Excel (fila {usuario.fila}): {usuario.nombre} | usuario {usuario.usuario} | casa {usuario.casa}",
+         f"Hoja: {en_hoja}", *(lineas or ["En la hoja no hay otra fila con un nombre parecido."])],
+        [{"id": "u", "campo": "No. de usuario", "actual": usuario.usuario,
+          "nuevo": propuestas[0][0] if propuestas else usuario.usuario,
+          "detalle": "Número de la hoja que parece ser de esta persona; puedes escribir otro. "
+                     "Se cambia en la columna B del Excel. 'Dejar el del Excel' no cambia nada."}],
+        aplicar="Usar este número", omitir="Dejar el del Excel")
+    nuevo = digitos((elegidos or {}).get("u", ""))
+    if not nuevo or nuevo == usuario.usuario:
+        print(f"    Decidido: queda el {usuario.usuario} del Excel.")
+        return actual
+    excel.marcar(usuario.fila, int(nuevo), excel.COL_USUARIO)
+    print(f"    Decidido: Excel fila {usuario.fila}, columna B (usuario) {usuario.usuario} -> {nuevo}")
+    usuario.usuario = nuevo
+    return refs.get(nuevo)
 
 
 def procesar_formulario(kobo: Kobo, usuario: excel.Usuario, numero: int) -> tuple[str, str]:
@@ -275,7 +323,7 @@ def main():
         kobo = Kobo(page)
         kobo.iniciar_sesion()
         hoja = sheets.Hoja(playwright)
-        cargar_referencias(hoja, por_procesar)
+        cargar_referencias(page, hoja, por_procesar, excel.usuarios(tabla))
 
         for n, usuario in enumerate(por_procesar, start=1):
             print("\n" + "=" * 70)

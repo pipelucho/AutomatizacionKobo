@@ -22,6 +22,29 @@ def mismo_documento(a: str, b: str) -> bool:
     return len(da) >= 5 and da == db
 
 
+def reparar(texto: str) -> str:
+    """Texto con letras danadas por mala codificacion ('QUIÃ‘ONES' -> 'QUIÑONES'); si no aplica, igual."""
+    texto = str(texto or "")
+    if "Ã" in texto or "Â" in texto:
+        try:
+            return texto.encode("cp1252").decode("utf-8")
+        except UnicodeError:
+            pass
+    return texto
+
+
+def sector(texto: str) -> str:
+    """Sector del barrio segun una direccion o barrio: 'LIBERTAD', 'TRIUNFO', 'BRISAS' o '' si no se sabe.
+    Hay numeros de casa repetidos en sectores distintos (Casa 61 de La Libertad y de El Triunfo)."""
+    t = norm(texto)
+    # La hoja a veces corta el barrio ('LA LIBERTA', 'BARRIO EL TRI')
+    for clave, nombre in (("triunfo", "TRIUNFO"), ("el tri", "TRIUNFO"), ("liberta", "LIBERTAD"), ("brisas", "BRISAS"),
+                          ("angeles", "BRISAS"), ("union victoria", "UNION VICTORIA")):
+        if clave in t:
+            return nombre
+    return ""
+
+
 def documento_distinto(a: str, b: str) -> bool:
     """Los dos documentos estan y son de personas distintas: no un error de digitacion de una o dos cifras
     ('5968887' por '59688887') ni un relleno ('00000000')."""

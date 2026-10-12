@@ -17,7 +17,7 @@ from contextlib import contextmanager
 from playwright.sync_api import Page, sync_playwright
 
 from . import config, reglas
-from .texto import numeros_casa, similitud_nombre
+from .texto import numeros_casa, reparar, similitud_nombre
 
 PESTANA = "Tumaco"
 FILA_ENCABEZADOS = 16  # No. | NOMBRES Y APELLIDOS USUARIO INICIAL | ... | RESPONSABLE
@@ -104,8 +104,43 @@ def referencias(filas) -> dict[str, dict]:
     for n in range(FILA_ENCABEZADOS + 1, len(filas) + 1):
         numero, nombre = _celda(filas, n, COL_NUMERO), _celda(filas, n, "B")
         if numero and nombre:
-            refs[numero] = {"nombre": nombre, "direccion": _celda(filas, n, COL_DIRECCION_INICIAL), "fila": n}
+            # La hoja trae letras danadas ('QUIÃ‘ONES'): se reparan para comparar
+            refs[numero] = {"nombre": reparar(nombre), "direccion": reparar(_celda(filas, n, COL_DIRECCION_INICIAL)),
+                            "fila": n}
     return refs
+
+
+def _nombres(usuario) -> list[str]:
+    return [n for n in (usuario.nombre, getattr(usuario, "nombre_final", "")) if n]
+
+
+def _casas(usuario) -> set[str]:
+    return {c for c, _ in numeros_casa(usuario.casa) | numeros_casa(getattr(usuario, "casa_final", ""))}
+
+
+def _casas_direccion(direccion: str) -> set[str]:
+    """Numeros de casa de la direccion inicial, sin el de la division ('CS 246B DIV 1' -> {'246'})."""
+    return {c for c, _ in numeros_casa(re.sub(r"DIV\s*\d+", "", direccion or "", flags=re.I))}
+
+
+def es_de_la_persona(ref: dict, usuario) -> bool:
+    """La fila inicial de la hoja (nombre B, direccion E) es de esta persona: nombre parecido o la misma casa."""
+    return (max((similitud_nombre(n, ref.get("nombre", "")) for n in _nombres(usuario)), default=0) >= 0.6
+            or bool(_casas(usuario) & _casas_direccion(ref.get("direccion", ""))))
+
+
+def proponer_usuarios(refs: dict, usuario, maximo: int = 3) -> list[tuple[str, dict, float, bool]]:
+    """Filas de la hoja que parecen ser de esta persona cuando su No. de usuario no cuadra: nombre inicial muy
+    parecido (>= 0.75), o parecido (>= 0.6) y la misma casa. Devuelve (numero, ref, parecido, misma casa),
+    primero las de la misma casa."""
+    casas, salida = _casas(usuario), []
+    for numero, ref in refs.items():
+        sim = max((similitud_nombre(n, ref["nombre"]) for n in _nombres(usuario)), default=0)
+        casa = bool(casas & _casas_direccion(ref["direccion"]))
+        if numero != usuario.usuario and (sim >= 0.75 or (sim >= 0.6 and casa)):
+            salida.append((numero, ref, sim, casa))
+    salida.sort(key=lambda p: (p[3], p[2]), reverse=True)
+    return salida[:maximo]
 
 
 def buscar_fila(filas, numero_usuario: str) -> int | None:
@@ -205,11 +240,8 @@ def actualizar_usuario(hoja: Page, usuario, retirado: bool = False) -> bool:
         return False
     # La fila debe ser de esta persona (nombre inicial B o casa inicial E): con el No. de usuario equivocado en
     # el Excel se llenaba la fila de otra (Oleisa Cuero con el 782, que es de Johan Aguirre)
-    nombres = [n for n in (usuario.nombre, getattr(usuario, "nombre_final", "")) if n]
     inicial, direccion = _celda(filas, fila, "B"), _celda(filas, fila, COL_DIRECCION_INICIAL)
-    casas = numeros_casa(usuario.casa) | numeros_casa(getattr(usuario, "casa_final", ""))
-    if (max(similitud_nombre(n, inicial) for n in nombres) < 0.6
-            and not ({c for c, _ in casas} & {c for c, _ in numeros_casa(re.sub(r"DIV\s*\d+", "", direccion))})):
+    if not es_de_la_persona({"nombre": reparar(inicial), "direccion": reparar(direccion)}, usuario):
         print(f"   [!] Hoja: la fila {fila} del usuario {usuario.usuario} es de '{inicial}' ({direccion}), no de "
               f"'{usuario.nombre}' casa {usuario.casa}: revisa el No. de usuario en el Excel. No se llena.")
         return False

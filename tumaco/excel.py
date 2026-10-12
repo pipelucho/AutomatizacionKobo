@@ -206,9 +206,10 @@ def aplicar_pendientes(tabla: pd.DataFrame) -> pd.DataFrame:
     """Pone en la tabla leida las marcas que aun no llegaron al Excel (para no repetir formularios)."""
     campo = {col: f"formulario{n}" for n, col in COLUMNA_FORMULARIO.items()}
     campo.update({col: nombre for nombre, col in COLUMNA_DATO.items()})
+    campo[COL_USUARIO] = "usuario"  # No. de usuario corregido al comparar con la hoja de Google
     for fila, columna, valor in _leer_pendientes():
         if columna in campo:
-            tabla.loc[tabla["fila"] == fila, campo[columna]] = valor
+            tabla.loc[tabla["fila"] == fila, campo[columna]] = str(valor) if columna == COL_USUARIO else valor
     return tabla
 
 
