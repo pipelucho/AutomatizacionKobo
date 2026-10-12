@@ -663,7 +663,7 @@ def ajustar_cedula(page: Page, selector: str, lado: str, usuario=None) -> tuple[
         ajustada = _cedula_a_mano(page, foto, lado, None, "no encontre el borde de la cedula en la foto")
         if ajustada is None:
             return None, None, f"no se encontro el borde de la cedula {lado} en la foto"
-        nota = "ajustada a mano"
+        nota = "aceptada tal como estaba" if ajustada is foto else "ajustada a mano"
     else:
         ajustada, seguro, nota = resultado
         if not seguro:
@@ -703,6 +703,9 @@ def _cedula_a_mano(page: Page, foto, lado: str, propuesta, motivo: str):
         print(f"   ? Cedula {lado}: marca las 4 esquinas en la ventana del navegador...")
         r = _preguntar_cedula(page, {"modo": "esquinas", "imagen": _data_url(foto, 1400),
                                      "titulo": f"Cédula ({lado}): {motivo}"})
+        if r["accion"] == "asi":  # 'Listo' sin marcar puntos: la foto ya estaba bien
+            print(f"   - Cedula {lado}: se deja tal como esta (decidido en la ventana)")
+            return foto
         if r["accion"] != "esquinas" or len(r.get("puntos", [])) != 4:
             return None
         escala = foto.shape[1] / r["ancho"]  # de la imagen mostrada (reducida) a la foto original
@@ -774,16 +777,23 @@ _JS_MODAL_CEDULA = r"""
     return;
   }
 
-  ayuda.textContent = 'Haz clic en las 4 esquinas de la cédula, en cualquier orden.';
+  ayuda.textContent = 'Haz clic en las 4 esquinas de la cédula, en cualquier orden. '
+    + 'Si la foto ya está bien recortada y derecha, da "Listo" sin marcar puntos.';
   img.style.cursor = 'crosshair';
   const puntos = [];
-  const listo = boton('Listo', true, () => responder({accion: 'esquinas', puntos, ancho: img.naturalWidth}));
-  listo.disabled = true;
-  listo.style.opacity = .5;
+  // Sin puntos: se acepta la foto tal como esta. Con 4: se recorta por las esquinas. Con 1 a 3: faltan esquinas
+  const listo = boton('Listo (dejarla así)', true, () => responder(puntos.length === 4
+    ? {accion: 'esquinas', puntos, ancho: img.naturalWidth} : {accion: 'asi'}));
+  const actualizar = () => {
+    const vale = puntos.length === 0 || puntos.length === 4;
+    listo.disabled = !vale;
+    listo.style.opacity = vale ? 1 : .5;
+    listo.textContent = puntos.length === 4 ? 'Listo (recortar)' : puntos.length === 0 ? 'Listo (dejarla así)' : `Listo (${puntos.length} de 4)`;
+  };
   const reiniciar = () => {
     puntos.length = 0;
     marco.querySelectorAll('.tc-punto').forEach(d => d.remove());
-    listo.disabled = true; listo.style.opacity = .5;
+    actualizar();
   };
   boton('Borrar puntos', false, reiniciar);
   boton('Dejar la original', false, () => responder({accion: 'original'}));
@@ -796,7 +806,7 @@ _JS_MODAL_CEDULA = r"""
     d.textContent = puntos.length;
     d.style.cssText = `position:absolute;left:${e.clientX - r.left - 11}px;top:${e.clientY - r.top - 11}px;width:22px;height:22px;border-radius:50%;background:#e53935;color:#fff;font:bold 13px/22px Arial;text-align:center;pointer-events:none;box-shadow:0 0 0 2px #fff`;
     marco.appendChild(d);
-    if (puntos.length === 4) { listo.disabled = false; listo.style.opacity = 1; }
+    actualizar();
   };
 }
 """
