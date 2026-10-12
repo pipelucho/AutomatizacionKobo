@@ -18,6 +18,8 @@ MARGEN_DECISION = 0.3  # ventaja minima de la mejor fila sobre la segunda para e
 # El formulario 1 no esta aqui: ubica sus columnas por el nombre del encabezado (config.KOBO_COLUMNA_*).
 BUSQUEDA_POR_FILTRO = {
     config.FORMULARIOS[1]: [("casa", 16), ("usuario", 15), ("nombre", 13)],
+    # Mismo orden que el 2; columnas de DATOS DEL USUARIO (la 11 es el nombre de la encuestadora, no del usuario)
+    config.FORMULARIOS[2]: [("casa", 15), ("usuario", 14), ("nombre", 12)],
 }
 CLAVES_COLUMNA = {
     "usuario": config.KOBO_COLUMNA_USUARIO,

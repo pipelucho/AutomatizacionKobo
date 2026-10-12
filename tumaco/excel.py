@@ -7,9 +7,12 @@ import pandas as pd
 from . import config
 
 COL_NOMBRE, COL_USUARIO, COL_CASA = 1, 2, 3  # A, B, C
-COL_REALIZADO, COL_FORMULARIO_2 = 4, 5  # D = formulario 1, E = formulario 2
-ENCABEZADOS = {COL_REALIZADO: "REALIZADO:", COL_FORMULARIO_2: "FORMULARIO 2:"}
+COL_REALIZADO, COL_FORMULARIO_2, COL_FORMULARIO_3 = 4, 5, 6  # D, E, F
+# Columna donde se marca cada formulario (numero de formulario -> columna)
+COLUMNA_FORMULARIO = {1: COL_REALIZADO, 2: COL_FORMULARIO_2, 3: COL_FORMULARIO_3}
+ENCABEZADOS = {COL_REALIZADO: "REALIZADO:", COL_FORMULARIO_2: "FORMULARIO 2:", COL_FORMULARIO_3: "FORMULARIO 3:"}
 MARCA_REALIZADO = "Si"
+MARCA_A_MANO = "Revisar a mano"  # se envio, pero algo quedo para hacerlo a mano (ej. una cedula)
 MARCA_OTRO = "Tiene otro"  # la persona que atiende manifiesta ser "Otro": no se procesa
 # Marcas que no se pudieron escribir porque el Excel estaba abierto: [fila, columna, valor]
 PENDIENTES_PATH = config.OUTPUT_DIR / "marcas_pendientes.json"
@@ -23,10 +26,32 @@ class Usuario:
     casa: str
     formulario1: str = ""  # valor de la columna D
     formulario2: str = ""  # valor de la columna E
+    formulario3: str = ""  # valor de la columna F
 
-    @property
-    def formulario1_listo(self) -> bool:
-        return self.formulario1.strip().lower() == MARCA_REALIZADO.lower()
+    def marca(self, numero: int) -> str:
+        """Lo que dice el Excel para el formulario `numero` (vacio = falta hacerlo)."""
+        return getattr(self, f"formulario{numero}", "").strip()
+
+    def siguiente(self) -> int | None:
+        """Primer formulario por hacer, o None si ya termino o una marca detiene la cadena
+        (ej. 'Tiene otro' o 'No encontrado' en un formulario anterior)."""
+        for numero in sorted(COLUMNA_FORMULARIO):
+            marca = self.marca(numero)
+            if not marca:
+                return numero
+            if not fue_enviado(marca):
+                return None
+        return None
+
+
+def fue_enviado(marca: str) -> bool:
+    """La marca indica que el formulario quedo enviado ('Si', o 'Revisar a mano: ...')."""
+    m = marca.strip().lower()
+    return m == MARCA_REALIZADO.lower() or m.startswith(MARCA_A_MANO.lower())
+
+
+def letra(columna: int) -> str:
+    return chr(ord("A") + columna - 1)
 
 
 def _texto(valor) -> str:
@@ -38,16 +63,15 @@ def _texto(valor) -> str:
 
 
 def cargar_tabla() -> pd.DataFrame:
-    """Lee el Excel UNA sola vez: nombre, usuario, casa, columnas D y E, y la fila real de Excel."""
+    """Lee el Excel UNA sola vez: nombre, usuario, casa, marcas de cada formulario y la fila real de Excel."""
     crudo = pd.read_excel(config.EXCEL_PATH, header=0, dtype=object)
-    while len(crudo.columns) < COL_FORMULARIO_2:  # las columnas D/E pueden no existir todavia
+    while len(crudo.columns) < max(COLUMNA_FORMULARIO.values()):  # las columnas D/E/F pueden no existir todavia
         crudo[f"_vacia_{len(crudo.columns)}"] = None
     tabla = pd.DataFrame({
         "nombre": crudo.iloc[:, COL_NOMBRE - 1],
         "usuario": crudo.iloc[:, COL_USUARIO - 1],
         "casa": crudo.iloc[:, COL_CASA - 1],
-        "formulario1": crudo.iloc[:, COL_REALIZADO - 1],
-        "formulario2": crudo.iloc[:, COL_FORMULARIO_2 - 1],
+        **{f"formulario{n}": crudo.iloc[:, col - 1] for n, col in COLUMNA_FORMULARIO.items()},
     }).map(_texto)
     tabla["fila"] = crudo.index + 2  # la fila 1 son los encabezados
     guardar_pendientes()  # marcas de una corrida anterior en la que el Excel estaba abierto
@@ -55,20 +79,15 @@ def cargar_tabla() -> pd.DataFrame:
 
 
 def pendientes(tabla: pd.DataFrame) -> list[Usuario]:
-    """Usuarios con algo por hacer, en el orden del Excel:
-    - formulario 1 sin marca en D, o
-    - formulario 1 enviado (D = Si) y formulario 2 sin marca en E.
-    Una fila con D = 'Tiene otro' no se procesa.
+    """Usuarios con algo por hacer, en el orden del Excel: tienen un formulario sin marca y todos
+    los anteriores enviados. Una marca como 'Tiene otro' o 'No encontrado' detiene a esa persona.
     """
-    d_vacia = tabla["formulario1"] == ""
-    d_lista = tabla["formulario1"].str.lower() == MARCA_REALIZADO.lower()
-    e_vacia = tabla["formulario2"] == ""
-    filtro = (tabla["usuario"] != "") & (d_vacia | (d_lista & e_vacia))
-    return [
+    usuarios = [
         Usuario(fila=int(f.fila), nombre=f.nombre, usuario=f.usuario, casa=f.casa,
-                formulario1=f.formulario1, formulario2=f.formulario2)
-        for f in tabla[filtro].itertuples(index=False)
+                **{f"formulario{n}": getattr(f, f"formulario{n}") for n in COLUMNA_FORMULARIO})
+        for f in tabla[tabla["usuario"] != ""].itertuples(index=False)
     ]
+    return [u for u in usuarios if u.siguiente() is not None]
 
 
 def marcar_realizado(fila: int):
@@ -121,7 +140,7 @@ def guardar_pendientes(esperar: bool = False) -> bool:
 
 def aplicar_pendientes(tabla: pd.DataFrame) -> pd.DataFrame:
     """Pone en la tabla leida las marcas que aun no llegaron al Excel (para no repetir formularios)."""
-    campo = {COL_REALIZADO: "formulario1", COL_FORMULARIO_2: "formulario2"}
+    campo = {col: f"formulario{n}" for n, col in COLUMNA_FORMULARIO.items()}
     for fila, columna, valor in _leer_pendientes():
         if columna in campo:
             tabla.loc[tabla["fila"] == fila, campo[columna]] = valor

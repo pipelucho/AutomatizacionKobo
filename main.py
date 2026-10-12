@@ -114,7 +114,7 @@ def _intentar(kobo: Kobo, usuario: excel.Usuario, numero: int) -> tuple[str, str
 
 
 def main():
-    # El Excel se lee una sola vez; durante la corrida solo se escribe para marcar las columnas D y E
+    # El Excel se lee una sola vez; durante la corrida solo se escribe para marcar cada formulario
     tabla = excel.cargar_tabla()
     por_procesar = excel.pendientes(tabla)
     print(f"{config.EXCEL_PATH.name}: {len(tabla)} fila(s), {len(por_procesar)} con formularios pendientes.")
@@ -122,6 +122,7 @@ def main():
         return
 
     terminados, con_otro, pendientes, no_encontrados, a_mano = [], [], [], [], []
+    sin_configurar = set()  # formularios sin correcciones cuyo inventario ya se guardo en esta corrida
     with abrir_navegador() as (_, page):
         kobo = Kobo(page)
         kobo.iniciar_sesion()
@@ -132,58 +133,55 @@ def main():
                   f"| CASA {usuario.casa} (fila {usuario.fila})")
             print("=" * 70)
 
-            # Formulario 1 -> columna D
-            if usuario.formulario1_listo:
-                print("Formulario 1 ya estaba realizado (columna D): se continua con el formulario 2.")
-            else:
-                resultado, nota = _intentar(kobo, usuario, 1)
-                if resultado == OTRO:
-                    excel.marcar(usuario.fila, excel.MARCA_OTRO)
-                    print(f"Excel: fila {usuario.fila}, columna D = '{excel.MARCA_OTRO}'")
-                    con_otro.append(usuario)
-                    continue
-                if resultado == NO_ENCONTRADO:
-                    excel.marcar(usuario.fila, kobo.motivo)
-                    print(f"Excel: fila {usuario.fila}, columna D = '{kobo.motivo}'")
-                    no_encontrados.append((usuario, 1, kobo.motivo))
-                    continue
-                if resultado != ENVIADO:
-                    print(f"Excel: fila {usuario.fila} queda pendiente (formulario 1 no se completo)")
-                    pendientes.append((usuario, 1))
-                    continue
-                excel.marcar(usuario.fila, excel.MARCA_REALIZADO)
-                print(f"Excel: fila {usuario.fila}, columna D = {excel.MARCA_REALIZADO}")
+            # Formularios en orden; cada uno solo si el anterior quedo enviado
+            for numero, columna in sorted(excel.COLUMNA_FORMULARIO.items()):
+                letra = excel.letra(columna)
+                marca = usuario.marca(numero)
+                if marca:
+                    if excel.fue_enviado(marca):
+                        print(f"Formulario {numero} ya estaba realizado (columna {letra}).")
+                        continue
+                    print(f"Formulario {numero} tiene '{marca}' en la columna {letra}: no se sigue con esta persona.")
+                    break
+                if numero in sin_configurar:
+                    print(f"Formulario {numero} aun sin correcciones configuradas: se salta "
+                          f"(su inventario de campos ya se guardo en esta corrida).")
+                    pendientes.append((usuario, numero))
+                    break
 
-            # Formulario 2 -> columna E (solo si el formulario 1 quedo enviado y la E esta vacia)
-            if usuario.formulario2.strip():
-                print(f"Formulario 2 ya tiene marca en la columna E ('{usuario.formulario2}'): no se repite.")
-                continue
-            resultado, nota = _intentar(kobo, usuario, 2)
-            if resultado == ENVIADO and nota:
-                # Se envio con las demas correcciones; lo que falto queda anotado para hacerlo a mano
-                excel.marcar(usuario.fila, nota, excel.COL_FORMULARIO_2)
-                print(f"Excel: fila {usuario.fila}, columna E = '{nota}'")
-                a_mano.append((usuario, nota))
-            elif resultado == ENVIADO:
-                excel.marcar(usuario.fila, excel.MARCA_REALIZADO, excel.COL_FORMULARIO_2)
-                print(f"Excel: fila {usuario.fila}, columna E = {excel.MARCA_REALIZADO}")
-                terminados.append(usuario)
-            elif resultado == NO_ENCONTRADO:
-                excel.marcar(usuario.fila, kobo.motivo, excel.COL_FORMULARIO_2)
-                print(f"Excel: fila {usuario.fila}, columna E = '{kobo.motivo}'")
-                no_encontrados.append((usuario, 2, kobo.motivo))
+                resultado, nota = _intentar(kobo, usuario, numero)
+                if not correcciones.tiene_correcciones(numero):
+                    sin_configurar.add(numero)
+                if resultado == OTRO:
+                    excel.marcar(usuario.fila, excel.MARCA_OTRO, columna)
+                    print(f"Excel: fila {usuario.fila}, columna {letra} = '{excel.MARCA_OTRO}'")
+                    con_otro.append(usuario)
+                    break
+                if resultado == NO_ENCONTRADO:
+                    excel.marcar(usuario.fila, kobo.motivo, columna)
+                    print(f"Excel: fila {usuario.fila}, columna {letra} = '{kobo.motivo}'")
+                    no_encontrados.append((usuario, numero, kobo.motivo))
+                    break
+                if resultado != ENVIADO:
+                    print(f"Excel: fila {usuario.fila}, formulario {numero} queda pendiente (columna {letra} vacia)")
+                    pendientes.append((usuario, numero))
+                    break
+                # Enviado. Si algo quedo para hacer a mano (ej. una cedula), se anota en vez de "Si"
+                excel.marcar(usuario.fila, nota or excel.MARCA_REALIZADO, columna)
+                print(f"Excel: fila {usuario.fila}, columna {letra} = '{nota or excel.MARCA_REALIZADO}'")
+                if nota:
+                    a_mano.append((usuario, numero, nota))
             else:
-                print(f"Excel: fila {usuario.fila}, formulario 2 queda pendiente (columna E vacia)")
-                pendientes.append((usuario, 2))
+                terminados.append(usuario)
 
         print("\n" + "=" * 70)
-        print(f"Con formularios 1 y 2 terminados: {len(terminados)} | Con opcion 'Otro': {len(con_otro)} "
+        print(f"Con todos los formularios enviados: {len(terminados)} | Con opcion 'Otro': {len(con_otro)} "
               f"| Enviados con algo a mano: {len(a_mano)} | No encontrados o dudosos: {len(no_encontrados)} "
               f"| Pendientes: {len(pendientes)}")
         for u in con_otro:
             print(f"   - fila {u.fila}: {u.usuario} {u.nombre} ({excel.MARCA_OTRO})")
-        for u, nota in a_mano:
-            print(f"   - fila {u.fila}: {u.usuario} {u.nombre} ({nota})")
+        for u, numero, nota in a_mano:
+            print(f"   - fila {u.fila}: {u.usuario} {u.nombre} (formulario {numero}: {nota})")
         for u, numero, motivo in no_encontrados:
             print(f"   - fila {u.fila}: {u.usuario} {u.nombre} (formulario {numero}: {motivo})")
         for u, numero in pendientes:

@@ -23,6 +23,11 @@ MAYUSCULAS = {
         f"{FORM} > section:nth-child(5) > label:nth-child(5)",
         f"{FORM} > section:nth-child(5) > label:nth-child(6)",
     ],
+    3: [
+        # DATOS DEL USUARIO: direccion y barrio
+        f"{FORM} > section:nth-child(4) > label:nth-child(6)",
+        f"{FORM} > section:nth-child(4) > label:nth-child(7)",
+    ],
 }
 
 # Campos que siempre llevan el mismo valor, por formulario
@@ -38,6 +43,23 @@ VALORES_FIJOS = {
         (f"{FORM} > section:nth-child(5) > section:nth-child(18) > label:nth-child(2)", "ADRIANA MUÑOZ"),
         (f"{FORM} > section:nth-child(5) > section:nth-child(18) > label:nth-child(3)", "59122110"),
     ],
+    3: [
+        # INFORMACION GENERAL: nombre (unica pregunta de texto de la seccion)
+        (f"{FORM} > section:nth-child(3) > label", "ADRIANA MUÑOZ"),
+        # RESPONSABLE CONTRATISTA: nombre y documento
+        (f"{FORM} > section:nth-child(6) > section:nth-child(5) > label:nth-child(2)", "ADRIANA MUÑOZ"),
+        (f"{FORM} > section:nth-child(6) > section:nth-child(5) > label:nth-child(3)", "59122110"),
+    ],
+}
+
+# Campos que se llenan con un texto solo si estan vacios (si ya tienen algo, se respeta), por formulario
+VALORES_SI_VACIO = {
+    3: [
+        # SERVICIOS PUBLICOS DOMICILIARIOS / OBSERVACION (OPCIONAL)
+        (f"{FORM} > section:nth-child(5) > label:nth-child(96)",
+         "EL AGUA ES DEFICIENTE, LA SUSPENDEN POR MÁS DE OCHO DÍAS CEDENAR NO VIENE A TOMAR LECTURA "
+         "Y LAS FACTURAS NOS LLEGAN MUY CARAS TAMBIEN APAGONES"),
+    ],
 }
 
 # Campos que se reemplazan con el dato del Excel de usuarios (viene corregido), por formulario.
@@ -52,6 +74,12 @@ VALORES_DEL_EXCEL = {
     2: [
         (f"{FORM} > section:nth-child(5) > label:nth-child(2)", "nombre"),
         (f"{FORM} > section:nth-child(5) > section:nth-child(17) > label:nth-child(2)", "nombre"),
+    ],
+    3: [
+        # DATOS DEL USUARIO: nombre
+        (f"{FORM} > section:nth-child(4) > label:nth-child(3)", "nombre"),
+        # ENTREVISTADO (junto a su firma): nombre
+        (f"{FORM} > section:nth-child(6) > section:nth-child(4) > label:nth-child(2)", "nombre"),
     ],
 }
 
@@ -70,6 +98,7 @@ DOCUMENTOS = {
 FIRMAS = {
     1: {"seccion": f"{FORM} > section:nth-child(10) > section:nth-child(4)", "trazos": "contratista.json"},
     2: {"seccion": f"{FORM} > section:nth-child(5) > section:nth-child(18)", "trazos": "contratista.json"},  # misma firma
+    3: {"seccion": f"{FORM} > section:nth-child(6) > section:nth-child(5)", "trazos": "contratista.json"},  # misma firma
 }
 
 # Fotos de la cedula que se recortan al borde del documento y se enderezan: (pregunta, lado)
@@ -122,6 +151,12 @@ def aplicar(page: Page, numero_formulario: int, usuario=None) -> Resultado:
             cambio = poner_valor(page, selector, valor)
             if cambio:
                 cambios.append(cambio)
+    if numero_formulario in VALORES_SI_VACIO:
+        print("\nCampos que se llenan si estan vacios:")
+        for selector, valor in VALORES_SI_VACIO[numero_formulario]:
+            cambio = llenar_si_vacio(page, selector, valor)
+            if cambio:
+                cambios.append(cambio)
     if numero_formulario in FIRMAS:
         firma = FIRMAS[numero_formulario]
         print("\nFirma del responsable contratista:")
@@ -147,8 +182,8 @@ def aplicar(page: Page, numero_formulario: int, usuario=None) -> Resultado:
 
 def tiene_correcciones(numero_formulario: int) -> bool:
     """True si el formulario ya tiene correcciones configuradas (solo entonces se envia a Kobo)."""
-    return any(numero_formulario in m for m in (MAYUSCULAS, VALORES_FIJOS, VALORES_DEL_EXCEL, DOCUMENTOS, FIRMAS,
-                                                 CEDULAS))
+    return any(numero_formulario in m for m in (MAYUSCULAS, VALORES_FIJOS, VALORES_DEL_EXCEL, VALORES_SI_VACIO,
+                                                 DOCUMENTOS, FIRMAS, CEDULAS))
 
 
 def inventario_campos(page: Page, numero_formulario: int) -> Path:
@@ -207,6 +242,11 @@ def poner_mayusculas(page: Page, selector: str) -> str | None:
 
 def poner_valor(page: Page, selector: str, valor: str) -> str | None:
     return _corregir_texto(page, selector, lambda _: valor, "ya tiene el valor correcto")
+
+
+def llenar_si_vacio(page: Page, selector: str, valor: str) -> str | None:
+    return _corregir_texto(page, selector, lambda actual: actual if actual.strip() else valor,
+                           "ya tiene texto, se deja igual")
 
 
 def _corregir_texto(page: Page, selector: str, transformar, msg_sin_cambio: str) -> str | None:
