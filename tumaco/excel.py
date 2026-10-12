@@ -20,10 +20,12 @@ COL_SOPORTE = 14  # N: texto de soportes para la columna J de la hoja (escrito e
 # O: registro de Kobo ya decidido para un formulario ('F1=829157463; F2=...'): el bot lo abre directo por su
 # _id, sin buscarlo en la tabla ni preguntar (para casos revisados a mano, ej. quien atendio es otra persona)
 COL_REGISTRO = 15
+# P: observacion para la columna L de la hoja (decidida en la ventana del formulario 1, ej. 'NUEVO PROPIETARIO')
+COL_OBSERVACION = 16
 # Datos del formulario 1 que se guardan para usarlos despues en la hoja de Google (campo -> columna)
 COLUMNA_DATO = {"propietario": COL_PROPIETARIO, "documento": COL_DOCUMENTO, "anexo": COL_ANEXO,
                 "hoja": COL_HOJA, "nombre_final": COL_NOMBRE_FINAL, "casa_final": COL_CASA_FINAL,
-                "soporte": COL_SOPORTE, "registro": COL_REGISTRO}
+                "soporte": COL_SOPORTE, "registro": COL_REGISTRO, "observacion": COL_OBSERVACION}
 # Formularios que algunas personas no tienen: "No encontrado" no detiene a la persona
 FORMULARIOS_OPCIONALES = {4}
 COLUMNA_FORMULARIO = {1: COL_REALIZADO, 2: COL_FORMULARIO_2, 3: COL_FORMULARIO_3, 4: COL_FORMULARIO_4}
@@ -31,7 +33,8 @@ ENCABEZADOS = {COL_REALIZADO: "REALIZADO:", COL_FORMULARIO_2: "FORMULARIO 2:", C
               COL_FORMULARIO_4: "FORMULARIO 4:", COL_PROPIETARIO: "PROPIETARIO:",
               COL_DOCUMENTO: "DOCUMENTO:", COL_ANEXO: "DOCUMENTO ANEXO:", COL_HOJA: "HOJA:",
               COL_NOMBRE_FINAL: "NOMBRE FINAL:", COL_CASA_FINAL: "CASA FINAL:",
-              COL_SOPORTE: "SOPORTES HOJA:", COL_REGISTRO: "REGISTRO KOBO:"}
+              COL_SOPORTE: "SOPORTES HOJA:", COL_REGISTRO: "REGISTRO KOBO:",
+              COL_OBSERVACION: "OBSERVACION HOJA:"}
 MARCA_REALIZADO = "Si"
 MARCA_A_MANO = "Revisar a mano"  # se envio, pero algo quedo para hacerlo a mano (ej. una cedula)
 MARCA_NO_ENCONTRADO = "No encontrado"  # formulario que no existe para esa persona (ej. el 4)
@@ -59,6 +62,7 @@ class Usuario:
     casa_final: str = ""  # columna M
     soporte: str = ""  # columna N
     registro: str = ""  # columna O: registros de Kobo ya decididos ('F1=829157463; F2=...')
+    observacion: str = ""  # columna P: texto para la columna L (OBSERVACION) de la hoja
     # Datos iniciales del usuario en la hoja de Google (no se guardan en el Excel)
     ref_nombre: str = ""
     ref_direccion: str = ""

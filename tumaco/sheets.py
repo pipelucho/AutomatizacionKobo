@@ -25,6 +25,8 @@ RESPONSABLE = "KAREN QUIÑONES"
 # Columnas de la hoja (A = No. del usuario, E = direccion inicial)
 COL_NUMERO, COL_DIRECCION_INICIAL = "A", "E"
 COL_NOMBRE, COL_DOCUMENTO, COL_DIRECCION, COL_VERIFICACION, COL_SOPORTE, COL_RESPONSABLE = "F", "G", "H", "I", "J", "K"
+COL_OBSERVACION = "L"  # razon del estado (ej. 'NUEVO PROPIETARIO'; en RETIRADO la inviabilidad)
+OBSERVACION_RETIRADO = "INVIABILIDAD VIVIENDA INEXISTENTE"  # el texto que ya usan otros para los lotes vacios
 
 
 class Hoja:
@@ -144,7 +146,7 @@ def valores_usuario(usuario, direccion_inicial: str) -> dict[str, str]:
     if casa and not (numeros_casa(casa) & numeros_casa(direccion)):
         barrio = re.sub(r"^CASA(\s+\d+(\s[A-Z](?![A-Z0-9]))?)?\s*", "", direccion)
         direccion = f"{casa} {barrio}".strip()
-    return {
+    valores = {
         COL_NOMBRE: " ".join((getattr(usuario, "nombre_final", "") or usuario.nombre).upper().split()),
         COL_DOCUMENTO: usuario.documento,
         COL_DIRECCION: direccion,
@@ -154,6 +156,10 @@ def valores_usuario(usuario, direccion_inicial: str) -> dict[str, str]:
                       (reglas.SOPORTE_CON_ANEXO if usuario.anexo.lower() == "si" else reglas.SOPORTE_SIN_ANEXO)),
         COL_RESPONSABLE: RESPONSABLE,
     }
+    # Observacion solo si se decidio una (columna P del Excel); si no, la columna L no se toca
+    if getattr(usuario, "observacion", ""):
+        valores[COL_OBSERVACION] = usuario.observacion
+    return valores
 
 
 # ---------- Escritura ----------
@@ -183,6 +189,7 @@ def valores_retirado(usuario, direccion_inicial: str) -> dict[str, str]:
         COL_VERIFICACION: "RETIRADO",
         COL_SOPORTE: "FOTOGRAFIA VIVIENDA",
         COL_RESPONSABLE: RESPONSABLE,
+        COL_OBSERVACION: OBSERVACION_RETIRADO,
     }
 
 

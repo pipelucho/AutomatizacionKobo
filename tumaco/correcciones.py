@@ -346,6 +346,51 @@ def confirmar_retirado(page: Page, usuario, evidencia: list[str]) -> bool:
     return bool(elegidos)
 
 
+def notas_formulario1(envio: dict) -> list[str]:
+    """Las notas del F1 (Otro cual, condiciones especiales, observaciones), sin vacias ni 'Ninguna'."""
+    notas = []
+    for clave, valor in (envio or {}).items():
+        if clave.split("/")[-1] in _CAMPOS_NOTA and isinstance(valor, str):
+            texto = " ".join(valor.split())
+            if texto and norm(texto) not in ("ninguna", "ninguno", "na", "n/a", "no"):
+                notas.append(texto)
+    return notas
+
+
+def proponer_observacion(notas: list[str]) -> str:
+    """Texto para la columna L de la hoja segun las notas del F1 (como lo escriben los demas equipos)."""
+    t = norm(" ".join(notas))
+    if re.search(r"fallec|difunt|murio", t):
+        return "BENEFICIARIO INICIAL FALLECIDO"
+    if re.search(r"vend|compraventa|compr[oa]|nuev[oa]\s+(propietari|duen)", t):
+        return "NUEVO PROPIETARIO"
+    if re.search(r"sin soporte|no se cuenta con soporte|zona informal", t):
+        return "NO SE CUENTA CON SOPORTES DE ESCRITURA PUBLICA NI COMPRAVENTA POR SER ZONA INFORMAL"
+    return ""
+
+
+def observacion_hoja(page: Page, usuario, envio: dict, nombre_final: str) -> str:
+    """Observacion (columna L de la hoja) cuando hay algo que explicar: quien atendio es otra persona, no es
+    propietario o el F1 trae una nota de venta, fallecimiento o soportes. Se decide en la ventana."""
+    notas = notas_formulario1(envio)
+    propuesta = proponer_observacion(notas)
+    otra_persona = bool(nombre_final) or getattr(usuario, "propietario", "").lower() == "no"
+    if not (propuesta or otra_persona) or not config.PREGUNTAR_DUDAS:
+        return propuesta if not config.PREGUNTAR_DUDAS else ""
+    print("   ? Observacion para la hoja (columna L) -> decide en la ventana del navegador...")
+    elegidos = ventanas.revisar_cambios(
+        page, "Observación para la hoja de Google (columna L)",
+        [f"Usuario {usuario.usuario} | Excel: {usuario.nombre} | quien atendió: {nombre_final or usuario.nombre}",
+         *([f"Nota en Kobo: {n}" for n in notas] or ["Kobo no trae notas"]),
+         "Puedes editar el texto. 'Sin observación' deja la columna L como está."],
+        [{"id": "obs", "campo": "Observación (L)", "actual": "", "nuevo": propuesta or "NUEVO PROPIETARIO",
+          "detalle": "Textos que ya usan: NUEVO PROPIETARIO, BENEFICIARIO INICIAL FALLECIDO, NO SE CUENTA CON SOPORTES..."}],
+        aplicar="Usar esta observación", omitir="Sin observación")
+    valor = reglas.limpio((elegidos or {}).get("obs", ""))
+    print(f"   - Observacion: decidido en la ventana -> '{valor or 'sin observacion'}'")
+    return valor
+
+
 def procesar_aunque_otro(page: Page, numero_formulario: int, usuario) -> bool:
     """Quien atiende marco 'Otro': se pregunta en la ventana si se procesa igual (como cuando atiende otra
     persona: queda el nombre de quien atendio). Con PREGUNTAR_DUDAS=0 se mantiene la regla: no se procesa."""

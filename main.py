@@ -190,6 +190,15 @@ def procesar_formulario(kobo: Kobo, usuario: excel.Usuario, numero: int) -> tupl
             usuario.soporte = resultado.soporte
             print(f"Excel: fila {usuario.fila}, columna {excel.letra(excel.COL_SOPORTE)} (soportes hoja) = "
                   f"'{resultado.soporte}'")
+        # Columna L de la hoja (OBSERVACION): solo cuando hay algo que explicar; se decide en la ventana
+        if enviado and numero == 1 and not usuario.observacion:
+            observacion = correcciones.observacion_hoja(kobo.page, usuario, kobo.registro_json(encontrado),
+                                                        resultado.nombre_final or usuario.nombre_final)
+            if observacion:
+                excel.marcar(usuario.fila, observacion, excel.COL_OBSERVACION)
+                usuario.observacion = observacion
+                print(f"Excel: fila {usuario.fila}, columna {excel.letra(excel.COL_OBSERVACION)} (observacion hoja) = "
+                      f"'{observacion}'")
     finally:
         # Cerrar SIEMPRE la pestaña de edicion (tambien si hubo error) para no acumular pestañas.
         # Un fallo aqui no debe hacer perder un envio que Kobo ya confirmo.
