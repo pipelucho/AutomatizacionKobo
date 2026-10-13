@@ -1,0 +1,240 @@
+[
+ {
+  "pregunta": "NO. CONTRATO",
+  "tipo": "opcion unica",
+  "valor": "512- 2026",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "NORMALIZACIÓN DE REDES DE DISTRIBUCIÓN ELÉCTRICA Y GENERACIÓN DE ENERGÍA FOTOVOLTAICA A PEQUEÑA ESCALA CONECTADA A LA RED, PARA LOS BARRIOS EL TRIUNFO",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(3) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "MUNICIPIO",
+  "tipo": "opcion unica",
+  "valor": "TUMACO - NARIÑO",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(4)",
+  "visible": true
+ },
+ {
+  "pregunta": "LUGAR",
+  "tipo": "opcion unica",
+  "valor": "El Triunfo – Sector 4",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(5)",
+  "visible": true
+ },
+ {
+  "pregunta": "CONTRATISTA",
+  "tipo": "opcion unica",
+  "valor": "Consorcio Alianza PRONE",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(6)",
+  "visible": true
+ },
+ {
+  "pregunta": "INTERVENTORÍA",
+  "tipo": "opcion unica",
+  "valor": "SERVICIOS DE INGENIERIA EYC S.A.S.",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(7)",
+  "visible": true
+ },
+ {
+  "pregunta": "CARGO",
+  "tipo": "opcion unica",
+  "valor": "COORDINADORA PLAN DE ACCION SOCIAL",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(8)",
+  "visible": true
+ },
+ {
+  "pregunta": "NOMBRE",
+  "tipo": "text",
+  "valor": "ADRIANA MUÑOZ",
+  "selector": "body > div.main > article > form > section:nth-child(3) > label:nth-child(9)",
+  "visible": true
+ },
+ {
+  "pregunta": "DE CONFORMIDAD CON LO DISPUESTO EN LA LEY 1581 DE 2012 Y DEMÁS NORMAS QUE LA REGLAMENTAN, AUTORIZO DE MANERA LIBRE, PREVIA, EXPRESA E INFORMADA AL CON",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "AUTORIZACIÓN DE TRATAMIENTO DE DATOS PERSONALES",
+  "tipo": "opcion unica",
+  "valor": "Sí",
+  "selector": "body > div.main > article > form > section:nth-child(4) > fieldset:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "No aceptó el tratamiento de datos personales, no se puede continuar.",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(4)",
+  "visible": false
+ },
+ {
+  "pregunta": "NOMBRE COMPLETO DEL USUARIO",
+  "tipo": "text",
+  "valor": "ANA LUCIA VIVEROS MONTAÑO",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "CÉDULA DE CIUDADANÍA NO.",
+  "tipo": "text",
+  "valor": "59677880",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "NO. USUARIO",
+  "tipo": "number",
+  "valor": "59",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(4)",
+  "visible": true
+ },
+ {
+  "pregunta": "DIRECCIÓN",
+  "tipo": "text",
+  "valor": "CASA 39",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(5)",
+  "visible": true
+ },
+ {
+  "pregunta": "BARRIO",
+  "tipo": "text",
+  "valor": "EL TRIUNFO",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(6)",
+  "visible": true
+ },
+ {
+  "pregunta": "NOMBRE DEL PROYECTO",
+  "tipo": "text",
+  "valor": "“NORMALIZACIÓN DE REDES DE DISTRIBUCIÓN ELÉCTRICA Y GENERACIÓN DE ENERGÍA FOTOVOLTÁICA A PEQUEÑA ESCALA CONECTADA A LA RED, PARA LOS BARRIOS EL TRIUNFO SECTOR 4, LA LIBERTAD SECTOR 1 Y 2 Y LOS ÁNGELES",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(7)",
+  "visible": true
+ },
+ {
+  "pregunta": "EN LA CIUDAD DE TUMACO, YO, ANA LUCIA VIVEROS MONTAÑO, IDENTIFICADO(A) CON CÉDULA DE CIUDADANÍA NO. 59677880, CON DOMICILIO EN LA DIRECCIÓN CASA 39, B",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(8)",
+  "visible": true
+ },
+ {
+  "pregunta": "1. HE RECIBIDO INFORMACIÓN SUFICIENTE SOBRE EL PROYECTO PRONE, COMPRENDIENDO SUS OBJETIVOS, ALCANCES, BENEFICIOS, LIMITACIONES Y CONDICIONES GENERALES",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(9)",
+  "visible": true
+ },
+ {
+  "pregunta": "2. COMPRENDO QUE MI EVENTUAL VINCULACIÓN COMO BENEFICIARIO ESTARÁ SUJETA AL CUMPLIMIENTO DE LOS REQUISITOS TÉCNICOS, SOCIALES Y ADMINISTRATIVOS ESTABL",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(10)",
+  "visible": true
+ },
+ {
+  "pregunta": "3. ACEPTO DE MANERA LIBRE Y VOLUNTARIA MI VINCULACIÓN COMO BENEFICIARIO DEL PROYECTO PRONE Y LA EJECUCIÓN DE LAS ACTIVIDADES NECESARIAS PARA LA IMPLEM",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(11)",
+  "visible": true
+ },
+ {
+  "pregunta": "4. AUTORIZO EL INGRESO DEL PERSONAL DEBIDAMENTE IDENTIFICADO DEL CONTRATISTA Y CUANDO CORRESPONDA, LA INTERVENTORÍA, PARA REALIZAR LAS ACTIVIDADES DE ",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(12)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿EL USUARIO ACEPTA PARTICIPAR EN EL PROYECTO PRONE?",
+  "tipo": "opcion unica",
+  "valor": "Sí acepta",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(13)",
+  "visible": true
+ },
+ {
+  "pregunta": "⚠️ Atención: El usuario manifestó que no desea participar en el Proyecto PRONE. Es obligatorio diligenciar, firmar y adjuntar el Certificado de Desist",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(14)",
+  "visible": false
+ },
+ {
+  "pregunta": "Certificado de renuncia voluntaria o desistimiento",
+  "tipo": "archivo",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(15)",
+  "visible": false
+ },
+ {
+  "pregunta": "EL USUARIO MANIFESTÓ SU ACEPTACIÓN PARA PARTICIPAR EN EL PROYECTO PRONE. A CONTINUACIÓN, SE DARÁ INICIO A LA APLICACIÓN DE LA ENCUESTA DE CARACTERIZAC",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(16)",
+  "visible": true
+ },
+ {
+  "pregunta": "NOMBRE",
+  "tipo": "text",
+  "valor": "ANA LUCIA VIVEROS MONTAÑO",
+  "selector": "body > div.main > article > form > section:nth-child(5) > section:nth-child(17) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "DOCUMENTO",
+  "tipo": "text",
+  "valor": "59677880",
+  "selector": "body > div.main > article > form > section:nth-child(5) > section:nth-child(17) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "FIRMA",
+  "tipo": "firma",
+  "valor": "(lienzo de firma)",
+  "selector": "body > div.main > article > form > section:nth-child(5) > section:nth-child(17) > label:nth-child(4)",
+  "visible": true
+ },
+ {
+  "pregunta": "NOMBRE",
+  "tipo": "text",
+  "valor": "ADRIANA MUÑOZ",
+  "selector": "body > div.main > article > form > section:nth-child(5) > section:nth-child(18) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "DOCUMENTO",
+  "tipo": "text",
+  "valor": "59122110",
+  "selector": "body > div.main > article > form > section:nth-child(5) > section:nth-child(18) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "FIRMA",
+  "tipo": "firma",
+  "valor": "(lienzo de firma)",
+  "selector": "body > div.main > article > form > section:nth-child(5) > section:nth-child(18) > label:nth-child(4)",
+  "visible": true
+ },
+ {
+  "pregunta": "CÉDULA DE CIUDADANÍA DEL USUARIO (CARA)",
+  "tipo": "archivo",
+  "valor": "1790264632756-ajustada-16_8_15.jpg",
+  "selector": "body > div.main > article > form > section:nth-child(6) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "CÉDULA DE CIUDADANÍA DEL USUARIO (REVERSO)",
+  "tipo": "archivo",
+  "valor": "1790264641056-ajustada-16_8_17.jpg",
+  "selector": "body > div.main > article > form > section:nth-child(6) > label:nth-child(3)",
+  "visible": true
+ }
+]

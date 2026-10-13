@@ -1,0 +1,22 @@
+{
+ "885|2": {
+  "fecha": "2026-10-12 04:38",
+  "mensaje": "TargetClosedError: Locator.wait_for: Target page, context or browser has been closed"
+ },
+ "802|4": {
+  "fecha": "2026-10-12 10:25",
+  "mensaje": "RuntimeError: no aparecio la caja de filtro de USUARIO en la tabla de Kobo"
+ },
+ "783|4": {
+  "fecha": "2026-10-12 10:26",
+  "mensaje": "RuntimeError: no aparecio la caja de filtro de USUARIO en la tabla de Kobo"
+ },
+ "751|4": {
+  "fecha": "2026-10-12 10:28",
+  "mensaje": "RuntimeError: no aparecio la caja de filtro de USUARIO en la tabla de Kobo"
+ },
+ "536|4": {
+  "fecha": "2026-10-12 10:30",
+  "mensaje": "RuntimeError: no aparecio la caja de filtro de USUARIO en la tabla de Kobo"
+ }
+}

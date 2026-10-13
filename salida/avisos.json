@@ -1,0 +1,62 @@
+{
+ "802|F4|Registro ajeno": {
+  "tipo": "Registro ajeno",
+  "formulario": "F4",
+  "texto": "marcado como enviado en el Excel, pero ningun registro de Kobo coincide por usuario, casa o documento",
+  "fecha": "2026-10-12 02:01"
+ },
+ "783|F4|Registro ajeno": {
+  "tipo": "Registro ajeno",
+  "formulario": "F4",
+  "texto": "marcado como enviado en el Excel, pero ningun registro de Kobo coincide por usuario, casa o documento",
+  "fecha": "2026-10-12 02:01"
+ },
+ "751|F2|Registro duplicado": {
+  "tipo": "Registro duplicado",
+  "formulario": "F2",
+  "texto": "hay otro registro que tambien coincide (posible duplicado): _id 829150714: Paula Yolima Wisamano, usuario 763, Casa 521, doc 59666480",
+  "fecha": "2026-10-12 02:01"
+ },
+ "751|F4|Registro duplicado": {
+  "tipo": "Registro duplicado",
+  "formulario": "F4",
+  "texto": "su registro (_id 829274647: Paula wisamano, usuario 751, Casa 453, doc 59666480) nunca fue corregido por el bot: el formulario se rehace completo",
+  "fecha": "2026-10-12 02:01"
+ },
+ "536|F1|Verificar casa": {
+  "tipo": "Verificar casa",
+  "formulario": "F1",
+  "texto": "se deja 'CASA 127' de Kobo (coincide con la hoja 'CS 127 LA LIBERTAD DIV 1'); el Excel dice 234",
+  "fecha": "2026-10-12 02:06"
+ },
+ "536|F2|Verificar casa": {
+  "tipo": "Verificar casa",
+  "formulario": "F2",
+  "texto": "se deja 'CASA 127' de Kobo (coincide con la hoja 'CS 127 LA LIBERTAD DIV 1'); el Excel dice 234",
+  "fecha": "2026-10-12 02:06"
+ },
+ "536|F3|Verificar casa": {
+  "tipo": "Verificar casa",
+  "formulario": "F3",
+  "texto": "se deja 'CASA 127' de Kobo (coincide con la hoja 'CS 127 LA LIBERTAD DIV 1'); el Excel dice 234",
+  "fecha": "2026-10-12 02:06"
+ },
+ "536|F4|Verificar casa": {
+  "tipo": "Verificar casa",
+  "formulario": "F4",
+  "texto": "Kobo 'CASA 60C', Excel 234 y hoja 'CS 127 LA LIBERTAD DIV 1' no coinciden; no se cambia",
+  "fecha": "2026-10-12 02:06"
+ },
+ "633|F1|Verificar nombre": {
+  "tipo": "Verificar nombre",
+  "formulario": "F1",
+  "texto": "se deja 'LUCENY PALACIOS ALOMIA' de Kobo (quien atendio es otra persona; el Excel y la hoja tienen al usuario inicial). Excel: 'COLOMBIA ARISMENDY', hoja: 'COLOMBIA ARISMENDY'",
+  "fecha": "2026-10-12 02:12"
+ },
+ "690|F1|Registro duplicado": {
+  "tipo": "Registro duplicado",
+  "formulario": "F1",
+  "texto": "hay otro registro que tambien coincide (posible duplicado): _id 829151223: Manuel  Santos Cuero, usuario 690, Casa 710, doc 13056497",
+  "fecha": "2026-10-12 02:12"
+ }
+}

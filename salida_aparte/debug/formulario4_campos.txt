@@ -1,0 +1,217 @@
+Formulario 4: 54 pregunta(s)
+
+[opcion unica] NO. CONTRATO
+    valor: 512- 2026
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(2)
+
+[opcion unica] MUNICIPIO
+    valor: TUMACO - NARIÑO
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(3)
+
+[opcion unica] LUGAR
+    valor: La Libertad – Sector 1 Y 2
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(4)
+
+[opcion unica] CONTRATISTA
+    valor: Consorcio Alianza PRONE
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(5)
+
+[opcion unica] INTERVENTORÍA
+    valor: SERVICIOS DE INGENIERIA EYC S.A.S.
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(6)
+
+[opcion unica] CARGO
+    valor: INGENIERO RESIDENTE
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(7)
+
+[text] NOMBRE
+    valor: Adriana Muñoz
+    selector: body > div.main > article > form > section:nth-child(3) > label:nth-child(8)
+
+[text] NOMBRE
+    valor: Yimy Wisamano
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(2)
+
+[text] DOCUMENTO
+    valor: 12918068
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(3)
+
+[text] NO. USUARIO
+    valor: 723
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(4)
+
+[text] DIRECCIÓN
+    valor: Casa 546
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(5)
+
+[text] BARRIO
+    valor: La libertad sector 1  y 2
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(6)
+
+[tel] CELULAR
+    valor: 3104649895
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(7)
+
+[opcion unica] UBICACIÓN (LATITUD / LONGITUD)
+    valor: humanitarian
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(8)
+
+[text] LA VALORACIÓN CORRESPONDE ÚNICAMENTE A LAS CONDICIONES VISIBLES AL MOMENTO DE LA VISITA.
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(2)
+
+[opcion unica] MUROS Y ACABADOS EXTERIORES
+    valor: Sin novedad
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(3)
+
+[text] Observación (opcional)  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(4)
+
+[opcion unica] PUERTAS Y VENTANAS
+    valor: Sin novedad
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(5)
+
+[text] Observación (opcional)  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(6)
+
+[opcion unica] CUBIERTA O TECHO
+    valor: Sin novedad
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(7)
+
+[text] Observación (opcional)  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(8)
+
+[opcion unica] ACCESO AL PREDIO (ANDÉN / ESCALERAS)
+    valor: Sin novedad
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(9)
+
+[text] Observación (opcional)  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(10)
+
+[opcion unica] MUROS Y ACABADOS INTERIORES
+    valor: Sin novedad
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(11)
+
+[text] Observación (opcional)  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(12)
+
+[opcion unica] PISOS INTERIOR
+    valor: Sin novedad
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(13)
+
+[text] Observación (opcional)  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(14)
+
+[opcion unica] CIELO RASO
+    valor: Sin novedad
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(15)
+
+[text] Observación (opcional)  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(16)
+
+[opcion unica] INSTALACIÓN ELÉCTRICA INTERNA (VISIBLE)
+    valor: Sin novedad
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(17)
+
+[text] Observación (opcional)  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(18)
+
+[text] SE REGISTRAN LAS CONDICIONES OBSERVABLES DEL PUNTO DE INTERVENCIÓN Y DE LA INFRAESTRUCTURA ELÉCTRICA EXISTENTE.
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(6) > label:nth-child(2)
+
+[opcion unica] SERVICIO ELÉCTRICO EXISTENTE
+    valor: Servicio con medidor individual
+    selector: body > div.main > article > form > section:nth-child(6) > fieldset:nth-child(3)
+
+[text] Observación  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(6) > label:nth-child(4)
+
+[opcion multiple] INFRAESTRUCTURA ELÉCTRICA OBSERVABLE
+    valor: Existe tablero eléctrico
+    selector: body > div.main > article > form > section:nth-child(6) > fieldset:nth-child(5)
+
+[text] Especifique la otra condición observable  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(6) > label:nth-child(6)
+
+[text] REGISTRO FOTOGRÁFICO MÍNIMO OBLIGATORIO:
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > label:nth-child(2)
+
+[archivo] FACHADA COMPLETA DEL INMUEBLE
+    valor: 1790780829927.jpg
+    selector: body > div.main > article > form > section:nth-child(7) > label:nth-child(3)
+
+[archivo] MEDIDOR DE ENERGÍA EXISTENTE (SERIAL VISIBLE)
+    valor: 1790780889749.jpg
+    selector: body > div.main > article > form > section:nth-child(7) > label:nth-child(4)
+
+[text] NO. SERIAL
+    valor: Lectura ilejible
+    selector: body > div.main > article > form > section:nth-child(7) > label:nth-child(5)
+
+[text] CIU MATRÍCULA
+    valor: 1147940
+    selector: body > div.main > article > form > section:nth-child(7) > label:nth-child(6)
+
+[archivo] ÁREA EXTERIOR DE INTERVENCIÓN (ACOMETIDA EXISTENTE)
+    valor: 1790780931274.jpg
+    selector: body > div.main > article > form > section:nth-child(7) > label:nth-child(7)
+
+[archivo] ÁREA INTERIOR DE INTERVENCIÓN (TABLERO ELÉCTRICO EXISTENTE)
+    valor: 1790780947813.jpg
+    selector: body > div.main > article > form > section:nth-child(7) > label:nth-child(8)
+
+[text] REGISTRO FOTOGRÁFICO COMPLEMENTARIO (SI APLICA):
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > label:nth-child(9)
+
+[archivo] DETALLE DAÑO O DETERIORO 1 (SI EXISTEN)
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > label:nth-child(10)
+
+[archivo] DETALLE DAÑO O DETERIORO 2 (SI EXISTEN)
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > label:nth-child(11)
+
+[texto largo] OBSERVACIONES ADICIONALES
+    valor: Todo normal
+    selector: body > div.main > article > form > section:nth-child(7) > label:nth-child(12)
+
+[text] CON LA FIRMA DEL PRESENTE DOCUMENTO, LAS PARTES DEJAN CONSTANCIA DE QUE LA INFORMACIÓN REGISTRADA CORRESPONDE A LAS CONDICIONES VISIBLES OBSERVADAS DU
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(8) > label:nth-child(2)
+
+[text] NOMBRE
+    valor: Yimy wisamano
+    selector: body > div.main > article > form > section:nth-child(8) > section:nth-child(3) > label:nth-child(2)
+
+[text] DOCUMENTO
+    valor: 12918066
+    selector: body > div.main > article > form > section:nth-child(8) > section:nth-child(3) > label:nth-child(3)
+
+[firma] FIRMA
+    valor: (lienzo de firma)
+    selector: body > div.main > article > form > section:nth-child(8) > section:nth-child(3) > label:nth-child(4)
+
+[text] NOMBRE
+    valor: Jhon . S  . M
+    selector: body > div.main > article > form > section:nth-child(8) > section:nth-child(4) > label:nth-child(2)
+
+[text] DOCUMENTO
+    valor: 1032490603
+    selector: body > div.main > article > form > section:nth-child(8) > section:nth-child(4) > label:nth-child(3)
+
+[firma] FIRMA
+    valor: (lienzo de firma)
+    selector: body > div.main > article > form > section:nth-child(8) > section:nth-child(4) > label:nth-child(4)

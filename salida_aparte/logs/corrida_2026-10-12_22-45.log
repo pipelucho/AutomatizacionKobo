@@ -1,0 +1,66 @@
+(Registro de esta corrida: C:\Users\felip\Documents\Proyectos\Tumaco\salida_aparte\logs\corrida_2026-10-12_22-45.log)
+USUARIOS_APARTE.xlsx: 10 fila(s), 2 con formularios pendientes.
+Solo los usuarios pedidos: 774 ANA LILIANA CORREA RODRIGUEZ, 860 NANCY MILENA GARCIAS CORTES
+Sesion de Kobo ya activa.
+Hoja local (HOJA_APARTE.xlsx): datos iniciales de 2 de 2 usuario(s) para buscar en Kobo y comparar nombre y casa.
+
+======================================================================
+[1/2] Usuario: ANA LILIANA CORREA RODRIGUEZ | USUARIO 774 | CASA 496 (fila 7)
+======================================================================
+
+--- Formulario 1: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA ---
+Abriendo formulario: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA
+Traceback (most recent call last):
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\tumaco\browser.py", line 77, in abrir_navegador
+    yield context, page, p
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\main.py", line 377, in main
+    resultado, nota = _intentar(kobo, usuario, numero)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\main.py", line 284, in _intentar
+    return procesar_formulario(kobo, usuario, numero)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\main.py", line 160, in procesar_formulario
+    kobo.abrir_datos(config.FORMULARIOS[numero - 1])
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\tumaco\kobo.py", line 134, in abrir_datos
+    self.ir_a_datos()
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\tumaco\kobo.py", line 169, in ir_a_datos
+    tab.wait_for(timeout=30_000)
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\sync_api\_generated.py", line 17975, in wait_for
+    self._sync(self._impl_obj.wait_for(timeout=timeout, state=state))
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_sync_base.py", line 113, in _sync
+    self._dispatcher_fiber.switch()
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\sync_api\_context_manager.py", line 56, in greenlet_main
+    self._loop.run_until_complete(self._connection.run_as_sync())
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 671, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\Python312\Lib\asyncio\windows_events.py", line 321, in run_forever
+    super().run_forever()
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 638, in run_forever
+    self._run_once()
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1933, in _run_once
+    event_list = self._selector.select(timeout)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\windows_events.py", line 444, in select
+    self._poll(timeout)
+  File "C:\Program Files\Python312\Lib\asyncio\windows_events.py", line 769, in _poll
+    status = _overlapped.GetQueuedCompletionStatus(self._iocp, ms)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\aparte.py", line 26, in <module>
+    main.main()
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\main.py", line 340, in main
+    with abrir_navegador() as (_, page, playwright):
+  File "C:\Program Files\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\tumaco\browser.py", line 79, in abrir_navegador
+    context.close()
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\sync_api\_generated.py", line 13482, in close
+    return mapping.from_maybe_impl(self._sync(self._impl_obj.close(reason=reason)))
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_sync_base.py", line 113, in _sync
+    self._dispatcher_fiber.switch()
+KeyboardInterrupt

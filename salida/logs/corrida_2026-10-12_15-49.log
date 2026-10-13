@@ -1,0 +1,81 @@
+(Registro de esta corrida: C:\Users\felip\Documents\Proyectos\Tumaco\salida\logs\corrida_2026-10-12_15-49.log)
+USUARIOS.xlsx: 76 fila(s), 2 con formularios pendientes.
+Prueba: solo las primeras 2: 18 SANTOS GENARO RIVERA ARIAS, 1 JACINTA MARINEZ ARROYO
+Sesion de Kobo ya activa.
+Hoja de Google: datos iniciales de 2 de 2 usuario(s) para comparar nombre y casa.
+
+======================================================================
+[1/2] Usuario: SANTOS GENARO RIVERA ARIAS | USUARIO 18 | CASA 244 (fila 61)
+======================================================================
+Formulario 1 ya estaba realizado (columna D).
+Formulario 2 ya estaba realizado (columna E).
+Formulario 3 ya estaba realizado (columna F).
+Formulario 4: no existe en Kobo (columna G), es opcional.
+
+Uniendo los PDF del usuario:
+   PDF unido (4 documentos): C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL\18_SANTOS GENARO RIVERA ARIAS\18_SANTOS GENARO RIVERA ARIAS.pdf
+     - 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA.pdf
+     - DOCUMENTO.pdf
+     - 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN PARA LA PARTICIPACIÓN EN EL PROYECTO.pdf
+     - 3. ENCUESTA DE CARACTERIZACIÓN SOCIOECONÓMICA DE LA COMUNIDAD.pdf
+
+Hoja de Google:
+   Hoja 'Tumaco', fila 34 (usuario 18):
+     F34 = SANTOS GENARO RIVERA ARIAS
+     G34 = 13015205
+     H34 = CASA 244 EL TRIUNFO DIV 1
+     I34 = CONFIRMADO
+     J34 = CEDULA DE CIUDADANIA
+     K34 = KAREN QUIÑONES
+   (Google respondio HTTP 429 al leer la hoja: se espera 20 s y se reintenta)
+   [!] G34: dice '13.015.205', se esperaba '13015205'
+   La hoja queda pendiente para la proxima corrida.
+
+======================================================================
+[2/2] Usuario: JACINTA MARINEZ ARROYO | USUARIO 1 | CASA 27A (fila 63)
+======================================================================
+Formulario 1 ya estaba realizado (columna D).
+Formulario 2 ya estaba realizado (columna E).
+Formulario 3 ya estaba realizado (columna F).
+Formulario 4: no existe en Kobo (columna G), es opcional.
+
+Uniendo los PDF del usuario:
+   PDF unido (4 documentos): C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL\1_KARYN EVELYN NOGALES MARINEZ\1_KARYN EVELYN NOGALES MARINEZ.pdf
+     - 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA.pdf
+     - DOCUMENTO.pdf
+     - 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN PARA LA PARTICIPACIÓN EN EL PROYECTO.pdf
+     - 3. ENCUESTA DE CARACTERIZACIÓN SOCIOECONÓMICA DE LA COMUNIDAD.pdf
+
+Hoja de Google:
+   Hoja 'Tumaco', fila 17 (usuario 1):
+     F17 = KARYN EVELYN NOGALES MARINEZ
+     G17 = 1036780156
+     H17 = CASA 27 A EL TRIUNFO DIV 1
+     I17 = INCORPORADO
+     J17 = CEDULA DE CIUDADANIA Y SOPORTE DE DIFUNCION
+     K17 = KAREN QUIÑONES
+     L17 = POSEEDORA
+   (Google respondio HTTP 429 al leer la hoja: se espera 20 s y se reintenta)
+Traceback (most recent call last):
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\main.py", line 375, in <module>
+    main()
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\main.py", line 266, in main
+    with abrir_navegador() as (_, page, playwright):
+  File "C:\Program Files\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\tumaco\browser.py", line 79, in abrir_navegador
+    context.close()
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\sync_api\_generated.py", line 13482, in close
+    return mapping.from_maybe_impl(self._sync(self._impl_obj.close(reason=reason)))
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_sync_base.py", line 115, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_browser_context.py", line 620, in close
+    await self._channel.send("close", None, {"reason": reason})
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 558, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+Exception: BrowserContext.close: Connection closed while reading from the driver

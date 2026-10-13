@@ -1,0 +1,534 @@
+[
+ {
+  "pregunta": "BUENOS DÍAS/TARDES. MI NOMBRE ES , PROFESIONAL DEL COMPONENTE SOCIAL DE . NOS ENCONTRAMOS REALIZANDO VISITAS DOMICILIARIAS EN EL MARCO DEL PROYECTO DE",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "NO. CONTRATO",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "OBJETO",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "MUNICIPIO",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(4)",
+  "visible": true
+ },
+ {
+  "pregunta": "LUGAR",
+  "tipo": "opcion unica",
+  "valor": "El Triunfo – Sector 4",
+  "selector": "body > div.main > article > form > section:nth-child(4) > fieldset:nth-child(5)",
+  "visible": true
+ },
+ {
+  "pregunta": "CONTRATISTA",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(6)",
+  "visible": true
+ },
+ {
+  "pregunta": "INTERVENTORÍA",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(7)",
+  "visible": true
+ },
+ {
+  "pregunta": "RESPOSANBLE",
+  "tipo": "text",
+  "valor": "ADRIANA MUÑOZ",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(8)",
+  "visible": true
+ },
+ {
+  "pregunta": "CARGO",
+  "tipo": "text",
+  "valor": "Profesional social",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(9)",
+  "visible": true
+ },
+ {
+  "pregunta": "NOMBRE",
+  "tipo": "text",
+  "valor": "ANA LUCIA VIVEROS MONTAÑO",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "DOCUMENTO",
+  "tipo": "text",
+  "valor": "59677880",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "NO. USUARIO",
+  "tipo": "text",
+  "valor": "59",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(4)",
+  "visible": true
+ },
+ {
+  "pregunta": "DIRECCIÓN",
+  "tipo": "text",
+  "valor": "CASA 39",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(5)",
+  "visible": true
+ },
+ {
+  "pregunta": "BARRIO",
+  "tipo": "text",
+  "valor": "EL TRIUNFO",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(6)",
+  "visible": true
+ },
+ {
+  "pregunta": "CELULAR",
+  "tipo": "tel",
+  "valor": "3165189033",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(7)",
+  "visible": true
+ },
+ {
+  "pregunta": "LA PERSONA QUE ATIENDE LA VISITA MANIFIESTA SER",
+  "tipo": "opcion unica",
+  "valor": "Propietario(a) del inmueble",
+  "selector": "body > div.main > article > form > section:nth-child(6) > fieldset:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿Cuál? (Calidad de la persona)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(6) > label:nth-child(3)",
+  "visible": false
+ },
+ {
+  "pregunta": "RESPECTO DE LA AUTORIZACIÓN PARA LAS ACTIVIDADES DEL PROYECTO, ES",
+  "tipo": "opcion unica",
+  "valor": "Persona facultada para autorizar el ingreso y/o las actuaciones requeridas en el inmueble",
+  "selector": "body > div.main > article > form > section:nth-child(6) > fieldset:nth-child(4)",
+  "visible": true
+ },
+ {
+  "pregunta": "CONDICIONES ESPECIALES DEL INMUEBLE",
+  "tipo": "opcion multiple",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(6) > fieldset:nth-child(5)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿Cuál? (Otra condición especial)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(6) > label:nth-child(6)",
+  "visible": false
+ },
+ {
+  "pregunta": "BRINDE AL USUARIO INFORMACIÓN CLARA Y SUFICIENTE SOBRE LOS TEMAS RELACIONADOS A CONTINUACIÓN, PERMITIENDO QUE FORMULE LAS INQUIETUDES QUE CONSIDERE PE",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "TEMA SOCIALIZADO",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "SOCIALIZADO",
+  "tipo": "opcion unica",
+  "valor": "Sí",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(4) > fieldset:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "INQUIETUD",
+  "tipo": "opcion unica",
+  "valor": "NO",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(4) > fieldset:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "Detalle de la inquietud",
+  "tipo": "texto largo",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(4) > label:nth-child(4)",
+  "visible": false
+ },
+ {
+  "pregunta": "Atención",
+  "tipo": "opcion unica",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(4) > fieldset:nth-child(5)",
+  "visible": false
+ },
+ {
+  "pregunta": "SOCIALIZADO",
+  "tipo": "opcion unica",
+  "valor": "Sí",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(5) > fieldset:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "INQUIETUD",
+  "tipo": "opcion unica",
+  "valor": "NO",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(5) > fieldset:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "Detalle de la inquietud",
+  "tipo": "texto largo",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(5) > label:nth-child(4)",
+  "visible": false
+ },
+ {
+  "pregunta": "Atención",
+  "tipo": "opcion unica",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(5) > fieldset:nth-child(5)",
+  "visible": false
+ },
+ {
+  "pregunta": "SOCIALIZADO",
+  "tipo": "opcion unica",
+  "valor": "Sí",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(6) > fieldset:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "INQUIETUD",
+  "tipo": "opcion unica",
+  "valor": "NO",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(6) > fieldset:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "Detalle de la inquietud",
+  "tipo": "texto largo",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(6) > label:nth-child(4)",
+  "visible": false
+ },
+ {
+  "pregunta": "Atención",
+  "tipo": "opcion unica",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(6) > fieldset:nth-child(5)",
+  "visible": false
+ },
+ {
+  "pregunta": "SOCIALIZADO",
+  "tipo": "opcion unica",
+  "valor": "Sí",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(7) > fieldset:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "INQUIETUD",
+  "tipo": "opcion unica",
+  "valor": "NO",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(7) > fieldset:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "Detalle de la inquietud",
+  "tipo": "texto largo",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(7) > label:nth-child(4)",
+  "visible": false
+ },
+ {
+  "pregunta": "Atención",
+  "tipo": "opcion unica",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(7) > fieldset:nth-child(5)",
+  "visible": false
+ },
+ {
+  "pregunta": "SOCIALIZADO",
+  "tipo": "opcion unica",
+  "valor": "Sí",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(8) > fieldset:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "INQUIETUD",
+  "tipo": "opcion unica",
+  "valor": "NO",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(8) > fieldset:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "Detalle de la inquietud",
+  "tipo": "texto largo",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(8) > label:nth-child(4)",
+  "visible": false
+ },
+ {
+  "pregunta": "Atención",
+  "tipo": "opcion unica",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(8) > fieldset:nth-child(5)",
+  "visible": false
+ },
+ {
+  "pregunta": "SOCIALIZADO",
+  "tipo": "opcion unica",
+  "valor": "Sí",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(9) > fieldset:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "INQUIETUD",
+  "tipo": "opcion unica",
+  "valor": "NO",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(9) > fieldset:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "Detalle de la inquietud",
+  "tipo": "texto largo",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(9) > label:nth-child(4)",
+  "visible": false
+ },
+ {
+  "pregunta": "Atención",
+  "tipo": "opcion unica",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(9) > fieldset:nth-child(5)",
+  "visible": false
+ },
+ {
+  "pregunta": "SOCIALIZADO",
+  "tipo": "opcion unica",
+  "valor": "Sí",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(10) > fieldset:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "INQUIETUD",
+  "tipo": "opcion unica",
+  "valor": "NO",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(10) > fieldset:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "Detalle de la inquietud",
+  "tipo": "texto largo",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(10) > label:nth-child(4)",
+  "visible": false
+ },
+ {
+  "pregunta": "Atención",
+  "tipo": "opcion unica",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(10) > fieldset:nth-child(5)",
+  "visible": false
+ },
+ {
+  "pregunta": "SOCIALIZADO",
+  "tipo": "opcion unica",
+  "valor": "Sí",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(11) > fieldset:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "INQUIETUD",
+  "tipo": "opcion unica",
+  "valor": "NO",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(11) > fieldset:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "Detalle de la inquietud",
+  "tipo": "texto largo",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(11) > label:nth-child(4)",
+  "visible": false
+ },
+ {
+  "pregunta": "Atención",
+  "tipo": "opcion unica",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(11) > fieldset:nth-child(5)",
+  "visible": false
+ },
+ {
+  "pregunta": "SOCIALIZADO",
+  "tipo": "opcion unica",
+  "valor": "Sí",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(12) > fieldset:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "INQUIETUD",
+  "tipo": "opcion unica",
+  "valor": "NO",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(12) > fieldset:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "Detalle de la inquietud",
+  "tipo": "texto largo",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(12) > label:nth-child(4)",
+  "visible": false
+ },
+ {
+  "pregunta": "Atención",
+  "tipo": "opcion unica",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(12) > fieldset:nth-child(5)",
+  "visible": false
+ },
+ {
+  "pregunta": "SE INFORMÓ QUE LA PRESENTE SOCIALIZACIÓN NO IMPLICA LA APROBACIÓN DEFINITIVA DEL USUARIO NI LA INCORPORACIÓN O SUSTITUCIÓN DE BENEFICIARIOS, SUJETAS A",
+  "tipo": "opcion unica",
+  "valor": "SÍ",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(12) > section:nth-child(6) > fieldset:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "OBSERVACIONES O GESTIÓN REQUERIDA",
+  "tipo": "texto largo",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > section:nth-child(12) > section:nth-child(6) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "SELECCIONE EL RESULTADO QUE CORRESPONDA Y REGISTRE LAS NOVEDADES O ACCIONES PENDIENTES, CUANDO APLIQUE.",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(8) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "RESULTADO DE LA VISITA",
+  "tipo": "opcion unica",
+  "valor": "Sin novedad",
+  "selector": "body > div.main > article > form > section:nth-child(8) > fieldset:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "Pendiente / novedad",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(8) > label:nth-child(4)",
+  "visible": false
+ },
+ {
+  "pregunta": "¿SE ESTABLECIERON COMPROMISOS PENDIENTES?",
+  "tipo": "opcion unica",
+  "valor": "NO",
+  "selector": "body > div.main > article > form > section:nth-child(9) > section:nth-child(2) > fieldset:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "Actividad / Tarea",
+  "tipo": "texto largo",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(9) > section:nth-child(2) > label:nth-child(3)",
+  "visible": false
+ },
+ {
+  "pregunta": "Responsable",
+  "tipo": "opcion unica",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(9) > section:nth-child(2) > fieldset:nth-child(4)",
+  "visible": false
+ },
+ {
+  "pregunta": "¿Cuál? (Otro responsable)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(9) > section:nth-child(2) > label:nth-child(5)",
+  "visible": false
+ },
+ {
+  "pregunta": "Fecha",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(9) > section:nth-child(2) > label:nth-child(6)",
+  "visible": false
+ },
+ {
+  "pregunta": "LA PERSONA QUE SUSCRIBE MANIFIESTA QUE RECIBIÓ INFORMACIÓN SOBRE EL PROYECTO Y PUDO FORMULAR INQUIETUDES. LA PRESENTE ACTA DEJA CONSTANCIA DE LA SOCIA",
+  "tipo": "opcion unica",
+  "valor": "OK",
+  "selector": "body > div.main > article > form > section:nth-child(10) > fieldset:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "NOMBRE",
+  "tipo": "text",
+  "valor": "ANA LUCIA VIVEROS MONTAÑO",
+  "selector": "body > div.main > article > form > section:nth-child(10) > section:nth-child(3) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "DOCUMENTO",
+  "tipo": "text",
+  "valor": "59677880",
+  "selector": "body > div.main > article > form > section:nth-child(10) > section:nth-child(3) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "FIRMA",
+  "tipo": "firma",
+  "valor": "(lienzo de firma)",
+  "selector": "body > div.main > article > form > section:nth-child(10) > section:nth-child(3) > label:nth-child(4)",
+  "visible": true
+ },
+ {
+  "pregunta": "NOMBRE",
+  "tipo": "text",
+  "valor": "ADRIANA MUÑOZ",
+  "selector": "body > div.main > article > form > section:nth-child(10) > section:nth-child(4) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "DOCUMENTO",
+  "tipo": "text",
+  "valor": "59122110",
+  "selector": "body > div.main > article > form > section:nth-child(10) > section:nth-child(4) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "FIRMA",
+  "tipo": "firma",
+  "valor": "(lienzo de firma)",
+  "selector": "body > div.main > article > form > section:nth-child(10) > section:nth-child(4) > label:nth-child(4)",
+  "visible": true
+ },
+ {
+  "pregunta": "SOPORTE DE PROPIEDAD SOBRE EL INMUEBLE",
+  "tipo": "archivo",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(11) > label:nth-child(2)",
+  "visible": true
+ }
+]

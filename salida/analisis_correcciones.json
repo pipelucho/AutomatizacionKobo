@@ -1,0 +1,291 @@
+{
+ "personas": [
+  {
+   "usuario": "744",
+   "fila": 7,
+   "nombre": "JUAN QUINTERO",
+   "nombre_final": "",
+   "casa_final": "CASA 491",
+   "formularios": [
+    {
+     "formulario": 1,
+     "uid": "aXQcitqkAEdmMK29TVZsbS",
+     "_id": 826426100,
+     "nota": "hay otro registro que tambien coincide (posible duplicado): _id 826857270: JUAN QUINTERO, usuario 744, CASA 491, doc 12905792",
+     "con_log": true,
+     "rehacer": true,
+     "correcciones": {}
+    }
+   ],
+   "hoja": {},
+   "avisos": [
+    "F1: hay otro registro que tambien coincide (posible duplicado): _id 826857270: JUAN QUINTERO, usuario 744, CASA 491, doc 12905792",
+    "F1: su registro (_id 826426100: Juan Quintero, usuario 744, Casa 491, doc 12905792) nunca fue corregido por el bot: el formulario se rehace completo"
+   ],
+   "sin_registro": []
+  },
+  {
+   "usuario": "433",
+   "fila": 8,
+   "nombre": "MARLENY ANDRADE",
+   "nombre_final": "RONALD MAURICIO PRADO CORTES",
+   "casa_final": "CASA 317 A",
+   "formularios": [],
+   "hoja": {},
+   "avisos": [
+    "F1 nombre: se deja 'RONALD MAURICIO PRADO CORTES' de Kobo (quien atendio es otra persona; el Excel y la hoja tienen al usuario inicial). Excel: 'MARLENY ANDRADE', hoja: 'MARLENY ANDRADE'"
+   ],
+   "sin_registro": []
+  },
+  {
+   "usuario": "751",
+   "fila": 12,
+   "nombre": "PAULA YOLIMA WISAMANO LARA",
+   "nombre_final": "",
+   "casa_final": "CASA 543",
+   "formularios": [],
+   "hoja": {},
+   "avisos": [
+    "F1: hay otro registro que tambien coincide (posible duplicado): _id 829150694: PAULA YOLIMA WISAMANO LARA, usuario 763, CASA 521, doc 59666480",
+    "F2: hay otro registro que tambien coincide (posible duplicado): _id 829150714: PAULA YOLIMA WISAMANO LARA, usuario 763, CASA 521, doc 59666480",
+    "F3: hay otro registro que tambien coincide (posible duplicado): _id 829150718: PAULA YOLIMA WISAMANO LARA, usuario 763, CASA 521, doc 59666480",
+    "F4: hay otro registro que tambien coincide (posible duplicado): _id 829274695: PAULA YOLIMA WISAMANO LARA, usuario 763, CASA 521, doc 59666480"
+   ],
+   "sin_registro": []
+  },
+  {
+   "usuario": "708",
+   "fila": 15,
+   "nombre": "LUZ MARIA DEL SOCORRO LANDAZURI QUIÑONES",
+   "nombre_final": "",
+   "casa_final": "CASA 555",
+   "formularios": [],
+   "hoja": {},
+   "avisos": [
+    "F1: hay otro registro que tambien coincide (posible duplicado): _id 830190961: LUS MARIA DEL SOCORRO LANDÁZURI, usuario 708, CASA 555, doc 59540122",
+    "F2: hay otro registro que tambien coincide (posible duplicado): _id 830190964: LUZ MARÍA DEL SOCORRO LANDÁZURI, usuario 708, CASA 555, doc 59540122",
+    "F3: hay otro registro que tambien coincide (posible duplicado): _id 830190967: LUZ MARÍA DEL SOCORRO LANDÁZURI, usuario 708, CASA 555, doc 59540122"
+   ],
+   "sin_registro": []
+  },
+  {
+   "usuario": "536",
+   "fila": 18,
+   "nombre": "YAMAIRA MONTAÑO",
+   "nombre_final": "",
+   "casa_final": "CASA 127",
+   "formularios": [
+    {
+     "formulario": 4,
+     "uid": "a6AuZGk6my3VKF5mwL7mhh",
+     "_id": 829273991,
+     "nota": "",
+     "con_log": true,
+     "rehacer": false,
+     "correcciones": {
+      "grp_usuario_inmueble/direccion": {
+       "campo": "direccion",
+       "actual": "CASA 127",
+       "nuevo": "CASA 60C",
+       "original": "Casa  60C"
+      }
+     }
+    }
+   ],
+   "hoja": {},
+   "avisos": [
+    "F1 casa: se deja 'CASA 127' de Kobo (coincide con la hoja 'CS 127 LA LIBERTAD DIV 1'); el Excel dice 234",
+    "F2 casa: se deja 'CASA 127' de Kobo (coincide con la hoja 'CS 127 LA LIBERTAD DIV 1'); el Excel dice 234",
+    "F3 casa: se deja 'CASA 127' de Kobo (coincide con la hoja 'CS 127 LA LIBERTAD DIV 1'); el Excel dice 234",
+    "F4 casa: Kobo 'CASA 60C', Excel 234 y hoja 'CS 127 LA LIBERTAD DIV 1' no coinciden; no se cambia"
+   ],
+   "sin_registro": []
+  },
+  {
+   "usuario": "633",
+   "fila": 19,
+   "nombre": "COLOMBIA ARISMENDY",
+   "nombre_final": "LUCENY PALACIOS ALOMIA",
+   "casa_final": "CASA 272",
+   "formularios": [],
+   "hoja": {},
+   "avisos": [
+    "F1 nombre: se deja 'LUCENY PALACIOS ALOMIA' de Kobo (el Excel tiene otro nombre; Kobo coincide con la hoja). Excel: 'COLOMBIA ARISMENDY', hoja: 'LUCENY PALACIOS ALOMIA'"
+   ],
+   "sin_registro": []
+  },
+  {
+   "usuario": "656",
+   "fila": 32,
+   "nombre": "DILIA MONTAÑO DE SEGURA",
+   "nombre_final": "MARÍA IRLANDA SEGURA",
+   "casa_final": "CASA 782",
+   "formularios": [],
+   "hoja": {},
+   "avisos": [
+    "F1 nombre: se deja 'MARÍA IRLANDA SEGURA' de Kobo (quien atendio es otra persona; el Excel y la hoja tienen al usuario inicial). Excel: 'DILIA MONTAÑO DE SEGURA', hoja: 'DILIA MONTAÑO DE SEGURA'"
+   ],
+   "sin_registro": []
+  },
+  {
+   "usuario": "624",
+   "fila": 38,
+   "nombre": "JUAN LINO VALVERDE CORTES",
+   "nombre_final": "CESAR EMILIO REDIN",
+   "casa_final": "CASA 856",
+   "formularios": [],
+   "hoja": {},
+   "avisos": [
+    "F1 nombre: se deja 'CESAR EMILIO REDIN' de Kobo (quien atendio es otra persona; el Excel y la hoja tienen al usuario inicial). Excel: 'JUAN LINO VALVERDE CORTES', hoja: 'JUAN LINO VALVERDE CORTES'"
+   ],
+   "sin_registro": []
+  },
+  {
+   "usuario": "471",
+   "fila": 52,
+   "nombre": "RAIMUNDO SOLIS QUIÑONES",
+   "nombre_final": "FANNY YULIANA QUINTERO PAI",
+   "casa_final": "CASA 61",
+   "formularios": [],
+   "hoja": {},
+   "avisos": [
+    "F1 nombre: se deja 'FANNY YULIANA QUINTERO PAI' de Kobo (quien atendio es otra persona; el Excel y la hoja tienen al usuario inicial). Excel: 'RAIMUNDO SOLIS QUIÑONES', hoja: 'RAIMUNDO SOLIS QUIÑONES'"
+   ],
+   "sin_registro": []
+  },
+  {
+   "usuario": "885",
+   "fila": 53,
+   "nombre": "MARIA LUISA MONTANO",
+   "nombre_final": "",
+   "casa_final": "CASA 611",
+   "formularios": [],
+   "hoja": {},
+   "avisos": [
+    "F1: hay otro registro que tambien coincide (posible duplicado): _id 830170692: María Luisa Montaño, usuario 885, Casa 611, doc 1087027142",
+    "F2: hay otro registro que tambien coincide (posible duplicado): _id 830170691: María Luisa Montaño, usuario 885, Casa 611, doc 1087027142",
+    "F3: hay otro registro que tambien coincide (posible duplicado): _id 830170690: María Luisa montaño, usuario 885, Casa 611, doc 1087027142"
+   ],
+   "sin_registro": []
+  },
+  {
+   "usuario": "843",
+   "fila": 57,
+   "nombre": "FELISA CECILIA QUIÑONES LANDAZURI",
+   "nombre_final": "",
+   "casa_final": "CASA 596",
+   "formularios": [],
+   "hoja": {},
+   "avisos": [
+    "F1: registro de OTRA persona con el mismo nombre, que el bot pudo editar por error (_id 830055060: FELISA CECILIA QUIÑONES LANDAZURI, usuario 864, CASA 593, doc 98528510)",
+    "F2: registro de OTRA persona con el mismo nombre, que el bot pudo editar por error (_id 830055067: FELISA CECILIA QUIÑONES LANDAZURI, usuario 864, CASA 593, doc 98528510)",
+    "F3: registro de OTRA persona con el mismo nombre, que el bot pudo editar por error (_id 830055065: FELISA CECILIA QUIÑONES LANDAZURI, usuario 864, CASA 593, doc 98528510)"
+   ],
+   "sin_registro": []
+  },
+  {
+   "usuario": "75",
+   "fila": 62,
+   "nombre": "EIBAR ANGULO NÚÑEZ",
+   "nombre_final": "",
+   "casa_final": "CASA 52 A",
+   "formularios": [],
+   "hoja": {},
+   "avisos": [
+    "F1: hay otro registro que tambien coincide (posible duplicado): _id 824697332: Eivar Angulo Nuñez, usuario 342, Casa oo, doc 1087205506",
+    "F2: hay otro registro que tambien coincide (posible duplicado): _id 826802417: Eivar Angulo Nuñez, usuario -, Casa  00, doc 1087205506",
+    "F3: hay otro registro que tambien coincide (posible duplicado): _id 829156758: Eivar Angulo Nuñez, usuario 342, Casa oo, doc 1087205506",
+    "F4: hay otro registro que tambien coincide (posible duplicado): _id 826863478: Eibar  Angulo, usuario 342, Casa 51, doc 1087205506"
+   ],
+   "sin_registro": []
+  },
+  {
+   "usuario": "1",
+   "fila": 63,
+   "nombre": "JACINTA MARINEZ ARROYO",
+   "nombre_final": "KARYN EVELYN NOGALES MARINEZ",
+   "casa_final": "CASA 27 A",
+   "formularios": [],
+   "hoja": {},
+   "avisos": [
+    "F1: registro de OTRA persona con el mismo nombre, que el bot pudo editar por error (_id 825389609: JACINTA MARINEZ ARROYO, usuario 247, CASA 27B, doc 27502225)",
+    "F1 nombre: se deja 'KARYN EVELYN NOGALES MARINEZ' de Kobo (quien atendio es otra persona; el Excel y la hoja tienen al usuario inicial). Excel: 'JACINTA MARINEZ ARROYO', hoja: 'MARINEZ ARROYO JACINTA'",
+    "F2: registro de OTRA persona con el mismo nombre, que el bot pudo editar por error (_id 825389623: JACINTA MARINEZ ARROYO, usuario 247, CASA 27B, doc 27502225)",
+    "F3: registro de OTRA persona con el mismo nombre, que el bot pudo editar por error (_id 825389628: JACINTA MARINEZ ARROYO, usuario 247, CASA 27B, doc 27502225)"
+   ],
+   "sin_registro": []
+  },
+  {
+   "usuario": "57",
+   "fila": 75,
+   "nombre": "TOMAS MAIRONGO",
+   "nombre_final": "",
+   "casa_final": "CASA 44",
+   "formularios": [],
+   "hoja": {},
+   "avisos": [
+    "F4 nombre: se deja 'COMBIA GALLON' de Kobo (el Excel tiene otro nombre; Kobo coincide con la hoja). Excel: 'TOMAS MAIRONGO', hoja: 'COLOMBIA MAIRONGO GALLON'"
+   ],
+   "sin_registro": []
+  },
+  {
+   "usuario": "763",
+   "fila": 76,
+   "nombre": "PAULA YOLIMA WISAMANO LARA",
+   "nombre_final": "",
+   "casa_final": "CASA 521",
+   "formularios": [],
+   "hoja": {},
+   "avisos": [
+    "F1: hay otro registro que tambien coincide (posible duplicado): _id 829150663: PAULA YOLIMA WISAMANO LARA, usuario 751, CASA 543, doc 59666480",
+    "F2: hay otro registro que tambien coincide (posible duplicado): _id 829150681: PAULA YOLIMA WISAMANO LARA, usuario 751, CASA 543, doc 59666480",
+    "F3: hay otro registro que tambien coincide (posible duplicado): _id 829150685: PAULA YOLIMA WISAMANO LARA, usuario 751, CASA 543, doc 59666480",
+    "F4: hay otro registro que tambien coincide (posible duplicado): _id 829274647: PAULA YOLIMA WISAMANO LARA, usuario 751, CASA 543, doc 59666480"
+   ],
+   "sin_registro": []
+  },
+  {
+   "usuario": "864",
+   "fila": 77,
+   "nombre": "FELISA CECILIA QUIÑONES LANDAZURI",
+   "nombre_final": "",
+   "casa_final": "CASA 593",
+   "formularios": [],
+   "hoja": {},
+   "avisos": [
+    "F1: registro de OTRA persona con el mismo nombre, que el bot pudo editar por error (_id 829151006: FELISA CECILIA QUIÑONES LANDAZURI, usuario 843, CASA 596, doc 59667399)",
+    "F2: registro de OTRA persona con el mismo nombre, que el bot pudo editar por error (_id 829151024: FELISA CECILIA QUIÑONES LANDAZURI, usuario 843, CASA 596, doc 59667399)",
+    "F3: registro de OTRA persona con el mismo nombre, que el bot pudo editar por error (_id 829151035: FELISA CECILIA QUIÑONES LANDAZURI, usuario 843, CASA 596, doc 59667399)"
+   ],
+   "sin_registro": []
+  },
+  {
+   "usuario": "87",
+   "fila": 80,
+   "nombre": "ROSA ELENA GUAGUA SANCHEZ",
+   "nombre_final": "",
+   "casa_final": "CASA 28",
+   "formularios": [
+    {
+     "formulario": 1,
+     "uid": "aXQcitqkAEdmMK29TVZsbS",
+     "_id": 815014926,
+     "nota": "",
+     "con_log": true,
+     "rehacer": false,
+     "correcciones": {
+      "group_ma5xk12/grp_firma_persona_atendida/persona_atendida_nombre_firma": {
+       "campo": "nombre_firma",
+       "actual": "",
+       "nuevo": "ROSA ELENA GUAGUA SANCHEZ",
+       "original": ""
+      }
+     }
+    }
+   ],
+   "hoja": {},
+   "avisos": [],
+   "sin_registro": []
+  }
+ ]
+}

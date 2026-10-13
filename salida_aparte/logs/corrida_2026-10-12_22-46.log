@@ -1,0 +1,548 @@
+(Registro de esta corrida: C:\Users\felip\Documents\Proyectos\Tumaco\salida_aparte\logs\corrida_2026-10-12_22-46.log)
+USUARIOS_APARTE.xlsx: 10 fila(s), 2 con formularios pendientes.
+Solo los usuarios pedidos: 774 ANA LILIANA CORREA RODRIGUEZ, 860 NANCY MILENA GARCIAS CORTES
+Sesion de Kobo ya activa.
+Hoja local (HOJA_APARTE.xlsx): datos iniciales de 2 de 2 usuario(s) para buscar en Kobo y comparar nombre y casa.
+
+======================================================================
+[1/2] Usuario: ANA LILIANA CORREA RODRIGUEZ | USUARIO 774 | CASA 496 (fila 7)
+======================================================================
+
+--- Formulario 1: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA ---
+Abriendo formulario: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA
+Esperando que cargue la tabla de datos...
+   Registro decidido en el Excel (columna O): _id 826848125
+   nombre_persona_atendida: Liliana Correa Rodríguez  | documento_persona_atendida: 59684123 | no_usuario: 774 | direccion: Casa 496 | persona_atendida_nombre_firma: Liliana Correa Rodríguez  | persona_atendida_documento_firma: 59684123
+Abriendo edicion del registro 826848125...
+Esperando que cargue el formulario de edicion...
+Formulario de edicion abierto: https://ee-eu.kobotoolbox.org/edit/dMwZcl4F?instance_id=db7d0257-c506-49f9-8236-6b1478c46949&return_url=false
+   Inventario de 76 campos guardado en C:\Users\felip\Documents\Proyectos\Tumaco\salida_aparte\debug\formulario1_campos.txt
+Excel: fila 7, columna H (propietario) = 'Si' (Propietario(a) del inmueble)
+Excel: fila 7, columna I (documento) = '59684123'
+
+Verificacion del usuario (la persona que atiende la visita manifiesta ser):
+   - Opcion 'Otro': no marcada
+
+Correcciones del formulario 1:
+
+Direccion (Excel, hoja y Kobo):
+   * DIRECCIÓN: 'Casa 496' -> 'CASA 496'
+
+Datos del Excel:
+   * NOMBRE: 'Liliana Correa Rodríguez ' -> 'ANA LILIANA CORREA RODRIGUEZ'
+   * NOMBRE: 'Liliana Correa Rodríguez ' -> 'ANA LILIANA CORREA RODRIGUEZ'
+   - NO. USUARIO: ya tiene usuario (774)
+
+Mayusculas:
+   * RESPOSANBLE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   * BARRIO: 'Libertad 1 ' -> 'LIBERTAD 1'
+
+Valores fijos:
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   - DOCUMENTO: ya tiene el valor correcto (59122110)
+
+Firma del responsable contratista:
+   - La firma actual no es la del bot o esta incompleta (otra forma (proporcion distinta: 2.47); puede ser otra firma o una cortada): se rehace
+   - Firma anterior borrada
+   * Firma dibujada (11 trazos)
+
+Documentos anexos:
+   ? SOPORTE DE PROPIEDAD SOBRE EL INMUEBLE: 1790712248117.jpg -> esperando tu decision en el navegador...
+   * SOPORTE DE PROPIEDAD SOBRE EL INMUEBLE: ELIMINADO (1790712248117.jpg)
+   - Soportes para la hoja (columna J): CEDULA DE CIUDADANIA
+
+8 cambio(s) aplicado(s).
+
+Guardando PDF en 774_ANA LILIANA CORREA RODRIGUEZ...
+   PDF guardado: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL_APARTE\774_ANA LILIANA CORREA RODRIGUEZ\1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA.pdf
+   (0.2 MB | 0 foto(s) reducida(s) | fotos 1s, imprimir 1s, guardar 0s)
+
+Enviando formulario a Kobo...
+   Formulario actualizado en Kobo. (Kobo confirmo el envio: https://ee-eu.kobotoolbox.org/thanks?taken=1791863231120)
+Excel: fila 7, columna M (casa final) = 'CASA 496'
+Excel: fila 7, columna J (documento anexo) = 'No'
+Excel: fila 7, columna N (soportes hoja) = 'CEDULA DE CIUDADANIA'
+Excel: fila 7, columna P (observacion hoja) = 'N/A'
+   Tiempos: abrir datos 5s | buscar 0s | abrir edicion 4s | correcciones 18s | PDF 2s | envio 2s | cerrar 1s | total 31s
+Formulario 1 terminado.
+Excel: fila 7, columna D = 'Si'
+
+--- Formulario 2: 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN ---
+Abriendo formulario: 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN
+Esperando que cargue la tabla de datos...
+   Registro decidido en el Excel (columna O): _id 826848127
+   nombre_usuario_decl: Liliana Correa Rodríguez  | documento_usuario_decl: 59684123 | direccion_usuario_decl: Casa496 | nombre_proyecto: “NORMALIZACIÓN DE REDES DE DISTRIBUCIÓN ELÉCTRICA Y GENERACIÓN DE ENERGÍA FOTOVOLTÁICA A PEQUEÑA ESCALA CONECTADA A LA RED, PARA LOS BARRIOS EL TRIUNFO SECTOR 4, LA 
+Abriendo edicion del registro 826848127...
+Esperando que cargue el formulario de edicion...
+Formulario de edicion abierto: https://ee-eu.kobotoolbox.org/edit/36rXrhXO?instance_id=012d6022-52b3-4354-9a87-cb246a4224f4&return_url=false
+   Inventario de 34 campos guardado en C:\Users\felip\Documents\Proyectos\Tumaco\salida_aparte\debug\formulario2_campos.txt
+
+Correcciones del formulario 2:
+
+Direccion (Excel, hoja y Kobo):
+   * DIRECCIÓN: 'Casa496' -> 'CASA496'
+
+Datos del Excel:
+   * NOMBRE COMPLETO DEL USUARIO: 'Liliana Correa Rodríguez ' -> 'ANA LILIANA CORREA RODRIGUEZ'
+   * NOMBRE: 'Liliana Correa Rodríguez ' -> 'ANA LILIANA CORREA RODRIGUEZ'
+   - NO. USUARIO: ya tiene usuario (774)
+
+Mayusculas:
+   * BARRIO: 'Libertad 1 ' -> 'LIBERTAD 1'
+
+Valores fijos:
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   - DOCUMENTO: ya tiene el valor correcto (59122110)
+
+Firma del responsable contratista:
+   - La firma actual no es la del bot o esta incompleta (otra forma (proporcion distinta: 2.37); puede ser otra firma o una cortada): se rehace
+   - Firma anterior borrada
+   * Firma dibujada (11 trazos)
+
+Fotos de la cedula:
+   - Cedula cara: descargando 1790712579115.jpg...
+   ? Cedula cara: no estoy seguro de hacia donde va arriba -> revisa la ventana en el navegador...
+   ? Cedula cara: marca las 4 esquinas en la ventana del navegador...
+   ? Cedula cara: revisa el recorte con las esquinas que marcaste -> revisa la ventana en el navegador...
+   * Cedula cara: recortada y enderezada (revisada a mano)
+   - Cedula reverso: descargando 1790712584307.jpg...
+   (descarga por sesion de Kobo fallo: Kobo respondio 404)
+   ? Cedula reverso: no estoy seguro de hacia donde va arriba -> revisa la ventana en el navegador...
+   ? Cedula reverso: marca las 4 esquinas en la ventana del navegador...
+   ? Cedula reverso: revisa el recorte con las esquinas que marcaste -> revisa la ventana en el navegador...
+   * Cedula reverso: recortada y enderezada (revisada a mano)
+
+9 cambio(s) aplicado(s).
+
+Guardando DOCUMENTO.pdf en 774_ANA LILIANA CORREA RODRIGUEZ...
+   Cedula guardada en un solo PDF: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL_APARTE\774_ANA LILIANA CORREA RODRIGUEZ\DOCUMENTO.pdf
+
+Guardando PDF en 774_ANA LILIANA CORREA RODRIGUEZ...
+   PDF guardado: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL_APARTE\774_ANA LILIANA CORREA RODRIGUEZ\2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN PARA LA PARTICIPACIÓN EN EL PROYECTO.pdf
+   (0.3 MB | 0 foto(s) reducida(s) | fotos 1s, imprimir 1s, guardar 0s)
+
+Enviando formulario a Kobo...
+   Formulario actualizado en Kobo. (Kobo confirmo el envio: https://ee-eu.kobotoolbox.org/thanks?taken=1791863388426)
+   Tiempos: abrir datos 5s | buscar 0s | abrir edicion 3s | correcciones 143s | PDF 2s | envio 2s | cerrar 1s | total 157s
+Formulario 2 terminado.
+Excel: fila 7, columna E = 'Si'
+
+--- Formulario 3: 3. ENCUESTA DE CARACTERIZACIÓN SOCIOECONÓMICA ---
+Abriendo formulario: 3. ENCUESTA DE CARACTERIZACIÓN SOCIOECONÓMICA
+Esperando que cargue la tabla de datos...
+   Registro decidido en el Excel (columna O): _id 826848129
+   nombre: Liliana Correa Rodríguez  | documento: 59684123 | no_usuario: 774 | direccion: Casa496 | entrevistado_nombre: Liliana Correa Rodríguez  | entrevistado_documento: 59684123
+Abriendo edicion del registro 826848129...
+Esperando que cargue el formulario de edicion...
+Formulario de edicion abierto: https://ee-eu.kobotoolbox.org/edit/lDjcJHlo?instance_id=1bbeb699-5d2b-41ba-833f-7432b9040c69&return_url=false
+   Inventario de 130 campos guardado en C:\Users\felip\Documents\Proyectos\Tumaco\salida_aparte\debug\formulario3_campos.txt
+
+Correcciones del formulario 3:
+
+Direccion (Excel, hoja y Kobo):
+   * DIRECCIÓN: 'Casa496' -> 'CASA496'
+
+Datos del Excel:
+   * NOMBRE: 'Liliana Correa Rodríguez ' -> 'ANA LILIANA CORREA RODRIGUEZ'
+   * NOMBRE: 'Liliana Correa Rodríguez ' -> 'ANA LILIANA CORREA RODRIGUEZ'
+   - NO. USUARIO: ya tiene usuario (774)
+
+Mayusculas:
+   * BARRIO: 'Libertad 1 ' -> 'LIBERTAD 1'
+
+Valores fijos:
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   - DOCUMENTO: ya tiene el valor correcto (59122110)
+
+Campos que se llenan si estan vacios:
+   * OBSERVACIÓN (OPCIONAL): '' -> 'EL AGUA ES DEFICIENTE, LA SUSPENDEN POR MÁS DE OCHO DÍAS CEDENAR NO VIENE A TOMAR LECTURA Y LAS FACTURAS NOS LLEGAN MUY CARAS TAMBIEN APAGONES'
+
+Firma del responsable contratista:
+   - La firma actual no es la del bot o esta incompleta (otra forma (proporcion distinta: 2.55); puede ser otra firma o una cortada): se rehace
+   - Firma anterior borrada
+   * Firma dibujada (11 trazos)
+
+8 cambio(s) aplicado(s).
+
+Guardando PDF en 774_ANA LILIANA CORREA RODRIGUEZ...
+   PDF guardado: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL_APARTE\774_ANA LILIANA CORREA RODRIGUEZ\3. ENCUESTA DE CARACTERIZACIÓN SOCIOECONÓMICA DE LA COMUNIDAD.pdf
+   (0.4 MB | 0 foto(s) reducida(s) | fotos 1s, imprimir 1s, guardar 0s)
+
+Enviando formulario a Kobo...
+   Formulario actualizado en Kobo. (Kobo confirmo el envio: https://ee-eu.kobotoolbox.org/thanks)
+   Tiempos: abrir datos 5s | buscar 0s | abrir edicion 3s | correcciones 12s | PDF 2s | envio 3s | cerrar 1s | total 26s
+Formulario 3 terminado.
+Excel: fila 7, columna F = 'Si'
+
+--- Formulario 4: 4. FORMATO ACTA DE VERIFICACIÓN DEL ESTADO INICIAL ---
+Abriendo formulario: 4. FORMATO ACTA DE VERIFICACIÓN DEL ESTADO INICIAL
+Esperando que cargue la tabla de datos...
+   Columna para DOCUMENTO: [7] DATOS DEL USUARIO Y DEL INMUEBLE / Documento
+   Columna para CASA: [9] DATOS DEL USUARIO Y DEL INMUEBLE / Dirección
+   Columna para USUARIO: [8] DATOS DEL USUARIO Y DEL INMUEBLE / No. Usuario
+   Columna para NOMBRE: [6] DATOS DEL USUARIO Y DEL INMUEBLE / Nombre
+
+Intento 1: buscar '59684123' por DOCUMENTO
+   0 fila(s) en la tabla, 0 con valor exacto '59684123'.
+
+Intento 2: buscar '496' por CASA
+   0 fila(s) en la tabla, 0 con valor exacto '496'.
+
+Intento 3: buscar '774' por USUARIO
+   0 fila(s) en la tabla, 0 con valor exacto '774'.
+
+Intento 4: buscar 'RODRIGUEZ' por NOMBRE
+   6 fila(s) en la tabla, 6 con nombre parecido a 'RODRIGUEZ'.
+   [1] ANA MARIA RODRIGUEZ QUIÑONES | CASA 436 | nombre 78%
+   [2] VANESSA RODRIGUEZ REINA | CASA 457 | nombre 76%
+   [3] Magda Rodriguez | Casa 231C | nombre 75% | OTRO SECTOR (la casa no cuenta)
+   [4] OVERMAN RODRIGUEZ GUERRERO | CASA 435 | nombre 64%
+   [5] BENICIA RODRIGUEZ CHILLAMBO | Casa | nombre 61%
+   [6] MARIBEL BOLAÑOS RODRIGUEZ | CASA 311 | nombre 61%
+
+Intento 5: buscar 'LILIANA' por NOMBRE
+   4 fila(s) en la tabla, 4 con nombre parecido a 'LILIANA'.
+   [1] MILTA LILIANA CAMACHO QUIÑONES | CASA 326 | nombre 75%
+   [2] MARTHA LILIANA VASQUEZ SANCHEZ | CASA 242 | nombre 70%
+   [3] Maria Liliana cuero paz | Casa 46 | nombre 70% | OTRO SECTOR (la casa no cuenta)
+   [4] Ingri Liliana Cuellar | Casa 346gel | nombre 68% | OTRO SECTOR (la casa no cuenta)
+
+Intento 6: buscar 'CORREA' por NOMBRE
+   0 fila(s) en la tabla, 0 con nombre parecido a 'CORREA'.
+
+Intento 7: buscar 'RODR' por NOMBRE
+   8 fila(s) en la tabla, 8 con nombre parecido a 'RODR'.
+   [1] ANA MARIA RODRIGUEZ QUIÑONES | CASA 436 | nombre 78%
+   [2] VANESSA RODRIGUEZ REINA | CASA 457 | nombre 76%
+   [3] Rosa Rodrigues | Casa 362 | nombre 75%
+   [4] Magda Rodriguez | Casa 231C | nombre 75% | OTRO SECTOR (la casa no cuenta)
+   [5] Claudia Rodrigues | Casa 350 | nombre 71% | OTRO SECTOR (la casa no cuenta)
+   [6] OVERMAN RODRIGUEZ GUERRERO | CASA 435 | nombre 64%
+   [7] BENICIA RODRIGUEZ CHILLAMBO | Casa | nombre 61%
+   [8] MARIBEL BOLAÑOS RODRIGUEZ | CASA 311 | nombre 61%
+
+Intento 8: buscar 'LILI' por NOMBRE
+   4 fila(s) en la tabla, 4 con nombre parecido a 'LILI'.
+   [1] MILTA LILIANA CAMACHO QUIÑONES | CASA 326 | nombre 75%
+   [2] MARTHA LILIANA VASQUEZ SANCHEZ | CASA 242 | nombre 70%
+   [3] Maria Liliana cuero paz | Casa 46 | nombre 70% | OTRO SECTOR (la casa no cuenta)
+   [4] Ingri Liliana Cuellar | Casa 346gel | nombre 68% | OTRO SECTOR (la casa no cuenta)
+
+Intento 9: buscar 'CORR' por NOMBRE
+   4 fila(s) en la tabla, 1 con nombre parecido a 'CORR'.
+   [1] Mirian del Socorro Batioja Bolaños | Casa 298A | nombre 62% | OTRO SECTOR (la casa no cuenta)
+
+No encontrado: el mas parecido en Kobo es ANA MARIA RODRIGUEZ QUIÑONES CASA 436 (78% de parecido en el nombre)
+Excel: fila 7, columna G = 'No encontrado'
+
+Uniendo los PDF del usuario:
+   PDF unido (4 documentos): C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL_APARTE\774_ANA LILIANA CORREA RODRIGUEZ\774_ANA LILIANA CORREA RODRIGUEZ.pdf
+     - 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA.pdf
+     - DOCUMENTO.pdf
+     - 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN PARA LA PARTICIPACIÓN EN EL PROYECTO.pdf
+     - 3. ENCUESTA DE CARACTERIZACIÓN SOCIOECONÓMICA DE LA COMUNIDAD.pdf
+
+Hoja local (HOJA_APARTE.xlsx):
+   HOJA_APARTE.xlsx, fila 7 (usuario 774):
+     F7 = ANA LILIANA CORREA RODRIGUEZ
+     G7 = 59684123
+     H7 = CASA 496 LA LIBERTAD DIV 1
+     I7 = CONFIRMADO
+     J7 = CEDULA DE CIUDADANIA
+     K7 = (en blanco)
+     L7 = N/A
+Excel: fila 7, columna K (hoja) = 'Si'
+
+======================================================================
+[2/2] Usuario: NANCY MILENA GARCIAS CORTES | USUARIO 860 | CASA 639 (fila 11)
+======================================================================
+
+--- Formulario 1: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA ---
+Abriendo datos de: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA
+Esperando que cargue la tabla de datos...
+   Registro decidido en el Excel (columna O): _id 829154592
+   nombre_persona_atendida: Nancy Milena Gracias Cortés  | documento_persona_atendida: 59672593 | no_usuario: 860 | direccion: Casa639 | persona_atendida_nombre_firma: Nancy Milena Gracias Cortés  | persona_atendida_documento_firma: 59672593
+Abriendo edicion del registro 829154592...
+Esperando que cargue el formulario de edicion...
+Formulario de edicion abierto: https://ee-eu.kobotoolbox.org/edit/mn9K2cHb?instance_id=c9794637-4bbe-4188-9d39-f8eeec3de2e6&return_url=false
+   Inventario de 76 campos guardado en C:\Users\felip\Documents\Proyectos\Tumaco\salida_aparte\debug\formulario1_campos.txt
+Excel: fila 11, columna H (propietario) = 'Si' (Propietario(a) del inmueble)
+Excel: fila 11, columna I (documento) = '59672593'
+
+Verificacion del usuario (la persona que atiende la visita manifiesta ser):
+   - Opcion 'Otro': no marcada
+
+Correcciones del formulario 1:
+
+Direccion (Excel, hoja y Kobo):
+   * DIRECCIÓN: 'Casa639' -> 'CASA639'
+
+Datos del Excel:
+   * NOMBRE: 'Nancy Milena Gracias Cortés ' -> 'NANCY MILENA GARCIAS CORTES'
+   * NOMBRE: 'Nancy Milena Gracias Cortés ' -> 'NANCY MILENA GARCIAS CORTES'
+   - NO. USUARIO: ya tiene usuario (860)
+
+Mayusculas:
+   * RESPOSANBLE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   * BARRIO: 'Libertad 1 ' -> 'LIBERTAD 1'
+
+Valores fijos:
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   * DOCUMENTO: 'Profesional Social ' -> '59122110'
+
+Firma del responsable contratista:
+   - La firma actual no es la del bot o esta incompleta (otra forma (proporcion distinta: 2.39); puede ser otra firma o una cortada): se rehace
+   - Firma anterior borrada
+   * Firma dibujada (11 trazos)
+
+Documentos anexos:
+   ? SOPORTE DE PROPIEDAD SOBRE EL INMUEBLE: 1790787979602.jpg -> esperando tu decision en el navegador...
+   - SOPORTE DE PROPIEDAD SOBRE EL INMUEBLE: se conserva (1790787979602.jpg)
+   - Soportes para la hoja (columna J): CEDULA DE CIUDADANIA Y RECIBO DE ENERGIA
+
+9 cambio(s) aplicado(s).
+
+Guardando PDF en 860_NANCY MILENA GARCIAS CORTES...
+   PDF guardado: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL_APARTE\860_NANCY MILENA GARCIAS CORTES\1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA.pdf
+   (0.7 MB | 1 foto(s) reducida(s) | fotos 1s, imprimir 1s, guardar 0s)
+
+Enviando formulario a Kobo...
+   Formulario actualizado en Kobo. (Kobo confirmo el envio: https://ee-eu.kobotoolbox.org/thanks?taken=1791863572473)
+Excel: fila 11, columna M (casa final) = 'CASA 639'
+Excel: fila 11, columna J (documento anexo) = 'Si'
+Excel: fila 11, columna N (soportes hoja) = 'CEDULA DE CIUDADANIA Y RECIBO DE ENERGIA'
+Excel: fila 11, columna P (observacion hoja) = 'N/A'
+   Tiempos: abrir datos 2s | buscar 0s | abrir edicion 4s | correcciones 109s | PDF 2s | envio 2s | cerrar 2s | total 121s
+Formulario 1 terminado.
+Excel: fila 11, columna D = 'Si'
+
+--- Formulario 2: 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN ---
+Abriendo datos de: 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN
+Esperando que cargue la tabla de datos...
+   Registro decidido en el Excel (columna O): _id 829154665
+   nombre_usuario_decl: Nancy Milena Garcías Cortés  | documento_usuario_decl: 59672592 | direccion_usuario_decl: Casa 639 | nombre_proyecto: “NORMALIZACIÓN DE REDES DE DISTRIBUCIÓN ELÉCTRICA Y GENERACIÓN DE ENERGÍA FOTOVOLTÁICA A PEQUEÑA ESCALA CONECTADA A LA RED, PARA LOS BARRIOS EL TRIUNFO SECTOR 4,
+Abriendo edicion del registro 829154665...
+Esperando que cargue el formulario de edicion...
+Formulario de edicion abierto: https://ee-eu.kobotoolbox.org/edit/T2YpsO9D?instance_id=4bf0b490-29b2-4fc8-abe6-50a4ebbd9df8&return_url=false
+   Inventario de 34 campos guardado en C:\Users\felip\Documents\Proyectos\Tumaco\salida_aparte\debug\formulario2_campos.txt
+
+Correcciones del formulario 2:
+
+Direccion (Excel, hoja y Kobo):
+   * DIRECCIÓN: 'Casa 639' -> 'CASA 639'
+
+Datos del Excel:
+   * NOMBRE COMPLETO DEL USUARIO: 'Nancy Milena Garcías Cortés ' -> 'NANCY MILENA GARCIAS CORTES'
+   * NOMBRE: 'Nancy Milena Garcías Cortés ' -> 'NANCY MILENA GARCIAS CORTES'
+   - NO. USUARIO: ya tiene usuario (860)
+
+Mayusculas:
+   * BARRIO: 'Libertad 1 ' -> 'LIBERTAD 1'
+
+Valores fijos:
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   - DOCUMENTO: ya tiene el valor correcto (59122110)
+
+Firma del responsable contratista:
+   - La firma actual no es la del bot o esta incompleta (otra forma (proporcion distinta: 2.29); puede ser otra firma o una cortada): se rehace
+   - Firma anterior borrada
+   * Firma dibujada (11 trazos)
+
+Fotos de la cedula:
+   - Cedula cara: descargando 1790788184172.jpg...
+   * Cedula cara: recortada y enderezada (tarjeta encontrada 96%)
+   - Cedula reverso: descargando 1790788196863.jpg...
+   * Cedula reverso: recortada y enderezada (tarjeta encontrada 92%)
+
+9 cambio(s) aplicado(s).
+
+Guardando DOCUMENTO.pdf en 860_NANCY MILENA GARCIAS CORTES...
+   Cedula guardada en un solo PDF: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL_APARTE\860_NANCY MILENA GARCIAS CORTES\DOCUMENTO.pdf
+
+Guardando PDF en 860_NANCY MILENA GARCIAS CORTES...
+   PDF guardado: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL_APARTE\860_NANCY MILENA GARCIAS CORTES\2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN PARA LA PARTICIPACIÓN EN EL PROYECTO.pdf
+   (0.5 MB | 2 foto(s) reducida(s) | fotos 1s, imprimir 1s, guardar 0s)
+
+Enviando formulario a Kobo...
+   Formulario actualizado en Kobo. (Kobo confirmo el envio: https://ee-eu.kobotoolbox.org/thanks?taken=1791863604491)
+   Tiempos: abrir datos 2s | buscar 0s | abrir edicion 4s | correcciones 20s | PDF 2s | envio 2s | cerrar 1s | total 31s
+Formulario 2 terminado.
+Excel: fila 11, columna E = 'Si'
+
+--- Formulario 3: 3. ENCUESTA DE CARACTERIZACIÓN SOCIOECONÓMICA ---
+Abriendo datos de: 3. ENCUESTA DE CARACTERIZACIÓN SOCIOECONÓMICA
+Esperando que cargue la tabla de datos...
+   Registro decidido en el Excel (columna O): _id 829154684
+   nombre: Nancy Milena Garcías Cortés  | documento: 59672593 | no_usuario: 860 | direccion: Casa 639 | entrevistado_nombre: Nancy Milena Garcías Cortés  | entrevistado_documento: 59672593
+Abriendo edicion del registro 829154684...
+Esperando que cargue el formulario de edicion...
+Formulario de edicion abierto: https://ee-eu.kobotoolbox.org/edit/pzv8Rvgk?instance_id=fda49487-8719-46a5-a686-774d52349b5d&return_url=false
+   Inventario de 130 campos guardado en C:\Users\felip\Documents\Proyectos\Tumaco\salida_aparte\debug\formulario3_campos.txt
+
+Correcciones del formulario 3:
+
+Direccion (Excel, hoja y Kobo):
+   * DIRECCIÓN: 'Casa 639' -> 'CASA 639'
+
+Datos del Excel:
+   * NOMBRE: 'Nancy Milena Garcías Cortés ' -> 'NANCY MILENA GARCIAS CORTES'
+   * NOMBRE: 'Nancy Milena Garcías Cortés ' -> 'NANCY MILENA GARCIAS CORTES'
+   - NO. USUARIO: ya tiene usuario (860)
+
+Mayusculas:
+   * BARRIO: 'Libertad 1 ' -> 'LIBERTAD 1'
+
+Valores fijos:
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   - DOCUMENTO: ya tiene el valor correcto (59122110)
+
+Campos que se llenan si estan vacios:
+   * OBSERVACIÓN (OPCIONAL): '' -> 'EL AGUA ES DEFICIENTE, LA SUSPENDEN POR MÁS DE OCHO DÍAS CEDENAR NO VIENE A TOMAR LECTURA Y LAS FACTURAS NOS LLEGAN MUY CARAS TAMBIEN APAGONES'
+
+Firma del responsable contratista:
+   - La firma actual no es la del bot o esta incompleta (otra forma (proporcion distinta: 2.47); puede ser otra firma o una cortada): se rehace
+   - Firma anterior borrada
+   * Firma dibujada (11 trazos)
+
+8 cambio(s) aplicado(s).
+
+Guardando PDF en 860_NANCY MILENA GARCIAS CORTES...
+   PDF guardado: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL_APARTE\860_NANCY MILENA GARCIAS CORTES\3. ENCUESTA DE CARACTERIZACIÓN SOCIOECONÓMICA DE LA COMUNIDAD.pdf
+   (0.3 MB | 0 foto(s) reducida(s) | fotos 1s, imprimir 1s, guardar 0s)
+
+Enviando formulario a Kobo...
+   Formulario actualizado en Kobo. (Kobo confirmo el envio: https://ee-eu.kobotoolbox.org/thanks?taken=1791863627647)
+   Tiempos: abrir datos 3s | buscar 0s | abrir edicion 4s | correcciones 12s | PDF 2s | envio 2s | cerrar 1s | total 23s
+Formulario 3 terminado.
+Excel: fila 11, columna F = 'Si'
+
+--- Formulario 4: 4. FORMATO ACTA DE VERIFICACIÓN DEL ESTADO INICIAL ---
+Abriendo datos de: 4. FORMATO ACTA DE VERIFICACIÓN DEL ESTADO INICIAL
+Esperando que cargue la tabla de datos...
+   Columna para DOCUMENTO: [7] DATOS DEL USUARIO Y DEL INMUEBLE / Documento
+   Columna para CASA: [9] DATOS DEL USUARIO Y DEL INMUEBLE / Dirección
+   Columna para USUARIO: [8] DATOS DEL USUARIO Y DEL INMUEBLE / No. Usuario
+   Columna para NOMBRE: [6] DATOS DEL USUARIO Y DEL INMUEBLE / Nombre
+
+Intento 1: buscar '59672593' por DOCUMENTO
+   0 fila(s) en la tabla, 0 con valor exacto '59672593'.
+
+Intento 2: buscar '639' por CASA
+   0 fila(s) en la tabla, 0 con valor exacto '639'.
+
+Intento 3: buscar '860' por USUARIO
+   0 fila(s) en la tabla, 0 con valor exacto '860'.
+
+Intento 4: buscar 'GARCIAS' por NOMBRE
+   0 fila(s) en la tabla, 0 con nombre parecido a 'GARCIAS'.
+
+Intento 5: buscar 'CORTES' por NOMBRE
+   18 fila(s) en la tabla, 14 con nombre parecido a 'CORTES'.
+   [1] MARIA ZAIDA CORTES | CASA 125A | nombre 76% | OTRO SECTOR (la casa no cuenta)
+   [2] SILVIA PATRICIA CORTES | CASA 80 | nombre 74%
+   [3] Doris Alicia Cortes | Casa 398 | nombre 74%
+   [4] JANNY LORENA VALLECILLA CORTES | Casa 72 | nombre 73%
+   [5] Brenda Carmenza Cortes | Casa 321 | nombre 69% | OTRO SECTOR (la casa no cuenta)
+   [6] LORENA PATRICIA MACUASE CORTES | Casa 700 | nombre 69%
+   [7] YINER MANCILLA CORTES | CASA 117 A | nombre 66% | OTRO SECTOR (la casa no cuenta)
+   [8] Mirian castro cortes | Casa 117 | nombre 65% | OTRO SECTOR (la casa no cuenta)
+   [9] ANA ALICIA SINISTERRA CORTES | CASA 630 | nombre 65%
+   [10] LINA AURORA VIVEROS CORTES | CASA 92 | nombre 64%
+
+Intento 6: buscar 'MILENA' por NOMBRE
+   4 fila(s) en la tabla, 4 con nombre parecido a 'MILENA'.
+   [1] Erika Milena Carrera | Casa 361 | nombre 68% | OTRO SECTOR (la casa no cuenta)
+   [2] Flor Milena Cortés Segura | Casa 295 | nombre 67% | OTRO SECTOR (la casa no cuenta)
+   [3] Milena Guerrero | Casa 48 | nombre 67% | OTRO SECTOR (la casa no cuenta)
+   [4] VIVIAN MILENA MONTAÑO QUIÑONES | CASA 009 | nombre 61%
+
+Intento 7: buscar 'GARC' por NOMBRE
+   7 fila(s) en la tabla, 7 con nombre parecido a 'GARC'.
+   [1] Glori Garcia | Casa 41 | nombre 77% | OTRO SECTOR (la casa no cuenta)
+   [2] EMILIO GARCÍA CABEZAS | CASA 57 | nombre 66%
+   [3] Doris Garces | Casa 609 | nombre 66%
+   [4] Doris Garces | Casa 608 | nombre 66%
+   [5] Doris Garces | Casa 607B | nombre 66%
+   [6] Doris Garces | Casa 607A | nombre 66%
+   [7] Luisa Dalila Garcia | Casa 285 | nombre 62% | OTRO SECTOR (la casa no cuenta)
+
+Intento 8: buscar 'CORT' por NOMBRE
+   23 fila(s) en la tabla, 17 con nombre parecido a 'CORT'.
+   [1] MARIA ZAIDA CORTES | CASA 125A | nombre 76% | OTRO SECTOR (la casa no cuenta)
+   [2] SILVIA PATRICIA CORTES | CASA 80 | nombre 74%
+   [3] Doris Alicia Cortes | Casa 398 | nombre 74%
+   [4] JANNY LORENA VALLECILLA CORTES | Casa 72 | nombre 73%
+   [5] DARLIN MEZA CORTÉS | CASA 374 | nombre 70%
+   [6] Brenda Carmenza Cortes | Casa 321 | nombre 69% | OTRO SECTOR (la casa no cuenta)
+   [7] LORENA PATRICIA MACUASE CORTES | Casa 700 | nombre 69%
+   [8] Flor Milena Cortés Segura | Casa 295 | nombre 67% | OTRO SECTOR (la casa no cuenta)
+   [9] YINER MANCILLA CORTES | CASA 117 A | nombre 66% | OTRO SECTOR (la casa no cuenta)
+   [10] Mirian castro cortes | Casa 117 | nombre 65% | OTRO SECTOR (la casa no cuenta)
+
+Intento 9: buscar 'MILE' por NOMBRE
+   4 fila(s) en la tabla, 4 con nombre parecido a 'MILE'.
+   [1] Erika Milena Carrera | Casa 361 | nombre 68% | OTRO SECTOR (la casa no cuenta)
+   [2] Flor Milena Cortés Segura | Casa 295 | nombre 67% | OTRO SECTOR (la casa no cuenta)
+   [3] Milena Guerrero | Casa 48 | nombre 67% | OTRO SECTOR (la casa no cuenta)
+   [4] VIVIAN MILENA MONTAÑO QUIÑONES | CASA 009 | nombre 61%
+
+Intento 10: buscar 'GARCIA' por NOMBRE
+   2 fila(s) en la tabla, 2 con nombre parecido a 'GARCIA'.
+   [1] Glori Garcia | Casa 41 | nombre 77% | OTRO SECTOR (la casa no cuenta)
+   [2] Luisa Dalila Garcia | Casa 285 | nombre 62% | OTRO SECTOR (la casa no cuenta)
+
+No encontrado: el mas parecido en Kobo es Glori Garcia Casa 41 (77% de parecido en el nombre)
+Excel: fila 11, columna G = 'No encontrado'
+
+Uniendo los PDF del usuario:
+   PDF unido (4 documentos): C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL_APARTE\860_NANCY MILENA GARCIAS CORTES\860_NANCY MILENA GARCIAS CORTES.pdf
+     - 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA.pdf
+     - DOCUMENTO.pdf
+     - 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN PARA LA PARTICIPACIÓN EN EL PROYECTO.pdf
+     - 3. ENCUESTA DE CARACTERIZACIÓN SOCIOECONÓMICA DE LA COMUNIDAD.pdf
+
+Hoja local (HOJA_APARTE.xlsx):
+   HOJA_APARTE.xlsx, fila 11 (usuario 860):
+     F11 = NANCY MILENA GARCIAS CORTES
+     G11 = 59672593
+     H11 = CASA 639 LA LIBERTAD DIV 1
+     I11 = CONFIRMADO
+     J11 = CEDULA DE CIUDADANIA Y RECIBO DE ENERGIA
+     K11 = (en blanco)
+     L11 = N/A
+Excel: fila 11, columna K (hoja) = 'Si'
+
+======================================================================
+Con todos los formularios enviados: 2 | Con opcion 'Otro': 0 | Vivienda inexistente (RETIRADO): 0 | Enviados con algo a mano: 0 | No encontrados o dudosos: 0 | Sin formulario 4 en Kobo: 2 | Pendientes: 0 | Hoja de Google pendiente: 0
+   - fila 7: 774 ANA LILIANA CORREA RODRIGUEZ (sin formulario 4 en Kobo)
+   - fila 11: 860 NANCY MILENA GARCIAS CORTES (sin formulario 4 en Kobo)
+
+Registro de casos:
+   Casos por resolver: 7 (Sin formulario 4: 7) -> CASOS_APARTE.xlsx
+Traceback (most recent call last):
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\aparte.py", line 26, in <module>
+    main.main()
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\main.py", line 340, in main
+    with abrir_navegador() as (_, page, playwright):
+  File "C:\Program Files\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\tumaco\browser.py", line 79, in abrir_navegador
+    context.close()
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\sync_api\_generated.py", line 13482, in close
+    return mapping.from_maybe_impl(self._sync(self._impl_obj.close(reason=reason)))
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_sync_base.py", line 115, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_browser_context.py", line 620, in close
+    await self._channel.send("close", None, {"reason": reason})
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 558, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+Exception: BrowserContext.close: Connection closed while reading from the driver

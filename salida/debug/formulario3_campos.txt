@@ -1,0 +1,521 @@
+Formulario 3: 130 pregunta(s)
+
+[opcion unica] NO. CONTRATO
+    valor: 512-2026
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(2)
+
+[opcion unica] MUNICIPIO
+    valor: TUMACO - NARIÑO
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(3)
+
+[opcion unica] LUGAR
+    valor: El Triunfo – Sector 4
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(4)
+
+[opcion unica] CONTRATISTA
+    valor: Consorcio Alianza PRONE
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(5)
+
+[opcion unica] INTERVENTORÍA
+    valor: SERVICIOS DE INGENIERIA EYC S.A.S.
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(6)
+
+[opcion unica] RESPONSABLE
+    valor: COORDINADORA PLAN DE ACCION SOCIAL
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(7)
+
+[text] NOMBRE
+    valor: ADRIANA MUÑOZ
+    selector: body > div.main > article > form > section:nth-child(3) > label:nth-child(8)
+
+[text] LA PRESENTE ENCUESTA HACE PARTE DEL PROCESO DE LOCALIZACIÓN, VERIFICACIÓN Y CARACTERIZACIÓN DE POTENCIALES BENEFICIARIOS DEL PROYECTO PRONE Y CONSTITU
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(2)
+
+[text] NOMBRE
+    valor: ANA LUCIA VIVEROS MONTAÑO
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(3)
+
+[text] DOCUMENTO
+    valor: 59677880
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(4)
+
+[text] NO. USUARIO
+    valor: 59
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(5)
+
+[text] DIRECCIÓN
+    valor: CASA 39
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(6)
+
+[text] BARRIO
+    valor: EL TRIUNFO
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(7)
+
+[number] EDAD
+    valor: 46
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(8)
+
+[opcion unica] GÉNERO
+    valor: Femenino
+    selector: body > div.main > article > form > section:nth-child(4) > fieldset:nth-child(9)
+
+[text] ¿CUÁL? (OTRO GENERO)
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(10)
+
+[opcion unica] SEXO
+    valor: Mujer
+    selector: body > div.main > article > form > section:nth-child(4) > fieldset:nth-child(11)
+
+[opcion multiple] ¿CUÁL CONSIDERA QUE ES EL HORARIO MÁS CONVENIENTE PARA ASISTIR A FUTURAS REUNIONES Y ACTIVIDADES COMUNITARIAS DEL PROYECTO? (PUEDE SELECCIONAR UNA O V
+    valor: Miércoles | Jueves | Viernes
+    selector: body > div.main > article > form > section:nth-child(4) > fieldset:nth-child(12)
+
+[opcion multiple] FRANJA HORARIA MÁS CONVENIENTE
+    valor: Tarde
+    selector: body > div.main > article > form > section:nth-child(4) > fieldset:nth-child(13)
+
+[text] HORA ESPECÍFICA (OPCIONAL)
+    valor: 2:00pm
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(14)
+
+[opcion multiple] ¿CUÁL CONSIDERA QUE ES EL HORARIO MÁS CONVENIENTE PARA VISITAS DOMICILIARIAS DEL PROYECTO (INSTALACIÓN Y SEGUIMIENTO)? (PUEDE SELECCIONAR UNA O VARIAS
+    valor: Miércoles | Jueves | Viernes
+    selector: body > div.main > article > form > section:nth-child(4) > fieldset:nth-child(15)
+
+[opcion multiple] FRANJA HORARIA MÁS CONVENIENTE
+    valor: Tarde
+    selector: body > div.main > article > form > section:nth-child(4) > fieldset:nth-child(16)
+
+[text] HORA ESPECÍFICA (OPCIONAL)
+    valor: 2:00pm
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(17)
+
+[number] ¿CUÁNTO TIEMPO EN AÑOS RESIDE EN ESTE BARRIO?
+    valor: 17
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(2)
+
+[opcion unica] ¿CUÁL ES EL ESTRATO SOCIOECONÓMICO DE SU VIVIENDA?
+    valor: 1
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(3)
+
+[text] ¿Cuál? (Otro estrato)  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(4)
+
+[opcion unica] ¿CUÁL ES LA PRINCIPAL FUENTE DE INGRESOS EN EL HOGAR?
+    valor: Empleo informal
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(5)
+
+[text] ¿Cuál? (Otra fuente de ingresos)  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(6)
+
+[opcion unica] ¿EL HOGAR SE CLASIFICA COMO?
+    valor: Nuclear
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(7)
+
+[text] ¿Cuál? (Otro tipo de hogar)  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(8)
+
+[number] ¿CUÁNTAS PERSONAS CONFORMAN EL HOGAR?
+    valor: 4
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(9)
+
+[text] ¿A QUÉ GRUPO ETARIO PERTENECE CADA UNO DE LOS MIEMBROS DE SU HOGAR? INDIQUE EL NÚMERO DE HOMBRES (H) Y MUJERES (M) EN CADA CATEGORÍA.
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(10)
+
+[number] PRIMERA INFANCIA (0 A 5 AÑOS) - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(11)
+
+[number] PRIMERA INFANCIA (0 A 5 AÑOS) - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(12)
+
+[number] INFANCIA (6 A 11 AÑOS) - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(13)
+
+[number] INFANCIA (6 A 11 AÑOS) - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(14)
+
+[number] ADOLESCENCIA (12 A 17 AÑOS) - HOMBRES
+    valor: 1
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(15)
+
+[number] ADOLESCENCIA (12 A 17 AÑOS) - MUJERES
+    valor: 1
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(16)
+
+[number] JUVENTUD (18 A 28 AÑOS) - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(17)
+
+[number] JUVENTUD (18 A 28 AÑOS) - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(18)
+
+[number] ADULTEZ (29 A 59 AÑOS) - HOMBRES
+    valor: 1
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(19)
+
+[number] ADULTEZ (29 A 59 AÑOS) - MUJERES
+    valor: 1
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(20)
+
+[number] PERSONAS MAYORES (60 AÑOS O MÁS) - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(21)
+
+[number] PERSONAS MAYORES (60 AÑOS O MÁS) - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(22)
+
+[text] ¿CUÁL ES EL NIVEL EDUCATIVO MÁS ALTO ALCANZADO POR CADA UNO DE LOS MIEMBROS DE SU HOGAR? INDIQUE EL NÚMERO DE HOMBRES (H) Y MUJERES (M) EN CADA CATEGO
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(23)
+
+[number] NINGUNO - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(24)
+
+[number] NINGUNO - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(25)
+
+[number] PRIMARIA - HOMBRES
+    valor: 1
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(26)
+
+[number] PRIMARIA - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(27)
+
+[number] SECUNDARIA - HOMBRES
+    valor: 1
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(28)
+
+[number] SECUNDARIA - MUJERES
+    valor: 2
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(29)
+
+[number] TÉCNICO - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(30)
+
+[number] TÉCNICO - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(31)
+
+[number] TECNÓLOGO - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(32)
+
+[number] TECNÓLOGO - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(33)
+
+[number] PROFESIONAL - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(34)
+
+[number] PROFESIONAL - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(35)
+
+[number] OTRO - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(36)
+
+[number] OTRO - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(37)
+
+[text] ¿Cuál? (Otro nivel educativo)  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(38)
+
+[text] DEL TOTAL DE INTEGRANTES DEL HOGAR, INDIQUE ¿CUÁNTAS PERSONAS SE AUTORRECONOCEN COMO? INDIQUE EL NÚMERO DE HOMBRES (H), MUJERES (M) Y LA COMUNIDAD A L
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(39)
+
+[number] INDÍGENA - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(40)
+
+[number] INDÍGENA - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(41)
+
+[text] INDÍGENA - COMUNIDAD
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(42)
+
+[number] NEGRO, AFROCOLOMBIANO O AFRODESCENDIENTE - HOMBRES
+    valor: 2
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(43)
+
+[number] NEGRO, AFROCOLOMBIANO O AFRODESCENDIENTE - MUJERES
+    valor: 2
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(44)
+
+[text] NEGRO, AFROCOLOMBIANO O AFRODESCENDIENTE - COMUNIDAD
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(45)
+
+[number] RAIZAL - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(46)
+
+[number] RAIZAL - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(47)
+
+[text] RAIZAL - COMUNIDAD
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(48)
+
+[number] PALENQUERO - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(49)
+
+[number] PALENQUERO - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(50)
+
+[text] PALENQUERO - COMUNIDAD
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(51)
+
+[number] PUEBLO ROM O GITANO - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(52)
+
+[number] PUEBLO ROM O GITANO - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(53)
+
+[text] PUEBLO ROM O GITANO - COMUNIDAD
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(54)
+
+[text] OTRO - HOMBRES - CUAL
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(55)
+
+[text] OTRO - MUJERES-CUAL
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(56)
+
+[text] ¿CUÁL? (OTRA ETNIA)
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(57)
+
+[number] NINGUNO - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(58)
+
+[number] NINGUNO - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(59)
+
+[text] ¿CUÁNTAS PERSONAS PERTENECEN A LOS SIGUIENTES GRUPOS CON ENFOQUE DIFERENCIAL? INDIQUE EL NÚMERO DE HOMBRES (H) Y MUJERES (M) EN CADA CATEGORÍA.
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(60)
+
+[number] PERSONAS CON DISCAPACIDAD - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(61)
+
+[number] PERSONAS CON DISCAPACIDAD - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(62)
+
+[number] PERSONAS CON ENFERMEDAD CRÓNICA - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(63)
+
+[number] PERSONAS CON ENFERMEDAD CRÓNICA - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(64)
+
+[number] PERSONAS MIGRANTES - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(65)
+
+[number] PERSONAS MIGRANTES - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(66)
+
+[number] VÍCTIMAS DEL CONFLICTO ARMADO - HOMBRES
+    valor: 2
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(67)
+
+[number] VÍCTIMAS DEL CONFLICTO ARMADO - MUJERES
+    valor: 2
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(68)
+
+[number] POBLACIÓN REINCORPORADA - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(69)
+
+[number] POBLACIÓN REINCORPORADA - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(70)
+
+[number] MUJERES GESTANTES O EN PERIODO DE LACTANCIA - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(71)
+
+[number] PADRE CABEZA DE FAMILIA - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(72)
+
+[number] MADRE CABEZA DE FAMILIA - MUJERES
+    valor: 1
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(73)
+
+[number] OTRO - HOMBRES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(74)
+
+[number] OTRO - MUJERES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(75)
+
+[text] ¿Cuál? (Otro enfoque diferencial)  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(76)
+
+[opcion unica] ¿ALGÚN INTEGRANTE DEL HOGAR REQUIERE APOYO ESPECÍFICO PARA PARTICIPAR EN ACTIVIDADES COMUNITARIAS?
+    valor: No requiere
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(77)
+
+[text] ¿Qué tipo de apoyo?  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(78)
+
+[opcion unica] ¿CONOCE ORGANIZACIONES COMUNITARIAS DE SU SECTOR?
+    valor: No
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(79)
+
+[text] ¿Cuál(es)?  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(80)
+
+[opcion unica] ¿HA PARTICIPADO EN ALGUNA REUNIÓN O ACTIVIDAD COMUNITARIA DURANTE EL ÚLTIMO AÑO?
+    valor: Sí
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(81)
+
+[text] ¿CÓMO CALIFICARÍA LA ORGANIZACIÓN Y PARTICIPACIÓN DE SU COMUNIDAD? (DEBE SELECCIONAR UNA ÚNICA OPCIÓN POR ASPECTO)
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(82)
+
+[opcion unica] PARTICIPACIÓN DE LA COMUNIDAD
+    valor: Buena
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(83)
+
+[opcion unica] TRABAJO CONJUNTO PARA RESOLVER PROBLEMAS
+    valor: Buena
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(84)
+
+[opcion unica] INCLUSIÓN DE LOS HABITANTES
+    valor: Buena
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(85)
+
+[text] ¿CLASIFIQUE Y DESCRIBA BREVEMENTE LOS SIGUIENTES ASPECTOS COMO FORTALEZAS O DEBILIDADES EN SU COMUNIDAD? (PUEDE SELECCIONAR UNA O VARIAS OPCIONES)
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(86)
+
+[opcion unica] ORGANIZACIÓN Y PARTICIPACIÓN COMUNITARIA
+    valor: Fortaleza
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(87)
+
+[text] OBSERVACIÓN (OPCIONAL)
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(88)
+
+[opcion unica] CONFLICTOS SOCIALES O TERRITORIALES
+    valor: Fortaleza
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(89)
+
+[text] OBSERVACIÓN (OPCIONAL)
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(90)
+
+[opcion unica] SEGURIDAD DEL SECTOR
+    valor: Fortaleza
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(91)
+
+[text] OBSERVACIÓN (OPCIONAL)
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(92)
+
+[opcion unica] ACCESIBILIDAD O CONDICIONES DE ACCESO
+    valor: Fortaleza
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(93)
+
+[text] OBSERVACIÓN (OPCIONAL)
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(94)
+
+[opcion unica] SERVICIOS PÚBLICOS DOMICILIARIOS
+    valor: Debilidad
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(95)
+
+[text] OBSERVACIÓN (OPCIONAL)
+    valor: El agua es deficiente no la quitan hasta por más de ocho días La factura de energía es muy elevada y cedenar no viene a tomar las lecturas
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(96)
+
+[opcion unica] PRESENCIA Y ARTICULACIÓN INSTITUCIONAL
+    valor: Fortaleza
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(97)
+
+[text] OBSERVACIÓN (OPCIONAL)
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(98)
+
+[opcion unica] ¿CÓMO CALIFICARÍA LA SEGURIDAD DE SU COMUNIDAD?
+    valor: Segura
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(99)
+
+[opcion unica] ¿CÓMO CALIFICARÍA EL SERVICIO DE ENERGÍA ELÉCTRICA?
+    valor: Regular
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(100)
+
+[opcion multiple] DECLARACIONES
+    valor: Entiendo que este formulario no garantiza mi selección como beneficiario, la cual dependerá de las verificaciones y requisitos del proyecto. | Declaro que la información suministrada en este formulari
+    selector: body > div.main > article > form > section:nth-child(6) > fieldset:nth-child(2)
+
+[text] SI ESTÁ DE ACUERDO CON LAS DECLARACIONES ANTERIORES, FIRME EN EL ESPACIO DISPUESTO A CONTINUACIÓN.
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(6) > label:nth-child(3)
+
+[text] NOMBRE
+    valor: ANA LUCIA VIVEROS MONTAÑO
+    selector: body > div.main > article > form > section:nth-child(6) > section:nth-child(4) > label:nth-child(2)
+
+[text] DOCUMENTO
+    valor: 59677880
+    selector: body > div.main > article > form > section:nth-child(6) > section:nth-child(4) > label:nth-child(3)
+
+[firma] FIRMA
+    valor: (lienzo de firma)
+    selector: body > div.main > article > form > section:nth-child(6) > section:nth-child(4) > label:nth-child(4)
+
+[text] NOMBRE
+    valor: ADRIANA MUÑOZ
+    selector: body > div.main > article > form > section:nth-child(6) > section:nth-child(5) > label:nth-child(2)
+
+[text] DOCUMENTO
+    valor: 59122110
+    selector: body > div.main > article > form > section:nth-child(6) > section:nth-child(5) > label:nth-child(3)
+
+[firma] FIRMA
+    valor: (lienzo de firma)
+    selector: body > div.main > article > form > section:nth-child(6) > section:nth-child(5) > label:nth-child(4)

@@ -1,0 +1,380 @@
+[
+ {
+  "pregunta": "NO. CONTRATO",
+  "tipo": "opcion unica",
+  "valor": "512- 2026",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "MUNICIPIO",
+  "tipo": "opcion unica",
+  "valor": "TUMACO - NARIÑO",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "LUGAR",
+  "tipo": "opcion unica",
+  "valor": "La Libertad – Sector 1 Y 2",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(4)",
+  "visible": true
+ },
+ {
+  "pregunta": "CONTRATISTA",
+  "tipo": "opcion unica",
+  "valor": "Consorcio Alianza PRONE",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(5)",
+  "visible": true
+ },
+ {
+  "pregunta": "INTERVENTORÍA",
+  "tipo": "opcion unica",
+  "valor": "SERVICIOS DE INGENIERIA EYC S.A.S.",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(6)",
+  "visible": true
+ },
+ {
+  "pregunta": "CARGO",
+  "tipo": "opcion unica",
+  "valor": "INGENIERO RESIDENTE",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(7)",
+  "visible": true
+ },
+ {
+  "pregunta": "NOMBRE",
+  "tipo": "text",
+  "valor": "Adriana Muñoz",
+  "selector": "body > div.main > article > form > section:nth-child(3) > label:nth-child(8)",
+  "visible": true
+ },
+ {
+  "pregunta": "NOMBRE",
+  "tipo": "text",
+  "valor": "Yimy Wisamano",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "DOCUMENTO",
+  "tipo": "text",
+  "valor": "12918068",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "NO. USUARIO",
+  "tipo": "text",
+  "valor": "723",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(4)",
+  "visible": true
+ },
+ {
+  "pregunta": "DIRECCIÓN",
+  "tipo": "text",
+  "valor": "Casa 546",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(5)",
+  "visible": true
+ },
+ {
+  "pregunta": "BARRIO",
+  "tipo": "text",
+  "valor": "La libertad sector 1  y 2",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(6)",
+  "visible": true
+ },
+ {
+  "pregunta": "CELULAR",
+  "tipo": "tel",
+  "valor": "3104649895",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(7)",
+  "visible": true
+ },
+ {
+  "pregunta": "UBICACIÓN (LATITUD / LONGITUD)",
+  "tipo": "opcion unica",
+  "valor": "humanitarian",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(8)",
+  "visible": true
+ },
+ {
+  "pregunta": "LA VALORACIÓN CORRESPONDE ÚNICAMENTE A LAS CONDICIONES VISIBLES AL MOMENTO DE LA VISITA.",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "MUROS Y ACABADOS EXTERIORES",
+  "tipo": "opcion unica",
+  "valor": "Sin novedad",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "Observación (opcional)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(4)",
+  "visible": false
+ },
+ {
+  "pregunta": "PUERTAS Y VENTANAS",
+  "tipo": "opcion unica",
+  "valor": "Sin novedad",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(5)",
+  "visible": true
+ },
+ {
+  "pregunta": "Observación (opcional)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(6)",
+  "visible": false
+ },
+ {
+  "pregunta": "CUBIERTA O TECHO",
+  "tipo": "opcion unica",
+  "valor": "Sin novedad",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(7)",
+  "visible": true
+ },
+ {
+  "pregunta": "Observación (opcional)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(8)",
+  "visible": false
+ },
+ {
+  "pregunta": "ACCESO AL PREDIO (ANDÉN / ESCALERAS)",
+  "tipo": "opcion unica",
+  "valor": "Sin novedad",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(9)",
+  "visible": true
+ },
+ {
+  "pregunta": "Observación (opcional)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(10)",
+  "visible": false
+ },
+ {
+  "pregunta": "MUROS Y ACABADOS INTERIORES",
+  "tipo": "opcion unica",
+  "valor": "Sin novedad",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(11)",
+  "visible": true
+ },
+ {
+  "pregunta": "Observación (opcional)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(12)",
+  "visible": false
+ },
+ {
+  "pregunta": "PISOS INTERIOR",
+  "tipo": "opcion unica",
+  "valor": "Sin novedad",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(13)",
+  "visible": true
+ },
+ {
+  "pregunta": "Observación (opcional)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(14)",
+  "visible": false
+ },
+ {
+  "pregunta": "CIELO RASO",
+  "tipo": "opcion unica",
+  "valor": "Sin novedad",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(15)",
+  "visible": true
+ },
+ {
+  "pregunta": "Observación (opcional)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(16)",
+  "visible": false
+ },
+ {
+  "pregunta": "INSTALACIÓN ELÉCTRICA INTERNA (VISIBLE)",
+  "tipo": "opcion unica",
+  "valor": "Sin novedad",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(17)",
+  "visible": true
+ },
+ {
+  "pregunta": "Observación (opcional)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(18)",
+  "visible": false
+ },
+ {
+  "pregunta": "SE REGISTRAN LAS CONDICIONES OBSERVABLES DEL PUNTO DE INTERVENCIÓN Y DE LA INFRAESTRUCTURA ELÉCTRICA EXISTENTE.",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(6) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "SERVICIO ELÉCTRICO EXISTENTE",
+  "tipo": "opcion unica",
+  "valor": "Servicio con medidor individual",
+  "selector": "body > div.main > article > form > section:nth-child(6) > fieldset:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "Observación",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(6) > label:nth-child(4)",
+  "visible": false
+ },
+ {
+  "pregunta": "INFRAESTRUCTURA ELÉCTRICA OBSERVABLE",
+  "tipo": "opcion multiple",
+  "valor": "Existe tablero eléctrico",
+  "selector": "body > div.main > article > form > section:nth-child(6) > fieldset:nth-child(5)",
+  "visible": true
+ },
+ {
+  "pregunta": "Especifique la otra condición observable",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(6) > label:nth-child(6)",
+  "visible": false
+ },
+ {
+  "pregunta": "REGISTRO FOTOGRÁFICO MÍNIMO OBLIGATORIO:",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "FACHADA COMPLETA DEL INMUEBLE",
+  "tipo": "archivo",
+  "valor": "1790780829927.jpg",
+  "selector": "body > div.main > article > form > section:nth-child(7) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "MEDIDOR DE ENERGÍA EXISTENTE (SERIAL VISIBLE)",
+  "tipo": "archivo",
+  "valor": "1790780889749.jpg",
+  "selector": "body > div.main > article > form > section:nth-child(7) > label:nth-child(4)",
+  "visible": true
+ },
+ {
+  "pregunta": "NO. SERIAL",
+  "tipo": "text",
+  "valor": "Lectura ilejible",
+  "selector": "body > div.main > article > form > section:nth-child(7) > label:nth-child(5)",
+  "visible": true
+ },
+ {
+  "pregunta": "CIU MATRÍCULA",
+  "tipo": "text",
+  "valor": "1147940",
+  "selector": "body > div.main > article > form > section:nth-child(7) > label:nth-child(6)",
+  "visible": true
+ },
+ {
+  "pregunta": "ÁREA EXTERIOR DE INTERVENCIÓN (ACOMETIDA EXISTENTE)",
+  "tipo": "archivo",
+  "valor": "1790780931274.jpg",
+  "selector": "body > div.main > article > form > section:nth-child(7) > label:nth-child(7)",
+  "visible": true
+ },
+ {
+  "pregunta": "ÁREA INTERIOR DE INTERVENCIÓN (TABLERO ELÉCTRICO EXISTENTE)",
+  "tipo": "archivo",
+  "valor": "1790780947813.jpg",
+  "selector": "body > div.main > article > form > section:nth-child(7) > label:nth-child(8)",
+  "visible": true
+ },
+ {
+  "pregunta": "REGISTRO FOTOGRÁFICO COMPLEMENTARIO (SI APLICA):",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > label:nth-child(9)",
+  "visible": true
+ },
+ {
+  "pregunta": "DETALLE DAÑO O DETERIORO 1 (SI EXISTEN)",
+  "tipo": "archivo",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > label:nth-child(10)",
+  "visible": true
+ },
+ {
+  "pregunta": "DETALLE DAÑO O DETERIORO 2 (SI EXISTEN)",
+  "tipo": "archivo",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(7) > label:nth-child(11)",
+  "visible": true
+ },
+ {
+  "pregunta": "OBSERVACIONES ADICIONALES",
+  "tipo": "texto largo",
+  "valor": "Todo normal",
+  "selector": "body > div.main > article > form > section:nth-child(7) > label:nth-child(12)",
+  "visible": true
+ },
+ {
+  "pregunta": "CON LA FIRMA DEL PRESENTE DOCUMENTO, LAS PARTES DEJAN CONSTANCIA DE QUE LA INFORMACIÓN REGISTRADA CORRESPONDE A LAS CONDICIONES VISIBLES OBSERVADAS DU",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(8) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "NOMBRE",
+  "tipo": "text",
+  "valor": "Yimy wisamano",
+  "selector": "body > div.main > article > form > section:nth-child(8) > section:nth-child(3) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "DOCUMENTO",
+  "tipo": "text",
+  "valor": "12918066",
+  "selector": "body > div.main > article > form > section:nth-child(8) > section:nth-child(3) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "FIRMA",
+  "tipo": "firma",
+  "valor": "(lienzo de firma)",
+  "selector": "body > div.main > article > form > section:nth-child(8) > section:nth-child(3) > label:nth-child(4)",
+  "visible": true
+ },
+ {
+  "pregunta": "NOMBRE",
+  "tipo": "text",
+  "valor": "Jhon . S  . M",
+  "selector": "body > div.main > article > form > section:nth-child(8) > section:nth-child(4) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "DOCUMENTO",
+  "tipo": "text",
+  "valor": "1032490603",
+  "selector": "body > div.main > article > form > section:nth-child(8) > section:nth-child(4) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "FIRMA",
+  "tipo": "firma",
+  "valor": "(lienzo de firma)",
+  "selector": "body > div.main > article > form > section:nth-child(8) > section:nth-child(4) > label:nth-child(4)",
+  "visible": true
+ }
+]

@@ -1,0 +1,80 @@
+Personas ya procesadas que tienen algo por corregir aparte. NO subir al Drive hasta corregirlas.
+
+======================================================================
+783 - MARIA LORENA ARBOLEDA REINA - CC 1.004.636.702 - CASA 467 LA LIBERTAD DIV 1
+======================================================================
+PROBLEMA
+- En Kobo, su formulario 2 (Manifestacion de voluntad, _id 826845937) tiene las FOTOS de la cedula
+  de otra persona: MARIA LORENA CAICEDO CALZADA (CC 1.087.126.583, usuario 467).
+- El numero de documento del formulario 2 ya se corrigio el 12-oct a 1004636702 (lo confirma su
+  factura de Cedenar, adjunta en su formulario 1).
+- Su DOCUMENTO.pdf y su PDF unido todavia muestran la cedula de la otra persona.
+
+PEDIDO PARA EL EQUIPO DE CAMPO
+- Tomar foto del FRENTE y del REVERSO de la cedula de Maria Lorena Arboleda Reina.
+- En Kobo, formulario 2, registro _id 826845937: reemplazar las dos fotos de la cedula por esas.
+- Avisar cuando este cargado.
+
+CUANDO ESTEN LAS FOTOS EN KOBO
+- En USUARIOS.xlsx borrar la marca de la columna E (formulario 2) de la fila del usuario 783.
+- Correr: .venv\Scripts\python main.py --limite 1
+  El bot recorta la cedula nueva, rehace DOCUMENTO.pdf, el PDF del formulario 2 y el unido, y la
+  carpeta vuelve a CONTINGENCIAL. Revisar y pasarla a TERMINADOS\LISTOS POR CARGAR.
+
+======================================================================
+708 - LUZ MARIA DEL SOCORRO LANDAZURI QUIÑONES - CC 59.665.249 - CASA 555 LA LIBERTAD DIV 1
+======================================================================
+PROBLEMA
+- En Kobo, formulario 2 (_id 829150797), la foto de la CARA de la cedula no es la cedula: es otra foto
+-   (una superficie gris que dice 'MEC-45869'). El REVERSO si es el suyo (59665249).
+- Su DOCUMENTO.pdf y su PDF unido no muestran la cara de la cedula.
+
+PEDIDO PARA EL EQUIPO DE CAMPO
+- Tomar foto del FRENTE de la cedula de Luz Maria del Socorro Landazuri Quiñones (CC 59.665.249).
+- En Kobo, formulario 2, registro _id 829150797: reemplazar la foto de la cara de la cedula por esa.
+- Avisar cuando este cargado.
+
+CUANDO ESTE LISTO
+- En USUARIOS.xlsx borrar la marca de la columna E (formulario 2) de la fila 15 (usuario 708).
+- Correr: .venv\Scripts\python main.py --limite 1 (recorta la cedula, rehace DOCUMENTO.pdf, el PDF
+-   del formulario 2 y el unido). Revisar y pasar la carpeta a TERMINADOS\LISTOS POR CARGAR.
+
+======================================================================
+864 - FELISA CECILIA QUIÑONES LANDAZURI - DOC 98528510 - CASA 593 LA LIBERTAD DIV 1
+======================================================================
+PROBLEMA
+- En Kobo, formulario 2 (_id 830055067), NO hay fotos de la cedula (ni cara ni reverso); la carpeta
+-   no tiene DOCUMENTO.pdf. El formulario 4 no existe en Kobo.
+- El documento 98528510 (en los formularios 1, 2 y 3 y en la hoja) no parece ser de Felisa Cecilia:
+-   su cedula, cargada en el usuario 843 (casa 596), es 59.667.399.
+- En la hoja de Google el usuario 864 es 'FELISA CECILIA QUIÃ‘ONES LANDAZ' (CS 593 LA LIBERTAD DIV 1).
+
+PEDIDO PARA EL EQUIPO DE CAMPO
+- Confirmar quien es el usuario de la casa 593 y su numero de cedula.
+- Tomar foto del FRENTE y del REVERSO de esa cedula y cargarlas en Kobo, formulario 2, _id 830055067.
+- Avisar el numero correcto (si es 59667399, hay que corregir el documento en los formularios y la hoja).
+
+CUANDO ESTE LISTO
+- Corregir el documento en USUARIOS.xlsx (columna I, fila 77) si cambio, y borrar la marca de la
+-   columna E (formulario 2). Correr: .venv\Scripts\python main.py --limite 1. Revisar y pasar la
+-   carpeta a TERMINADOS\LISTOS POR CARGAR.
+
+======================================================================
+711 - CLARA LANDAZURI DE CASTILLO - CC 27.506.285 - CASA 633 LA LIBERTAD DIV 1
+======================================================================
+PROBLEMA
+- El 12-oct otra persona edito sus 4 formularios en Kobo con la misma cuenta (IP 181.62.56.15) despues
+-   del bot: cambio la firma del contratista (ya se volvio a poner la del bot) y en el formulario 1
+-   (_id 829150879) se BORRO el soporte de propiedad (foto de la cedula y el recibo de energia,
+-   archivo 1790799828898.jpg, tomada el 30-sep). Kobo ya no la tiene.
+- El nombre quedo como la cedula: CLARA LANDAZURI DE CASTILLO (Excel, Kobo y hoja).
+
+PEDIDO PARA EL EQUIPO DE CAMPO
+- Coordinar con quien trabaja desde la otra conexion para que no vuelva a editar el 711.
+- Conseguir la foto del soporte: del PDF viejo del 711 en el Drive (version anterior del formulario 1
+-   o del PDF unido, subida antes de las 15:14 del 12-oct) o pidiendo la foto otra vez a campo.
+- Cargarla en Kobo, formulario 1, registro _id 829150879, pregunta SOPORTE DE PROPIEDAD SOBRE EL INMUEBLE
+-   (o dejarla en esta carpeta como SOPORTE.jpg para que la suba el bot).
+
+CUANDO ESTE LISTO
+- Rehacer el PDF del formulario 1 y el unido, y pasar la carpeta a TERMINADOS\LISTOS POR CARGAR.

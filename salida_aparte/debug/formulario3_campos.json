@@ -1,0 +1,912 @@
+[
+ {
+  "pregunta": "NO. CONTRATO",
+  "tipo": "opcion unica",
+  "valor": "512-2026",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "MUNICIPIO",
+  "tipo": "opcion unica",
+  "valor": "TUMACO - NARIÑO",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "LUGAR",
+  "tipo": "opcion unica",
+  "valor": "La Libertad – Sector 1 Y 2",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(4)",
+  "visible": true
+ },
+ {
+  "pregunta": "CONTRATISTA",
+  "tipo": "opcion unica",
+  "valor": "Consorcio Alianza PRONE",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(5)",
+  "visible": true
+ },
+ {
+  "pregunta": "INTERVENTORÍA",
+  "tipo": "opcion unica",
+  "valor": "SERVICIOS DE INGENIERIA EYC S.A.S.",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(6)",
+  "visible": true
+ },
+ {
+  "pregunta": "RESPONSABLE",
+  "tipo": "opcion unica",
+  "valor": "COORDINADORA PLAN DE ACCION SOCIAL",
+  "selector": "body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(7)",
+  "visible": true
+ },
+ {
+  "pregunta": "NOMBRE",
+  "tipo": "text",
+  "valor": "Adriana Muñoz ",
+  "selector": "body > div.main > article > form > section:nth-child(3) > label:nth-child(8)",
+  "visible": true
+ },
+ {
+  "pregunta": "LA PRESENTE ENCUESTA HACE PARTE DEL PROCESO DE LOCALIZACIÓN, VERIFICACIÓN Y CARACTERIZACIÓN DE POTENCIALES BENEFICIARIOS DEL PROYECTO PRONE Y CONSTITU",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "NOMBRE",
+  "tipo": "text",
+  "valor": "Nancy Milena Garcías Cortés ",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "DOCUMENTO",
+  "tipo": "text",
+  "valor": "59672593",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(4)",
+  "visible": true
+ },
+ {
+  "pregunta": "NO. USUARIO",
+  "tipo": "text",
+  "valor": "860",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(5)",
+  "visible": true
+ },
+ {
+  "pregunta": "DIRECCIÓN",
+  "tipo": "text",
+  "valor": "Casa 639",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(6)",
+  "visible": true
+ },
+ {
+  "pregunta": "BARRIO",
+  "tipo": "text",
+  "valor": "Libertad 1 ",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(7)",
+  "visible": true
+ },
+ {
+  "pregunta": "EDAD",
+  "tipo": "number",
+  "valor": "53",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(8)",
+  "visible": true
+ },
+ {
+  "pregunta": "GÉNERO",
+  "tipo": "opcion unica",
+  "valor": "Femenino",
+  "selector": "body > div.main > article > form > section:nth-child(4) > fieldset:nth-child(9)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿CUÁL? (OTRO GENERO)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(10)",
+  "visible": true
+ },
+ {
+  "pregunta": "SEXO",
+  "tipo": "opcion unica",
+  "valor": "Mujer",
+  "selector": "body > div.main > article > form > section:nth-child(4) > fieldset:nth-child(11)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿CUÁL CONSIDERA QUE ES EL HORARIO MÁS CONVENIENTE PARA ASISTIR A FUTURAS REUNIONES Y ACTIVIDADES COMUNITARIAS DEL PROYECTO? (PUEDE SELECCIONAR UNA O V",
+  "tipo": "opcion multiple",
+  "valor": "Viernes",
+  "selector": "body > div.main > article > form > section:nth-child(4) > fieldset:nth-child(12)",
+  "visible": true
+ },
+ {
+  "pregunta": "FRANJA HORARIA MÁS CONVENIENTE",
+  "tipo": "opcion multiple",
+  "valor": "Tarde",
+  "selector": "body > div.main > article > form > section:nth-child(4) > fieldset:nth-child(13)",
+  "visible": true
+ },
+ {
+  "pregunta": "HORA ESPECÍFICA (OPCIONAL)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(14)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿CUÁL CONSIDERA QUE ES EL HORARIO MÁS CONVENIENTE PARA VISITAS DOMICILIARIAS DEL PROYECTO (INSTALACIÓN Y SEGUIMIENTO)? (PUEDE SELECCIONAR UNA O VARIAS",
+  "tipo": "opcion multiple",
+  "valor": "Domingo",
+  "selector": "body > div.main > article > form > section:nth-child(4) > fieldset:nth-child(15)",
+  "visible": true
+ },
+ {
+  "pregunta": "FRANJA HORARIA MÁS CONVENIENTE",
+  "tipo": "opcion multiple",
+  "valor": "Mañana",
+  "selector": "body > div.main > article > form > section:nth-child(4) > fieldset:nth-child(16)",
+  "visible": true
+ },
+ {
+  "pregunta": "HORA ESPECÍFICA (OPCIONAL)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(4) > label:nth-child(17)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿CUÁNTO TIEMPO EN AÑOS RESIDE EN ESTE BARRIO?",
+  "tipo": "number",
+  "valor": "27",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿CUÁL ES EL ESTRATO SOCIOECONÓMICO DE SU VIVIENDA?",
+  "tipo": "opcion unica",
+  "valor": "1",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿Cuál? (Otro estrato)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(4)",
+  "visible": false
+ },
+ {
+  "pregunta": "¿CUÁL ES LA PRINCIPAL FUENTE DE INGRESOS EN EL HOGAR?",
+  "tipo": "opcion unica",
+  "valor": "Ninguno (Desempleo)",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(5)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿Cuál? (Otra fuente de ingresos)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(6)",
+  "visible": false
+ },
+ {
+  "pregunta": "¿EL HOGAR SE CLASIFICA COMO?",
+  "tipo": "opcion unica",
+  "valor": "Nuclear",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(7)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿Cuál? (Otro tipo de hogar)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(8)",
+  "visible": false
+ },
+ {
+  "pregunta": "¿CUÁNTAS PERSONAS CONFORMAN EL HOGAR?",
+  "tipo": "number",
+  "valor": "3",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(9)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿A QUÉ GRUPO ETARIO PERTENECE CADA UNO DE LOS MIEMBROS DE SU HOGAR? INDIQUE EL NÚMERO DE HOMBRES (H) Y MUJERES (M) EN CADA CATEGORÍA.",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(10)",
+  "visible": true
+ },
+ {
+  "pregunta": "PRIMERA INFANCIA (0 A 5 AÑOS) - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(11)",
+  "visible": true
+ },
+ {
+  "pregunta": "PRIMERA INFANCIA (0 A 5 AÑOS) - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(12)",
+  "visible": true
+ },
+ {
+  "pregunta": "INFANCIA (6 A 11 AÑOS) - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(13)",
+  "visible": true
+ },
+ {
+  "pregunta": "INFANCIA (6 A 11 AÑOS) - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(14)",
+  "visible": true
+ },
+ {
+  "pregunta": "ADOLESCENCIA (12 A 17 AÑOS) - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(15)",
+  "visible": true
+ },
+ {
+  "pregunta": "ADOLESCENCIA (12 A 17 AÑOS) - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(16)",
+  "visible": true
+ },
+ {
+  "pregunta": "JUVENTUD (18 A 28 AÑOS) - HOMBRES",
+  "tipo": "number",
+  "valor": "1",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(17)",
+  "visible": true
+ },
+ {
+  "pregunta": "JUVENTUD (18 A 28 AÑOS) - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(18)",
+  "visible": true
+ },
+ {
+  "pregunta": "ADULTEZ (29 A 59 AÑOS) - HOMBRES",
+  "tipo": "number",
+  "valor": "1",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(19)",
+  "visible": true
+ },
+ {
+  "pregunta": "ADULTEZ (29 A 59 AÑOS) - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(20)",
+  "visible": true
+ },
+ {
+  "pregunta": "PERSONAS MAYORES (60 AÑOS O MÁS) - HOMBRES",
+  "tipo": "number",
+  "valor": "1",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(21)",
+  "visible": true
+ },
+ {
+  "pregunta": "PERSONAS MAYORES (60 AÑOS O MÁS) - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(22)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿CUÁL ES EL NIVEL EDUCATIVO MÁS ALTO ALCANZADO POR CADA UNO DE LOS MIEMBROS DE SU HOGAR? INDIQUE EL NÚMERO DE HOMBRES (H) Y MUJERES (M) EN CADA CATEGO",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(23)",
+  "visible": true
+ },
+ {
+  "pregunta": "NINGUNO - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(24)",
+  "visible": true
+ },
+ {
+  "pregunta": "NINGUNO - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(25)",
+  "visible": true
+ },
+ {
+  "pregunta": "PRIMARIA - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(26)",
+  "visible": true
+ },
+ {
+  "pregunta": "PRIMARIA - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(27)",
+  "visible": true
+ },
+ {
+  "pregunta": "SECUNDARIA - HOMBRES",
+  "tipo": "number",
+  "valor": "1",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(28)",
+  "visible": true
+ },
+ {
+  "pregunta": "SECUNDARIA - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(29)",
+  "visible": true
+ },
+ {
+  "pregunta": "TÉCNICO - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(30)",
+  "visible": true
+ },
+ {
+  "pregunta": "TÉCNICO - MUJERES",
+  "tipo": "number",
+  "valor": "1",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(31)",
+  "visible": true
+ },
+ {
+  "pregunta": "TECNÓLOGO - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(32)",
+  "visible": true
+ },
+ {
+  "pregunta": "TECNÓLOGO - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(33)",
+  "visible": true
+ },
+ {
+  "pregunta": "PROFESIONAL - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(34)",
+  "visible": true
+ },
+ {
+  "pregunta": "PROFESIONAL - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(35)",
+  "visible": true
+ },
+ {
+  "pregunta": "OTRO - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(36)",
+  "visible": true
+ },
+ {
+  "pregunta": "OTRO - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(37)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿Cuál? (Otro nivel educativo)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(38)",
+  "visible": false
+ },
+ {
+  "pregunta": "DEL TOTAL DE INTEGRANTES DEL HOGAR, INDIQUE ¿CUÁNTAS PERSONAS SE AUTORRECONOCEN COMO? INDIQUE EL NÚMERO DE HOMBRES (H), MUJERES (M) Y LA COMUNIDAD A L",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(39)",
+  "visible": true
+ },
+ {
+  "pregunta": "INDÍGENA - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(40)",
+  "visible": true
+ },
+ {
+  "pregunta": "INDÍGENA - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(41)",
+  "visible": true
+ },
+ {
+  "pregunta": "INDÍGENA - COMUNIDAD",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(42)",
+  "visible": true
+ },
+ {
+  "pregunta": "NEGRO, AFROCOLOMBIANO O AFRODESCENDIENTE - HOMBRES",
+  "tipo": "number",
+  "valor": "2",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(43)",
+  "visible": true
+ },
+ {
+  "pregunta": "NEGRO, AFROCOLOMBIANO O AFRODESCENDIENTE - MUJERES",
+  "tipo": "number",
+  "valor": "1",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(44)",
+  "visible": true
+ },
+ {
+  "pregunta": "NEGRO, AFROCOLOMBIANO O AFRODESCENDIENTE - COMUNIDAD",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(45)",
+  "visible": true
+ },
+ {
+  "pregunta": "RAIZAL - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(46)",
+  "visible": true
+ },
+ {
+  "pregunta": "RAIZAL - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(47)",
+  "visible": true
+ },
+ {
+  "pregunta": "RAIZAL - COMUNIDAD",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(48)",
+  "visible": true
+ },
+ {
+  "pregunta": "PALENQUERO - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(49)",
+  "visible": true
+ },
+ {
+  "pregunta": "PALENQUERO - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(50)",
+  "visible": true
+ },
+ {
+  "pregunta": "PALENQUERO - COMUNIDAD",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(51)",
+  "visible": true
+ },
+ {
+  "pregunta": "PUEBLO ROM O GITANO - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(52)",
+  "visible": true
+ },
+ {
+  "pregunta": "PUEBLO ROM O GITANO - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(53)",
+  "visible": true
+ },
+ {
+  "pregunta": "PUEBLO ROM O GITANO - COMUNIDAD",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(54)",
+  "visible": true
+ },
+ {
+  "pregunta": "OTRO - HOMBRES - CUAL",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(55)",
+  "visible": true
+ },
+ {
+  "pregunta": "OTRO - MUJERES-CUAL",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(56)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿CUÁL? (OTRA ETNIA)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(57)",
+  "visible": true
+ },
+ {
+  "pregunta": "NINGUNO - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(58)",
+  "visible": true
+ },
+ {
+  "pregunta": "NINGUNO - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(59)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿CUÁNTAS PERSONAS PERTENECEN A LOS SIGUIENTES GRUPOS CON ENFOQUE DIFERENCIAL? INDIQUE EL NÚMERO DE HOMBRES (H) Y MUJERES (M) EN CADA CATEGORÍA.",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(60)",
+  "visible": true
+ },
+ {
+  "pregunta": "PERSONAS CON DISCAPACIDAD - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(61)",
+  "visible": true
+ },
+ {
+  "pregunta": "PERSONAS CON DISCAPACIDAD - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(62)",
+  "visible": true
+ },
+ {
+  "pregunta": "PERSONAS CON ENFERMEDAD CRÓNICA - HOMBRES",
+  "tipo": "number",
+  "valor": "1",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(63)",
+  "visible": true
+ },
+ {
+  "pregunta": "PERSONAS CON ENFERMEDAD CRÓNICA - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(64)",
+  "visible": true
+ },
+ {
+  "pregunta": "PERSONAS MIGRANTES - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(65)",
+  "visible": true
+ },
+ {
+  "pregunta": "PERSONAS MIGRANTES - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(66)",
+  "visible": true
+ },
+ {
+  "pregunta": "VÍCTIMAS DEL CONFLICTO ARMADO - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(67)",
+  "visible": true
+ },
+ {
+  "pregunta": "VÍCTIMAS DEL CONFLICTO ARMADO - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(68)",
+  "visible": true
+ },
+ {
+  "pregunta": "POBLACIÓN REINCORPORADA - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(69)",
+  "visible": true
+ },
+ {
+  "pregunta": "POBLACIÓN REINCORPORADA - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(70)",
+  "visible": true
+ },
+ {
+  "pregunta": "MUJERES GESTANTES O EN PERIODO DE LACTANCIA - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(71)",
+  "visible": true
+ },
+ {
+  "pregunta": "PADRE CABEZA DE FAMILIA - HOMBRES",
+  "tipo": "number",
+  "valor": "1",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(72)",
+  "visible": true
+ },
+ {
+  "pregunta": "MADRE CABEZA DE FAMILIA - MUJERES",
+  "tipo": "number",
+  "valor": "1",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(73)",
+  "visible": true
+ },
+ {
+  "pregunta": "OTRO - HOMBRES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(74)",
+  "visible": true
+ },
+ {
+  "pregunta": "OTRO - MUJERES",
+  "tipo": "number",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(75)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿Cuál? (Otro enfoque diferencial)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(76)",
+  "visible": false
+ },
+ {
+  "pregunta": "¿ALGÚN INTEGRANTE DEL HOGAR REQUIERE APOYO ESPECÍFICO PARA PARTICIPAR EN ACTIVIDADES COMUNITARIAS?",
+  "tipo": "opcion unica",
+  "valor": "No requiere",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(77)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿Qué tipo de apoyo?",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(78)",
+  "visible": false
+ },
+ {
+  "pregunta": "¿CONOCE ORGANIZACIONES COMUNITARIAS DE SU SECTOR?",
+  "tipo": "opcion unica",
+  "valor": "Sí",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(79)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿CUÁL(ES)?",
+  "tipo": "text",
+  "valor": "La junta de acción comunal ",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(80)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿HA PARTICIPADO EN ALGUNA REUNIÓN O ACTIVIDAD COMUNITARIA DURANTE EL ÚLTIMO AÑO?",
+  "tipo": "opcion unica",
+  "valor": "Sí",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(81)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿CÓMO CALIFICARÍA LA ORGANIZACIÓN Y PARTICIPACIÓN DE SU COMUNIDAD? (DEBE SELECCIONAR UNA ÚNICA OPCIÓN POR ASPECTO)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(82)",
+  "visible": true
+ },
+ {
+  "pregunta": "PARTICIPACIÓN DE LA COMUNIDAD",
+  "tipo": "opcion unica",
+  "valor": "Buena",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(83)",
+  "visible": true
+ },
+ {
+  "pregunta": "TRABAJO CONJUNTO PARA RESOLVER PROBLEMAS",
+  "tipo": "opcion unica",
+  "valor": "Buena",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(84)",
+  "visible": true
+ },
+ {
+  "pregunta": "INCLUSIÓN DE LOS HABITANTES",
+  "tipo": "opcion unica",
+  "valor": "Regular",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(85)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿CLASIFIQUE Y DESCRIBA BREVEMENTE LOS SIGUIENTES ASPECTOS COMO FORTALEZAS O DEBILIDADES EN SU COMUNIDAD? (PUEDE SELECCIONAR UNA O VARIAS OPCIONES)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(86)",
+  "visible": true
+ },
+ {
+  "pregunta": "ORGANIZACIÓN Y PARTICIPACIÓN COMUNITARIA",
+  "tipo": "opcion unica",
+  "valor": "Fortaleza",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(87)",
+  "visible": true
+ },
+ {
+  "pregunta": "OBSERVACIÓN (OPCIONAL)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(88)",
+  "visible": true
+ },
+ {
+  "pregunta": "CONFLICTOS SOCIALES O TERRITORIALES",
+  "tipo": "opcion unica",
+  "valor": "Fortaleza",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(89)",
+  "visible": true
+ },
+ {
+  "pregunta": "OBSERVACIÓN (OPCIONAL)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(90)",
+  "visible": true
+ },
+ {
+  "pregunta": "SEGURIDAD DEL SECTOR",
+  "tipo": "opcion unica",
+  "valor": "Fortaleza",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(91)",
+  "visible": true
+ },
+ {
+  "pregunta": "OBSERVACIÓN (OPCIONAL)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(92)",
+  "visible": true
+ },
+ {
+  "pregunta": "ACCESIBILIDAD O CONDICIONES DE ACCESO",
+  "tipo": "opcion unica",
+  "valor": "Fortaleza",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(93)",
+  "visible": true
+ },
+ {
+  "pregunta": "OBSERVACIÓN (OPCIONAL)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(94)",
+  "visible": true
+ },
+ {
+  "pregunta": "SERVICIOS PÚBLICOS DOMICILIARIOS",
+  "tipo": "opcion unica",
+  "valor": "Fortaleza",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(95)",
+  "visible": true
+ },
+ {
+  "pregunta": "OBSERVACIÓN (OPCIONAL)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(96)",
+  "visible": true
+ },
+ {
+  "pregunta": "PRESENCIA Y ARTICULACIÓN INSTITUCIONAL",
+  "tipo": "opcion unica",
+  "valor": "Fortaleza",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(97)",
+  "visible": true
+ },
+ {
+  "pregunta": "OBSERVACIÓN (OPCIONAL)",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(5) > label:nth-child(98)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿CÓMO CALIFICARÍA LA SEGURIDAD DE SU COMUNIDAD?",
+  "tipo": "opcion unica",
+  "valor": "Segura",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(99)",
+  "visible": true
+ },
+ {
+  "pregunta": "¿CÓMO CALIFICARÍA EL SERVICIO DE ENERGÍA ELÉCTRICA?",
+  "tipo": "opcion unica",
+  "valor": "Regular",
+  "selector": "body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(100)",
+  "visible": true
+ },
+ {
+  "pregunta": "DECLARACIONES",
+  "tipo": "opcion multiple",
+  "valor": "Entiendo que este formulario no garantiza mi selección como beneficiario, la cual dependerá de las verificaciones y requisitos del proyecto. | Declaro que la información suministrada en este formulari",
+  "selector": "body > div.main > article > form > section:nth-child(6) > fieldset:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "SI ESTÁ DE ACUERDO CON LAS DECLARACIONES ANTERIORES, FIRME EN EL ESPACIO DISPUESTO A CONTINUACIÓN.",
+  "tipo": "text",
+  "valor": "",
+  "selector": "body > div.main > article > form > section:nth-child(6) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "NOMBRE",
+  "tipo": "text",
+  "valor": "Nancy Milena Garcías Cortés ",
+  "selector": "body > div.main > article > form > section:nth-child(6) > section:nth-child(4) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "DOCUMENTO",
+  "tipo": "text",
+  "valor": "59672593",
+  "selector": "body > div.main > article > form > section:nth-child(6) > section:nth-child(4) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "FIRMA",
+  "tipo": "firma",
+  "valor": "(lienzo de firma)",
+  "selector": "body > div.main > article > form > section:nth-child(6) > section:nth-child(4) > label:nth-child(4)",
+  "visible": true
+ },
+ {
+  "pregunta": "NOMBRE",
+  "tipo": "text",
+  "valor": "Adriana Muñoz ",
+  "selector": "body > div.main > article > form > section:nth-child(6) > section:nth-child(5) > label:nth-child(2)",
+  "visible": true
+ },
+ {
+  "pregunta": "DOCUMENTO",
+  "tipo": "text",
+  "valor": "59122110",
+  "selector": "body > div.main > article > form > section:nth-child(6) > section:nth-child(5) > label:nth-child(3)",
+  "visible": true
+ },
+ {
+  "pregunta": "FIRMA",
+  "tipo": "firma",
+  "valor": "(lienzo de firma)",
+  "selector": "body > div.main > article > form > section:nth-child(6) > section:nth-child(5) > label:nth-child(4)",
+  "visible": true
+ }
+]

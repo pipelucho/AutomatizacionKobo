@@ -1,0 +1,137 @@
+Formulario 2: 34 pregunta(s)
+
+[opcion unica] NO. CONTRATO
+    valor: 512- 2026
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(2)
+
+[text] NORMALIZACIÓN DE REDES DE DISTRIBUCIÓN ELÉCTRICA Y GENERACIÓN DE ENERGÍA FOTOVOLTAICA A PEQUEÑA ESCALA CONECTADA A LA RED, PARA LOS BARRIOS EL TRIUNFO
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(3) > label:nth-child(3)
+
+[opcion unica] MUNICIPIO
+    valor: TUMACO - NARIÑO
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(4)
+
+[opcion unica] LUGAR
+    valor: La Libertad – Sector 1 Y 2
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(5)
+
+[opcion unica] CONTRATISTA
+    valor: Consorcio Alianza PRONE
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(6)
+
+[opcion unica] INTERVENTORÍA
+    valor: SERVICIOS DE INGENIERIA EYC S.A.S.
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(7)
+
+[opcion unica] CARGO
+    valor: COORDINADORA PLAN DE ACCION SOCIAL
+    selector: body > div.main > article > form > section:nth-child(3) > fieldset:nth-child(8)
+
+[text] NOMBRE
+    valor: Adriana Muñoz 
+    selector: body > div.main > article > form > section:nth-child(3) > label:nth-child(9)
+
+[text] DE CONFORMIDAD CON LO DISPUESTO EN LA LEY 1581 DE 2012 Y DEMÁS NORMAS QUE LA REGLAMENTAN, AUTORIZO DE MANERA LIBRE, PREVIA, EXPRESA E INFORMADA AL CON
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(2)
+
+[opcion unica] AUTORIZACIÓN DE TRATAMIENTO DE DATOS PERSONALES
+    valor: Sí
+    selector: body > div.main > article > form > section:nth-child(4) > fieldset:nth-child(3)
+
+[text] No aceptó el tratamiento de datos personales, no se puede continuar.  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(4)
+
+[text] NOMBRE COMPLETO DEL USUARIO
+    valor: Nancy Milena Garcías Cortés 
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(2)
+
+[text] CÉDULA DE CIUDADANÍA NO.
+    valor: 59672592
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(3)
+
+[number] NO. USUARIO
+    valor: 860
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(4)
+
+[text] DIRECCIÓN
+    valor: Casa 639
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(5)
+
+[text] BARRIO
+    valor: Libertad 1 
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(6)
+
+[text] NOMBRE DEL PROYECTO
+    valor: “NORMALIZACIÓN DE REDES DE DISTRIBUCIÓN ELÉCTRICA Y GENERACIÓN DE ENERGÍA FOTOVOLTÁICA A PEQUEÑA ESCALA CONECTADA A LA RED, PARA LOS BARRIOS EL TRIUNFO SECTOR 4, LA LIBERTAD SECTOR 1 Y 2 Y LOS ÁNGELES
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(7)
+
+[text] EN LA CIUDAD DE TUMACO, YO, NANCY MILENA GARCÍAS CORTÉS , IDENTIFICADO(A) CON CÉDULA DE CIUDADANÍA NO. 59672592, CON DOMICILIO EN LA DIRECCIÓN CASA 63
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(8)
+
+[text] 1. HE RECIBIDO INFORMACIÓN SUFICIENTE SOBRE EL PROYECTO PRONE, COMPRENDIENDO SUS OBJETIVOS, ALCANCES, BENEFICIOS, LIMITACIONES Y CONDICIONES GENERALES
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(9)
+
+[text] 2. COMPRENDO QUE MI EVENTUAL VINCULACIÓN COMO BENEFICIARIO ESTARÁ SUJETA AL CUMPLIMIENTO DE LOS REQUISITOS TÉCNICOS, SOCIALES Y ADMINISTRATIVOS ESTABL
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(10)
+
+[text] 3. ACEPTO DE MANERA LIBRE Y VOLUNTARIA MI VINCULACIÓN COMO BENEFICIARIO DEL PROYECTO PRONE Y LA EJECUCIÓN DE LAS ACTIVIDADES NECESARIAS PARA LA IMPLEM
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(11)
+
+[text] 4. AUTORIZO EL INGRESO DEL PERSONAL DEBIDAMENTE IDENTIFICADO DEL CONTRATISTA Y CUANDO CORRESPONDA, LA INTERVENTORÍA, PARA REALIZAR LAS ACTIVIDADES DE 
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(12)
+
+[opcion unica] ¿EL USUARIO ACEPTA PARTICIPAR EN EL PROYECTO PRONE?
+    valor: Sí acepta
+    selector: body > div.main > article > form > section:nth-child(5) > fieldset:nth-child(13)
+
+[text] ⚠️ Atención: El usuario manifestó que no desea participar en el Proyecto PRONE. Es obligatorio diligenciar, firmar y adjuntar el Certificado de Desist  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(14)
+
+[archivo] Certificado de renuncia voluntaria o desistimiento  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(15)
+
+[text] EL USUARIO MANIFESTÓ SU ACEPTACIÓN PARA PARTICIPAR EN EL PROYECTO PRONE. A CONTINUACIÓN, SE DARÁ INICIO A LA APLICACIÓN DE LA ENCUESTA DE CARACTERIZAC
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(16)
+
+[text] NOMBRE
+    valor: Nancy Milena Garcías Cortés 
+    selector: body > div.main > article > form > section:nth-child(5) > section:nth-child(17) > label:nth-child(2)
+
+[text] DOCUMENTO
+    valor: 59672593
+    selector: body > div.main > article > form > section:nth-child(5) > section:nth-child(17) > label:nth-child(3)
+
+[firma] FIRMA
+    valor: (lienzo de firma)
+    selector: body > div.main > article > form > section:nth-child(5) > section:nth-child(17) > label:nth-child(4)
+
+[text] NOMBRE
+    valor: Adriana Muñoz 
+    selector: body > div.main > article > form > section:nth-child(5) > section:nth-child(18) > label:nth-child(2)
+
+[text] DOCUMENTO
+    valor: 59122110
+    selector: body > div.main > article > form > section:nth-child(5) > section:nth-child(18) > label:nth-child(3)
+
+[firma] FIRMA
+    valor: (lienzo de firma)
+    selector: body > div.main > article > form > section:nth-child(5) > section:nth-child(18) > label:nth-child(4)
+
+[archivo] CÉDULA DE CIUDADANÍA DEL USUARIO (CARA)
+    valor: 1790788184172.jpg
+    selector: body > div.main > article > form > section:nth-child(6) > label:nth-child(2)
+
+[archivo] CÉDULA DE CIUDADANÍA DEL USUARIO (REVERSO)
+    valor: 1790788196863.jpg
+    selector: body > div.main > article > form > section:nth-child(6) > label:nth-child(3)

@@ -1,0 +1,187 @@
+(Registro de esta corrida: C:\Users\felip\Documents\Proyectos\Tumaco\salida\logs\corrida_2026-10-12_14-20.log)
+USUARIOS.xlsx: 76 fila(s), 19 con formularios pendientes.
+Prueba: solo las primeras 10: 433 MARLENY ANDRADE, 471 RAIMUNDO SOLIS QUIÑONES, 18 SANTOS GENARO RIVERA ARIAS, 75 EIBAR ANGULO NÚÑEZ, 1 JACINTA MARINEZ ARROYO, 247 JACINTA MARINEZ ARROYO, 74 JUNIOR SANTIAGO CASTRO CASTRO, 459 MABEL SAYA SALAZAR, 483 SIANIEN SAYA SALAZAR, 498 BIOLINDA BELARCAZAR
+Sesion de Kobo ya activa.
+Hoja de Google: datos iniciales de 10 de 10 usuario(s) para comparar nombre y casa.
+
+======================================================================
+[1/10] Usuario: MARLENY ANDRADE | USUARIO 433 | CASA 317A (fila 8)
+======================================================================
+
+--- Formulario 1: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA ---
+Abriendo formulario: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA
+Esperando que cargue la tabla de datos...
+   Registro decidido en el Excel (columna O): _id 826845953
+   nombre_persona_atendida: Ronald Mauricio Prado Cortes | documento_persona_atendida: 1087124252 | no_usuario: 433 | direccion: Casa 317 | persona_atendida_nombre_firma: Ronal Mauricio Prado Cortes | persona_atendida_documento_firma: 1087124252
+Abriendo edicion del registro 826845953...
+Esperando que cargue el formulario de edicion...
+Formulario de edicion abierto: https://ee-eu.kobotoolbox.org/edit/zSDF1bve?instance_id=44492da5-4505-40a9-9bce-2fca7e8bc2be&return_url=false
+   Inventario de 76 campos guardado en C:\Users\felip\Documents\Proyectos\Tumaco\salida\debug\formulario1_campos.txt
+Excel: fila 8, columna H (propietario) = 'Si' (Propietario(a) del inmueble)
+Excel: fila 8, columna I (documento) = '1087124252'
+
+Verificacion del usuario (la persona que atiende la visita manifiesta ser):
+   - Opcion 'Otro': no marcada
+
+Correcciones del formulario 1:
+
+Direccion (Excel, hoja y Kobo):
+   * DIRECCIÓN: 'Casa 317' -> 'CASA 317A'
+
+Datos del Excel:
+   * NOMBRE: 'Ronald Mauricio Prado Cortes' -> 'RONALD MAURICIO PRADO CORTES'
+   * NOMBRE: 'Ronal Mauricio Prado Cortes' -> 'RONALD MAURICIO PRADO CORTES'
+   - NO. USUARIO: ya tiene usuario (433)
+
+Mayusculas:
+   * RESPOSANBLE: 'Adriana Muñoz' -> 'ADRIANA MUÑOZ'
+   * BARRIO: 'El triunfo sector 4' -> 'EL TRIUNFO SECTOR 4'
+
+Valores fijos:
+   * NOMBRE: 'Adriana Muñoz' -> 'ADRIANA MUÑOZ'
+   - DOCUMENTO: ya tiene el valor correcto (59122110)
+
+Firma del responsable contratista:
+   - La firma actual no es la del bot o esta incompleta (otra forma (proporcion distinta: 1.93); puede ser otra firma o una cortada): se rehace
+   - Firma anterior borrada
+   * Firma dibujada (11 trazos)
+
+Documentos anexos:
+   ? SOPORTE DE PROPIEDAD SOBRE EL INMUEBLE: 1790706296989.jpg -> esperando tu decision en el navegador...
+   - SOPORTE DE PROPIEDAD SOBRE EL INMUEBLE: se conserva (1790706296989.jpg)
+   - Soportes para la hoja (columna J): CEDULA DE CIUDADANIA Y COMPRAVENTA
+
+8 cambio(s) aplicado(s).
+
+Guardando PDF en 433_RONALD MAURICIO PRADO CORTES...
+   PDF guardado: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL\433_RONALD MAURICIO PRADO CORTES\1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA.pdf
+   (0.6 MB | 1 foto(s) reducida(s) | fotos 0s, imprimir 2s, guardar 0s)
+
+Enviando formulario a Kobo...
+   Formulario actualizado en Kobo. (Kobo confirmo el envio: https://ee-eu.kobotoolbox.org/thanks?taken=1791832876111)
+Excel: fila 8, columna M (casa final) = 'CASA 317 A'
+Excel: fila 8, columna J (documento anexo) = 'Si'
+Excel: fila 8, columna N (soportes hoja) = 'CEDULA DE CIUDADANIA Y COMPRAVENTA'
+   Tiempos: abrir datos 4s | buscar 0s | abrir edicion 4s | correcciones 25s | PDF 2s | envio 2s | cerrar 0s | total 37s
+Formulario 1 terminado.
+Excel: fila 8, columna D = 'Si'
+
+--- Formulario 2: 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN ---
+Abriendo formulario: 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN
+Esperando que cargue la tabla de datos...
+   Columna para DOCUMENTO: [14] DECLARACIÓN DE CONSENTIMIENTO Y AUTORIZACIÓN DEL USUARIO / Cédula de ciudadanía No.
+   Columna para CASA: [16] DECLARACIÓN DE CONSENTIMIENTO Y AUTORIZACIÓN DEL USUARIO / Dirección
+   Columna para USUARIO: [15] DECLARACIÓN DE CONSENTIMIENTO Y AUTORIZACIÓN DEL USUARIO / No. Usuario
+   Columna para NOMBRE: [13] DECLARACIÓN DE CONSENTIMIENTO Y AUTORIZACIÓN DEL USUARIO / Nombre completo del usuario
+
+Intento 1: buscar '1087124252' por DOCUMENTO
+   1 fila(s) en la tabla, 1 con valor exacto '1087124252'.
+   [1] Ronald Mauricio Prado Cortes | Casa 327 | nombre 52% | documento coincide | usuario coincide
+   Elegido: Ronald Mauricio Prado Cortes | Casa 327 (el que mas coincide con el Excel)
+   Usuario encontrado en la fila 1.
+Abriendo edicion de la fila 1...
+Esperando que cargue el formulario de edicion...
+Formulario de edicion abierto: https://ee-eu.kobotoolbox.org/edit/X5n9XVgr?instance_id=6346cb39-9439-4ff0-afbd-87e37d52efe8&return_url=false
+   Inventario de 34 campos guardado en C:\Users\felip\Documents\Proyectos\Tumaco\salida\debug\formulario2_campos.txt
+
+Correcciones del formulario 2:
+
+Direccion (Excel, hoja y Kobo):
+   * DIRECCIÓN: 'Casa 327' -> 'CASA 317A'
+
+Datos del Excel:
+   * NOMBRE COMPLETO DEL USUARIO: 'Ronald Mauricio Prado Cortes' -> 'RONALD MAURICIO PRADO CORTES'
+   * NOMBRE: 'Ronald Mauricio Prado' -> 'RONALD MAURICIO PRADO CORTES'
+   - NO. USUARIO: ya tiene usuario (433)
+
+Mayusculas:
+   * BARRIO: 'el triunfo sector 4' -> 'EL TRIUNFO SECTOR 4'
+
+Valores fijos:
+   * NOMBRE: 'Adriana Muñoz' -> 'ADRIANA MUÑOZ'
+   * NOMBRE: 'Adriana Muñoz' -> 'ADRIANA MUÑOZ'
+   - DOCUMENTO: ya tiene el valor correcto (59122110)
+
+Firma del responsable contratista:
+   - La firma actual no es la del bot o esta incompleta (otra forma (proporcion distinta: 1.97); puede ser otra firma o una cortada): se rehace
+   - Firma anterior borrada
+   * Firma dibujada (11 trazos)
+
+Fotos de la cedula:
+   - Cedula cara: descargando 1790706823341.jpg...
+   * Cedula cara: recortada y enderezada (la foto ya estaba recortada)
+   - Cedula reverso: descargando 1790706827314.jpg...
+   ? Cedula reverso: marca las 4 esquinas en la ventana del navegador...
+Traceback (most recent call last):
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\main.py", line 146, in procesar_formulario
+    resultado = correcciones.aplicar(edicion, numero, usuario, firma_actual)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\tumaco\correcciones.py", line 263, in aplicar
+    cambio, jpg, problema = ajustar_cedula(page, selector, lado, usuario)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\tumaco\correcciones.py", line 663, in ajustar_cedula
+    ajustada = _cedula_a_mano(page, foto, lado, None, "no encontre el borde de la cedula en la foto")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\tumaco\correcciones.py", line 704, in _cedula_a_mano
+    r = _preguntar_cedula(page, {"modo": "esquinas", "imagen": _data_url(foto, 1400),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\tumaco\correcciones.py", line 724, in _preguntar_cedula
+    page.wait_for_function("() => window.__tumacoCedula", timeout=0, polling=500)
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\sync_api\_generated.py", line 11559, in wait_for_function
+    self._sync(
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_sync_base.py", line 113, in _sync
+    self._dispatcher_fiber.switch()
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\sync_api\_context_manager.py", line 56, in greenlet_main
+    self._loop.run_until_complete(self._connection.run_as_sync())
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 671, in run_until_complete
+    self.run_forever()
+  File "C:\Program Files\Python312\Lib\asyncio\windows_events.py", line 321, in run_forever
+    super().run_forever()
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 638, in run_forever
+    self._run_once()
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1933, in _run_once
+    event_list = self._selector.select(timeout)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\windows_events.py", line 444, in select
+    self._poll(timeout)
+  File "C:\Program Files\Python312\Lib\asyncio\windows_events.py", line 769, in _poll
+    status = _overlapped.GetQueuedCompletionStatus(self._iocp, ms)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\tumaco\browser.py", line 77, in abrir_navegador
+    yield context, page, p
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\main.py", line 271, in main
+    resultado, nota = _intentar(kobo, usuario, numero)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\main.py", line 200, in _intentar
+    return procesar_formulario(kobo, usuario, numero)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\main.py", line 185, in procesar_formulario
+    edicion.close()
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\sync_api\_generated.py", line 9841, in close
+    self._sync(
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_sync_base.py", line 113, in _sync
+    self._dispatcher_fiber.switch()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\main.py", line 335, in <module>
+    main()
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\main.py", line 243, in main
+    with abrir_navegador() as (_, page, playwright):
+  File "C:\Program Files\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\tumaco\browser.py", line 79, in abrir_navegador
+    context.close()
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\sync_api\_generated.py", line 13482, in close
+    return mapping.from_maybe_impl(self._sync(self._impl_obj.close(reason=reason)))
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_sync_base.py", line 113, in _sync
+    self._dispatcher_fiber.switch()
+KeyboardInterrupt

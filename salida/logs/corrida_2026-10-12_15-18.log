@@ -1,0 +1,98 @@
+(Registro de esta corrida: C:\Users\felip\Documents\Proyectos\Tumaco\salida\logs\corrida_2026-10-12_15-18.log)
+USUARIOS.xlsx: 76 fila(s), 9 con formularios pendientes.
+Prueba: solo las primeras 9: 18 SANTOS GENARO RIVERA ARIAS, 1 JACINTA MARINEZ ARROYO, 528 FRANCISCA ARROYO, 320 BERLIS ADRIANA CAICEDO ROSERO, 299 JENNY CAICEDO ROSERO, 304 ELSI SOCORRO PRECIADO ANGULO, 57 TOMAS MAIRONGO, 763 PAULA YOLIMA WISAMANO LARA, 864 FELISA CECILIA QUIÑONES LANDAZURI
+Traceback (most recent call last):
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\main.py", line 366, in <module>
+    main()
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\main.py", line 257, in main
+    with abrir_navegador() as (_, page, playwright):
+  File "C:\Program Files\Python312\Lib\contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\tumaco\browser.py", line 73, in abrir_navegador
+    context = lanzar(p)
+              ^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\tumaco\browser.py", line 27, in lanzar
+    context = p.chromium.launch_persistent_context(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\sync_api\_generated.py", line 14804, in launch_persistent_context
+    self._sync(
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_sync_base.py", line 115, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_browser_type.py", line 166, in launch_persistent_context
+    result = await self._channel.send_return_as_dict(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 83, in send_return_as_dict
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 558, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: BrowserType.launch_persistent_context: Target page, context or browser has been closed
+Browser logs:
+
+<launching> C:\Program Files\Google\Chrome\Application\chrome.exe --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --start-maximized --lang=es-CO --no-first-run --no-default-browser-check --user-data-dir=C:\Users\felip\Documents\Proyectos\Tumaco\.browser_profile --remote-debugging-pipe about:blank
+<launched> pid=25952
+[pid=25952][out] Abriendo en una sesi�n existente del navegador
+Call log:
+  - <launching> C:\Program Files\Google\Chrome\Application\chrome.exe --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --start-maximized --lang=es-CO --no-first-run --no-default-browser-check --user-data-dir=C:\Users\felip\Documents\Proyectos\Tumaco\.browser_profile --remote-debugging-pipe about:blank
+  - <launched> pid=25952
+  - [pid=25952][out] Abriendo en una sesi�n existente del navegador
+  - [pid=25952] <gracefully close start>
+  - [pid=25952] <kill>
+  - [pid=25952] <will force kill>
+  - [pid=25952] taskkill stderr: ERROR: no se encontr� el proceso "25952".
+  - [pid=25952] <process did exit: exitCode=0, signal=null>
+  - [pid=25952] starting temporary directories cleanup
+  - [pid=25952] finished temporary directories cleanup
+  - [pid=25952] <gracefully close end>
+
+(Registro de esta corrida: C:\Users\felip\Documents\Proyectos\Tumaco\salida\logs\corrida_2026-10-12_15-18.log)
+USUARIOS.xlsx: 76 fila(s), 9 con formularios pendientes.
+Prueba: solo las primeras 9: 18 SANTOS GENARO RIVERA ARIAS, 1 JACINTA MARINEZ ARROYO, 528 FRANCISCA ARROYO, 320 BERLIS ADRIANA CAICEDO ROSERO, 299 JENNY CAICEDO ROSERO, 304 ELSI SOCORRO PRECIADO ANGULO, 57 TOMAS MAIRONGO, 763 PAULA YOLIMA WISAMANO LARA, 864 FELISA CECILIA QUIÑONES LANDAZURI
+Traceback (most recent call last):
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\main.py", line 366, in <module>
+    main()
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\main.py", line 257, in main
+    with abrir_navegador() as (_, page, playwright):
+  File "C:\Program Files\Python312\Lib\contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\tumaco\browser.py", line 73, in abrir_navegador
+    context = lanzar(p)
+              ^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\tumaco\browser.py", line 27, in lanzar
+    context = p.chromium.launch_persistent_context(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\sync_api\_generated.py", line 14804, in launch_persistent_context
+    self._sync(
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_sync_base.py", line 115, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_browser_type.py", line 166, in launch_persistent_context
+    result = await self._channel.send_return_as_dict(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 83, in send_return_as_dict
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Documents\Proyectos\Tumaco\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 558, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: BrowserType.launch_persistent_context: Target page, context or browser has been closed
+Browser logs:
+
+<launching> C:\Program Files\Google\Chrome\Application\chrome.exe --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --start-maximized --lang=es-CO --no-first-run --no-default-browser-check --user-data-dir=C:\Users\felip\Documents\Proyectos\Tumaco\.browser_profile --remote-debugging-pipe about:blank
+<launched> pid=42236
+[pid=42236][out] Abriendo en una sesi�n existente del navegador
+Call log:
+  - <launching> C:\Program Files\Google\Chrome\Application\chrome.exe --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --start-maximized --lang=es-CO --no-first-run --no-default-browser-check --user-data-dir=C:\Users\felip\Documents\Proyectos\Tumaco\.browser_profile --remote-debugging-pipe about:blank
+  - <launched> pid=42236
+  - [pid=42236][out] Abriendo en una sesi�n existente del navegador
+  - [pid=42236] <gracefully close start>
+  - [pid=42236] <kill>
+  - [pid=42236] <will force kill>
+  - [pid=42236] taskkill stderr: ERROR: no se encontr� el proceso "42236".
+  - [pid=42236] <process did exit: exitCode=0, signal=null>
+  - [pid=42236] starting temporary directories cleanup
+  - [pid=42236] finished temporary directories cleanup
+  - [pid=42236] <gracefully close end>
+

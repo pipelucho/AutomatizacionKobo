@@ -1,0 +1,305 @@
+Formulario 1: 76 pregunta(s)
+
+[text] BUENOS DÍAS/TARDES. MI NOMBRE ES , PROFESIONAL DEL COMPONENTE SOCIAL DE . NOS ENCONTRAMOS REALIZANDO VISITAS DOMICILIARIAS EN EL MARCO DEL PROYECTO DE
+    valor: (vacio)
+    selector: body > div.main > article > form > label:nth-child(3)
+
+[text] NO. CONTRATO
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(2)
+
+[text] OBJETO
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(3)
+
+[text] MUNICIPIO
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(4)
+
+[opcion unica] LUGAR
+    valor: La Libertad – Sector 1 Y
+    selector: body > div.main > article > form > section:nth-child(4) > fieldset:nth-child(5)
+
+[text] CONTRATISTA
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(6)
+
+[text] INTERVENTORÍA
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(7)
+
+[text] RESPOSANBLE
+    valor: Adriana Muñoz 
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(8)
+
+[text] CARGO
+    valor: Profesional Social 
+    selector: body > div.main > article > form > section:nth-child(4) > label:nth-child(9)
+
+[text] NOMBRE
+    valor: Nancy Milena Gracias Cortés 
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(2)
+
+[text] DOCUMENTO
+    valor: 59672593
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(3)
+
+[text] NO. USUARIO
+    valor: 860
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(4)
+
+[text] DIRECCIÓN
+    valor: Casa639
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(5)
+
+[text] BARRIO
+    valor: Libertad 1 
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(6)
+
+[tel] CELULAR
+    valor: 3185622335
+    selector: body > div.main > article > form > section:nth-child(5) > label:nth-child(7)
+
+[opcion unica] LA PERSONA QUE ATIENDE LA VISITA MANIFIESTA SER
+    valor: Propietario(a) del inmueble
+    selector: body > div.main > article > form > section:nth-child(6) > fieldset:nth-child(2)
+
+[text] ¿Cuál? (Calidad de la persona)  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(6) > label:nth-child(3)
+
+[opcion unica] RESPECTO DE LA AUTORIZACIÓN PARA LAS ACTIVIDADES DEL PROYECTO, ES
+    valor: Persona facultada para autorizar el ingreso y/o las actuaciones requeridas en el inmueble
+    selector: body > div.main > article > form > section:nth-child(6) > fieldset:nth-child(4)
+
+[opcion multiple] CONDICIONES ESPECIALES DEL INMUEBLE
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(6) > fieldset:nth-child(5)
+
+[text] ¿Cuál? (Otra condición especial)  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(6) > label:nth-child(6)
+
+[text] BRINDE AL USUARIO INFORMACIÓN CLARA Y SUFICIENTE SOBRE LOS TEMAS RELACIONADOS A CONTINUACIÓN, PERMITIENDO QUE FORMULE LAS INQUIETUDES QUE CONSIDERE PE
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > label:nth-child(2)
+
+[text] TEMA SOCIALIZADO
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > label:nth-child(3)
+
+[opcion unica] SOCIALIZADO
+    valor: Sí
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(4) > fieldset:nth-child(2)
+
+[opcion unica] INQUIETUD
+    valor: NO
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(4) > fieldset:nth-child(3)
+
+[texto largo] Detalle de la inquietud  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(4) > label:nth-child(4)
+
+[opcion unica] Atención  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(4) > fieldset:nth-child(5)
+
+[opcion unica] SOCIALIZADO
+    valor: Sí
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(5) > fieldset:nth-child(2)
+
+[opcion unica] INQUIETUD
+    valor: NO
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(5) > fieldset:nth-child(3)
+
+[texto largo] Detalle de la inquietud  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(5) > label:nth-child(4)
+
+[opcion unica] Atención  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(5) > fieldset:nth-child(5)
+
+[opcion unica] SOCIALIZADO
+    valor: Sí
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(6) > fieldset:nth-child(2)
+
+[opcion unica] INQUIETUD
+    valor: NO
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(6) > fieldset:nth-child(3)
+
+[texto largo] Detalle de la inquietud  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(6) > label:nth-child(4)
+
+[opcion unica] Atención  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(6) > fieldset:nth-child(5)
+
+[opcion unica] SOCIALIZADO
+    valor: Sí
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(7) > fieldset:nth-child(2)
+
+[opcion unica] INQUIETUD
+    valor: NO
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(7) > fieldset:nth-child(3)
+
+[texto largo] Detalle de la inquietud  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(7) > label:nth-child(4)
+
+[opcion unica] Atención  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(7) > fieldset:nth-child(5)
+
+[opcion unica] SOCIALIZADO
+    valor: Sí
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(8) > fieldset:nth-child(2)
+
+[opcion unica] INQUIETUD
+    valor: NO
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(8) > fieldset:nth-child(3)
+
+[texto largo] Detalle de la inquietud  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(8) > label:nth-child(4)
+
+[opcion unica] Atención  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(8) > fieldset:nth-child(5)
+
+[opcion unica] SOCIALIZADO
+    valor: Sí
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(9) > fieldset:nth-child(2)
+
+[opcion unica] INQUIETUD
+    valor: NO
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(9) > fieldset:nth-child(3)
+
+[texto largo] Detalle de la inquietud  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(9) > label:nth-child(4)
+
+[opcion unica] Atención  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(9) > fieldset:nth-child(5)
+
+[opcion unica] SOCIALIZADO
+    valor: Sí
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(10) > fieldset:nth-child(2)
+
+[opcion unica] INQUIETUD
+    valor: NO
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(10) > fieldset:nth-child(3)
+
+[texto largo] Detalle de la inquietud  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(10) > label:nth-child(4)
+
+[opcion unica] Atención  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(10) > fieldset:nth-child(5)
+
+[opcion unica] SOCIALIZADO
+    valor: Sí
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(11) > fieldset:nth-child(2)
+
+[opcion unica] INQUIETUD
+    valor: NO
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(11) > fieldset:nth-child(3)
+
+[texto largo] Detalle de la inquietud  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(11) > label:nth-child(4)
+
+[opcion unica] Atención  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(11) > fieldset:nth-child(5)
+
+[opcion unica] SOCIALIZADO
+    valor: Sí
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(12) > fieldset:nth-child(2)
+
+[opcion unica] INQUIETUD
+    valor: NO
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(12) > fieldset:nth-child(3)
+
+[texto largo] Detalle de la inquietud  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(12) > label:nth-child(4)
+
+[opcion unica] Atención  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(12) > fieldset:nth-child(5)
+
+[opcion unica] SE INFORMÓ QUE LA PRESENTE SOCIALIZACIÓN NO IMPLICA LA APROBACIÓN DEFINITIVA DEL USUARIO NI LA INCORPORACIÓN O SUSTITUCIÓN DE BENEFICIARIOS, SUJETAS A
+    valor: SÍ
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(12) > section:nth-child(6) > fieldset:nth-child(2)
+
+[texto largo] OBSERVACIONES O GESTIÓN REQUERIDA
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(7) > section:nth-child(12) > section:nth-child(6) > label:nth-child(3)
+
+[text] SELECCIONE EL RESULTADO QUE CORRESPONDA Y REGISTRE LAS NOVEDADES O ACCIONES PENDIENTES, CUANDO APLIQUE.
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(8) > label:nth-child(2)
+
+[opcion unica] RESULTADO DE LA VISITA
+    valor: Sin novedad
+    selector: body > div.main > article > form > section:nth-child(8) > fieldset:nth-child(3)
+
+[text] Pendiente / novedad  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(8) > label:nth-child(4)
+
+[opcion unica] ¿SE ESTABLECIERON COMPROMISOS PENDIENTES?
+    valor: NO
+    selector: body > div.main > article > form > section:nth-child(9) > section:nth-child(2) > fieldset:nth-child(2)
+
+[texto largo] Actividad / Tarea  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(9) > section:nth-child(2) > label:nth-child(3)
+
+[opcion unica] Responsable  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(9) > section:nth-child(2) > fieldset:nth-child(4)
+
+[text] ¿Cuál? (Otro responsable)  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(9) > section:nth-child(2) > label:nth-child(5)
+
+[text] Fecha  [oculta en este registro]
+    valor: (vacio)
+    selector: body > div.main > article > form > section:nth-child(9) > section:nth-child(2) > label:nth-child(6)
+
+[opcion unica] LA PERSONA QUE SUSCRIBE MANIFIESTA QUE RECIBIÓ INFORMACIÓN SOBRE EL PROYECTO Y PUDO FORMULAR INQUIETUDES. LA PRESENTE ACTA DEJA CONSTANCIA DE LA SOCIA
+    valor: OK
+    selector: body > div.main > article > form > section:nth-child(10) > fieldset:nth-child(2)
+
+[text] NOMBRE
+    valor: Nancy Milena Gracias Cortés 
+    selector: body > div.main > article > form > section:nth-child(10) > section:nth-child(3) > label:nth-child(2)
+
+[text] DOCUMENTO
+    valor: 59672593
+    selector: body > div.main > article > form > section:nth-child(10) > section:nth-child(3) > label:nth-child(3)
+
+[firma] FIRMA
+    valor: (lienzo de firma)
+    selector: body > div.main > article > form > section:nth-child(10) > section:nth-child(3) > label:nth-child(4)
+
+[text] NOMBRE
+    valor: Adriana Muñoz 
+    selector: body > div.main > article > form > section:nth-child(10) > section:nth-child(4) > label:nth-child(2)
+
+[text] DOCUMENTO
+    valor: Profesional Social 
+    selector: body > div.main > article > form > section:nth-child(10) > section:nth-child(4) > label:nth-child(3)
+
+[firma] FIRMA
+    valor: (lienzo de firma)
+    selector: body > div.main > article > form > section:nth-child(10) > section:nth-child(4) > label:nth-child(4)
+
+[archivo] SOPORTE DE PROPIEDAD SOBRE EL INMUEBLE
+    valor: 1790787979602.jpg
+    selector: body > div.main > article > form > section:nth-child(11) > label:nth-child(2)

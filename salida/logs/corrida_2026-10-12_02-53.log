@@ -1,0 +1,596 @@
+(Registro de esta corrida: C:\Users\felip\Documents\Proyectos\Tumaco\salida\logs\corrida_2026-10-12_02-53.log)
+USUARIOS.xlsx: 58 fila(s), 31 con formularios pendientes.
+Prueba: solo las primeras 5: 676 ANGELA FILOMENA PALACIOS, 654 EULALIA HURTADO ANGULO, 645 YESICA JENNY GARCES VALENCIA, 656 DILIA MONTAÑO DE SEGURA, 672 TEOTISTA SANCHEZ ARBOLEDA
+Sesion de Kobo ya activa.
+Hoja de Google: datos iniciales de 5 de 5 usuario(s) para comparar nombre y casa.
+
+======================================================================
+[1/5] Usuario: ANGELA FILOMENA PALACIOS | USUARIO 676 | CASA 713 (fila 29)
+======================================================================
+
+--- Formulario 1: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA ---
+Abriendo formulario: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA
+Esperando que cargue la tabla de datos...
+
+Intento 1: buscar '676' por USUARIO
+   1 fila(s) en la tabla, 1 con valor exacto '676'.
+   [1] Angela Filomena Palacios | Casa 713 | nombre 100% | usuario coincide | casa exacta
+   Elegido: Angela Filomena Palacios | Casa 713 (el que mas coincide con el Excel)
+   Usuario encontrado en la fila 1.
+Abriendo edicion de la fila 1...
+Esperando que cargue el formulario de edicion...
+Formulario de edicion abierto: https://ee-eu.kobotoolbox.org/edit/SM076TOT?instance_id=ac3ca954-20f5-4759-b41b-158bc7089654&return_url=false
+   Inventario de 76 campos guardado en C:\Users\felip\Documents\Proyectos\Tumaco\salida\debug\formulario1_campos.txt
+Excel: fila 29, columna H (propietario) = 'Si' (Propietario(a) del inmueble)
+Excel: fila 29, columna I (documento) = '59667695'
+
+Verificacion del usuario (la persona que atiende la visita manifiesta ser):
+   - Opcion 'Otro': no marcada
+
+Correcciones del formulario 1:
+
+Direccion (Excel, hoja y Kobo):
+   * DIRECCIÓN: 'Casa 713' -> 'CASA 713'
+
+Datos del Excel:
+   * NOMBRE: 'Angela Filomena Palacios ' -> 'ANGELA FILOMENA PALACIOS'
+   * NOMBRE: 'Angela Filomena Palacios ' -> 'ANGELA FILOMENA PALACIOS'
+
+Mayusculas:
+   * RESPOSANBLE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   * BARRIO: 'La libertad sector 1 ' -> 'LA LIBERTAD SECTOR 1'
+
+Valores fijos:
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   - DOCUMENTO: ya tiene el valor correcto (59122110)
+
+Firma del responsable contratista:
+   - Firma anterior borrada
+   * Firma dibujada (11 trazos)
+
+Documentos anexos:
+   ? SOPORTE DE PROPIEDAD SOBRE EL INMUEBLE: 1790891094312.jpg -> esperando tu decision en el navegador...
+   - SOPORTE DE PROPIEDAD SOBRE EL INMUEBLE: se conserva (1790891094312.jpg)
+
+8 cambio(s) aplicado(s).
+
+Guardando PDF en 676_ANGELA FILOMENA PALACIOS...
+   PDF guardado: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL\676_ANGELA FILOMENA PALACIOS\1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA.pdf
+   (0.7 MB | 1 foto(s) reducida(s) | fotos 0s, imprimir 2s, guardar 0s)
+
+Enviando formulario a Kobo...
+   Formulario actualizado en Kobo. (Kobo confirmo el envio: https://ee-eu.kobotoolbox.org/thanks?taken=1791791656370)
+Excel: fila 29, columna M (casa final) = 'CASA 713'
+Excel: fila 29, columna J (documento anexo) = 'Si'
+   Tiempos: abrir datos 5s | buscar 2s | abrir edicion 4s | correcciones 15s | PDF 2s | envio 2s | cerrar 0s | total 30s
+Formulario 1 terminado.
+Excel: fila 29, columna D = 'Si'
+
+--- Formulario 2: 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN ---
+Abriendo formulario: 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN
+Esperando que cargue la tabla de datos...
+   Columna para DOCUMENTO: [14] DECLARACIÓN DE CONSENTIMIENTO Y AUTORIZACIÓN DEL USUARIO / Cédula de ciudadanía No.
+   Columna para CASA: [16] DECLARACIÓN DE CONSENTIMIENTO Y AUTORIZACIÓN DEL USUARIO / Dirección
+   Columna para USUARIO: [15] DECLARACIÓN DE CONSENTIMIENTO Y AUTORIZACIÓN DEL USUARIO / No. Usuario
+   Columna para NOMBRE: [13] DECLARACIÓN DE CONSENTIMIENTO Y AUTORIZACIÓN DEL USUARIO / Nombre completo del usuario
+
+Intento 1: buscar '59667695' por DOCUMENTO
+   1 fila(s) en la tabla, 1 con valor exacto '59667695'.
+   [1] Angela Filomena Palacios | 59122110 | nombre 100% | documento coincide | usuario coincide
+   Elegido: Angela Filomena Palacios | 59122110 (el que mas coincide con el Excel)
+   Usuario encontrado en la fila 1.
+Abriendo edicion de la fila 1...
+Esperando que cargue el formulario de edicion...
+Formulario de edicion abierto: https://ee-eu.kobotoolbox.org/edit/iigqph1k?instance_id=d2cea57a-bbb8-4ae1-852a-0234a49ccc5c&return_url=false
+   Inventario de 34 campos guardado en C:\Users\felip\Documents\Proyectos\Tumaco\salida\debug\formulario2_campos.txt
+
+Correcciones del formulario 2:
+
+Direccion (Excel, hoja y Kobo):
+   * DIRECCIÓN: '59122110 ' -> 'CASA 713'
+
+Datos del Excel:
+   * NOMBRE COMPLETO DEL USUARIO: 'Angela Filomena Palacios ' -> 'ANGELA FILOMENA PALACIOS'
+   * NOMBRE: 'Angela Filomena Palacios ' -> 'ANGELA FILOMENA PALACIOS'
+
+Mayusculas:
+   * BARRIO: 'La libertad sector 1 ' -> 'LA LIBERTAD SECTOR 1'
+
+Valores fijos:
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   - DOCUMENTO: ya tiene el valor correcto (59122110)
+
+Firma del responsable contratista:
+   - Firma anterior borrada
+   * Firma dibujada (11 trazos)
+
+Fotos de la cedula:
+   - Cedula cara: descargando 1790891370753.jpg...
+   * Cedula cara: recortada y enderezada (tarjeta encontrada 92%)
+   - Cedula reverso: descargando 1790891378683.jpg...
+   * Cedula reverso: recortada y enderezada (tarjeta encontrada 91%)
+
+9 cambio(s) aplicado(s).
+
+Guardando DOCUMENTO.pdf en 676_ANGELA FILOMENA PALACIOS...
+   Cedula guardada en un solo PDF: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL\676_ANGELA FILOMENA PALACIOS\DOCUMENTO.pdf
+
+Guardando PDF en 676_ANGELA FILOMENA PALACIOS...
+   PDF guardado: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL\676_ANGELA FILOMENA PALACIOS\2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN PARA LA PARTICIPACIÓN EN EL PROYECTO.pdf
+   (0.7 MB | 2 foto(s) reducida(s) | fotos 0s, imprimir 2s, guardar 0s)
+
+Enviando formulario a Kobo...
+   Formulario actualizado en Kobo. (Kobo confirmo el envio: https://ee-eu.kobotoolbox.org/thanks?taken=1791791690987)
+   Tiempos: abrir datos 5s | buscar 2s | abrir edicion 4s | correcciones 19s | PDF 2s | envio 2s | cerrar 0s | total 33s
+Formulario 2 terminado.
+Excel: fila 29, columna E = 'Si'
+
+--- Formulario 3: 3. ENCUESTA DE CARACTERIZACIÓN SOCIOECONÓMICA ---
+Abriendo formulario: 3. ENCUESTA DE CARACTERIZACIÓN SOCIOECONÓMICA
+Esperando que cargue la tabla de datos...
+   Columna para DOCUMENTO: [13] DATOS DEL USUARIO / Documento
+   Columna para CASA: [15] DATOS DEL USUARIO / Dirección
+   Columna para USUARIO: [14] DATOS DEL USUARIO / No. Usuario
+   Columna para NOMBRE: [12] DATOS DEL USUARIO / Nombre
+
+Intento 1: buscar '59667695' por DOCUMENTO
+   1 fila(s) en la tabla, 1 con valor exacto '59667695'.
+   [1] Angela Filomena Palacios | Casa 713 | nombre 100% | documento coincide | usuario coincide | casa exacta
+   Elegido: Angela Filomena Palacios | Casa 713 (el que mas coincide con el Excel)
+   Usuario encontrado en la fila 1.
+Abriendo edicion de la fila 1...
+Esperando que cargue el formulario de edicion...
+Formulario de edicion abierto: https://ee-eu.kobotoolbox.org/edit/xFAy1WFS?instance_id=fabdc7e6-3d06-4fc0-b63b-60654a557763&return_url=false
+   Inventario de 130 campos guardado en C:\Users\felip\Documents\Proyectos\Tumaco\salida\debug\formulario3_campos.txt
+
+Correcciones del formulario 3:
+
+Direccion (Excel, hoja y Kobo):
+   * DIRECCIÓN: 'Casa 713' -> 'CASA 713'
+
+Datos del Excel:
+   * NOMBRE: 'Angela Filomena Palacios ' -> 'ANGELA FILOMENA PALACIOS'
+   * NOMBRE: 'Angela Filomena Palacios ' -> 'ANGELA FILOMENA PALACIOS'
+
+Mayusculas:
+   * BARRIO: 'La libertad sector 1 ' -> 'LA LIBERTAD SECTOR 1'
+
+Valores fijos:
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   - DOCUMENTO: ya tiene el valor correcto (59122110)
+
+Campos que se llenan si estan vacios:
+   * OBSERVACIÓN (OPCIONAL): '' -> 'EL AGUA ES DEFICIENTE, LA SUSPENDEN POR MÁS DE OCHO DÍAS CEDENAR NO VIENE A TOMAR LECTURA Y LAS FACTURAS NOS LLEGAN MUY CARAS TAMBIEN APAGONES'
+
+Firma del responsable contratista:
+   - Firma anterior borrada
+   * Firma dibujada (11 trazos)
+
+8 cambio(s) aplicado(s).
+
+Guardando PDF en 676_ANGELA FILOMENA PALACIOS...
+   PDF guardado: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL\676_ANGELA FILOMENA PALACIOS\3. ENCUESTA DE CARACTERIZACIÓN SOCIOECONÓMICA DE LA COMUNIDAD.pdf
+   (0.4 MB | 0 foto(s) reducida(s) | fotos 0s, imprimir 2s, guardar 0s)
+
+Enviando formulario a Kobo...
+   Formulario actualizado en Kobo. (Kobo confirmo el envio: https://ee-eu.kobotoolbox.org/thanks)
+   Tiempos: abrir datos 5s | buscar 3s | abrir edicion 4s | correcciones 11s | PDF 2s | envio 33s | cerrar 0s | total 57s
+Formulario 3 terminado.
+Excel: fila 29, columna F = 'Si'
+
+--- Formulario 4: 4. FORMATO ACTA DE VERIFICACIÓN DEL ESTADO INICIAL ---
+Abriendo formulario: 4. FORMATO ACTA DE VERIFICACIÓN DEL ESTADO INICIAL
+Esperando que cargue la tabla de datos...
+   Columna para DOCUMENTO: [11] DATOS DEL USUARIO Y DEL INMUEBLE / Documento
+   Columna para CASA: [13] DATOS DEL USUARIO Y DEL INMUEBLE / Dirección
+   Columna para USUARIO: [12] DATOS DEL USUARIO Y DEL INMUEBLE / No. Usuario
+   Columna para NOMBRE: [10] DATOS DEL USUARIO Y DEL INMUEBLE / Nombre
+
+Intento 1: buscar '59667695' por DOCUMENTO
+   0 fila(s) en la tabla, 0 con valor exacto '59667695'.
+
+Intento 2: buscar '713' por CASA
+   0 fila(s) en la tabla, 0 con valor exacto '713'.
+
+Intento 3: buscar '676' por USUARIO
+   0 fila(s) en la tabla, 0 con valor exacto '676'.
+
+Intento 4: buscar 'FILOMENA' por NOMBRE
+   0 fila(s) en la tabla, 0 con nombre parecido a 'FILOMENA'.
+
+Intento 5: buscar 'PALACIOS' por NOMBRE
+   4 fila(s) en la tabla, 3 con nombre parecido a 'PALACIOS'.
+   [1] LUCENY PALACIOS ALOMIA | CASA 272 | nombre 69%
+   [2] DIANA MARITZA PINZON PALACIOS | Casa 89 | nombre 67%
+   [3] Deli Fabiola Palacios | Casa 259 | nombre 66%
+
+Intento 6: buscar 'ANGELA' por NOMBRE
+   1 fila(s) en la tabla, 0 con nombre parecido a 'ANGELA'.
+
+Intento 7: buscar 'FILO' por NOMBRE
+   0 fila(s) en la tabla, 0 con nombre parecido a 'FILO'.
+
+Intento 8: buscar 'PALA' por NOMBRE
+   7 fila(s) en la tabla, 4 con nombre parecido a 'PALA'.
+   [1] LUCENY PALACIOS ALOMIA | CASA 272 | nombre 69%
+   [2] DIANA MARITZA PINZON PALACIOS | Casa 89 | nombre 67%
+   [3] Deli Fabiola Palacios | Casa 259 | nombre 66%
+   [4] Hulbert Palacio | Casa 23 | nombre 61%
+
+Intento 9: buscar 'ANGE' por NOMBRE
+   5 fila(s) en la tabla, 0 con nombre parecido a 'ANGE'.
+
+No encontrado: el mas parecido en Kobo es LUCENY PALACIOS ALOMIA CASA 272 (69% de parecido en el nombre)
+Excel: fila 29, columna G = 'No encontrado'
+
+Uniendo los PDF del usuario:
+   PDF unido (4 documentos): C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL\676_ANGELA FILOMENA PALACIOS\676_ANGELA FILOMENA PALACIOS.pdf
+     - 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA.pdf
+     - DOCUMENTO.pdf
+     - 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN PARA LA PARTICIPACIÓN EN EL PROYECTO.pdf
+     - 3. ENCUESTA DE CARACTERIZACIÓN SOCIOECONÓMICA DE LA COMUNIDAD.pdf
+
+Hoja de Google:
+   Hoja 'Tumaco', fila 692 (usuario 676):
+     F692 = ANGELA FILOMENA PALACIOS
+     G692 = 59667695
+     H692 = CASA 713 LA LIBERTAD DIV 1
+     I692 = CONFIRMADO
+     J692 = CEDULA DE CIUDADANIA Y RECIBO DE ENERGIA
+     K692 = KAREN QUIÑONES
+   Hoja: fila verificada, quedo con todos los valores.
+Excel: fila 29, columna K (hoja) = 'Si'
+
+======================================================================
+[2/5] Usuario: EULALIA HURTADO ANGULO | USUARIO 654 | CASA 795 (fila 30)
+======================================================================
+
+--- Formulario 1: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA ---
+Abriendo datos de: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA
+Esperando que cargue la tabla de datos...
+
+   ¿Cual columna corresponde a USUARIO en '1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA'?
+
+   ¿Cual columna corresponde a CASA en '1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA'?
+
+   ¿Cual columna corresponde a NOMBRE en '1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA'?
+
+No encontrado en Kobo por usuario, casa, nombre
+Excel: fila 30, columna D = 'No encontrado en Kobo por usuario, casa, nombre'
+
+======================================================================
+[3/5] Usuario: YESICA JENNY GARCES VALENCIA | USUARIO 645 | CASA 786 (fila 31)
+======================================================================
+
+--- Formulario 1: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA ---
+Abriendo datos de: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA
+Esperando que cargue la tabla de datos...
+
+Intento 1: buscar '645' por USUARIO
+   1 fila(s) en la tabla, 1 con valor exacto '645'.
+   [1] Yesica Jenny Garcés | Casa 786 | nombre 100% | usuario coincide | casa exacta
+   Elegido: Yesica Jenny Garcés | Casa 786 (el que mas coincide con el Excel)
+   Usuario encontrado en la fila 1.
+Abriendo edicion de la fila 1...
+Esperando que cargue el formulario de edicion...
+Formulario de edicion abierto: https://ee-eu.kobotoolbox.org/edit/khxNAd1h?instance_id=bedb0b2f-b4cf-48b0-af88-8b9c3bd7325e&return_url=false
+   Inventario de 76 campos guardado en C:\Users\felip\Documents\Proyectos\Tumaco\salida\debug\formulario1_campos.txt
+Excel: fila 31, columna H (propietario) = 'Si' (Propietario(a) del inmueble)
+Excel: fila 31, columna I (documento) = '1087117947'
+
+Verificacion del usuario (la persona que atiende la visita manifiesta ser):
+   - Opcion 'Otro': no marcada
+
+Correcciones del formulario 1:
+
+Direccion (Excel, hoja y Kobo):
+   * DIRECCIÓN: 'Casa 786' -> 'CASA 786'
+
+Datos del Excel:
+   * NOMBRE: 'Yesica Jenny Garcés ' -> 'YESICA JENNY GARCES VALENCIA'
+   * NOMBRE: 'Yesica Jenny Garcés ' -> 'YESICA JENNY GARCES VALENCIA'
+
+Mayusculas:
+   * RESPOSANBLE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   * BARRIO: 'La libertad sector 1 ' -> 'LA LIBERTAD SECTOR 1'
+
+Valores fijos:
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   - DOCUMENTO: ya tiene el valor correcto (59122110)
+
+Firma del responsable contratista:
+   - Firma anterior borrada
+   * Firma dibujada (11 trazos)
+
+Documentos anexos:
+   ? SOPORTE DE PROPIEDAD SOBRE EL INMUEBLE: 1790957277422.jpg -> esperando tu decision en el navegador...
+   - SOPORTE DE PROPIEDAD SOBRE EL INMUEBLE: se conserva (1790957277422.jpg)
+
+8 cambio(s) aplicado(s).
+
+Guardando PDF en 645_YESICA JENNY GARCES VALENCIA...
+   PDF guardado: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL\645_YESICA JENNY GARCES VALENCIA\1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA.pdf
+   (0.8 MB | 1 foto(s) reducida(s) | fotos 0s, imprimir 2s, guardar 0s)
+
+Enviando formulario a Kobo...
+   Formulario actualizado en Kobo. (Kobo confirmo el envio: https://ee-eu.kobotoolbox.org/thanks)
+Excel: fila 31, columna M (casa final) = 'CASA 786'
+Excel: fila 31, columna J (documento anexo) = 'Si'
+   Tiempos: abrir datos 5s | buscar 3s | abrir edicion 4s | correcciones 15s | PDF 2s | envio 33s | cerrar 0s | total 62s
+Formulario 1 terminado.
+Excel: fila 31, columna D = 'Si'
+
+--- Formulario 2: 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN ---
+Abriendo datos de: 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN
+Esperando que cargue la tabla de datos...
+   Columna para DOCUMENTO: [14] (no existe)
+   Columna para CASA: [16] (no existe)
+   Columna para USUARIO: [15] (no existe)
+   Columna para NOMBRE: [13] (no existe)
+
+Intento 1: buscar '1087117947' por DOCUMENTO
+   No encontre la caja de filtro de esa columna.
+
+Intento 2: buscar '786' por CASA
+   No encontre la caja de filtro de esa columna.
+
+Intento 3: buscar '645' por USUARIO
+   No encontre la caja de filtro de esa columna.
+
+Intento 4: buscar 'VALENCIA' por NOMBRE
+   No encontre la caja de filtro de esa columna.
+
+No encontrado en Kobo por documento, casa, usuario, nombre
+Excel: fila 31, columna E = 'No encontrado en Kobo por documento, casa, usuario, nombre'
+
+======================================================================
+[4/5] Usuario: DILIA MONTAÑO DE SEGURA | USUARIO 656 | CASA 782 (fila 32)
+======================================================================
+
+--- Formulario 1: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA ---
+Abriendo datos de: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA
+Esperando que cargue la tabla de datos...
+
+Intento 1: buscar '656' por USUARIO
+   1 fila(s) en la tabla, 1 con valor exacto '656'.
+   [1] María Irlanda Segura | Casa 782 | nombre 58% | usuario coincide | casa exacta
+   Elegido: María Irlanda Segura | Casa 782 (el que mas coincide con el Excel)
+   Usuario encontrado en la fila 1.
+Abriendo edicion de la fila 1...
+Esperando que cargue el formulario de edicion...
+Formulario de edicion abierto: https://ee-eu.kobotoolbox.org/edit/eEnXybAa?instance_id=7873280b-4e52-4418-bf7c-dc085e83dd2e&return_url=false
+   Inventario de 76 campos guardado en C:\Users\felip\Documents\Proyectos\Tumaco\salida\debug\formulario1_campos.txt
+Excel: fila 32, columna H (propietario) = 'No' (Poseedor del inmueble)
+Excel: fila 32, columna I (documento) = '59678852'
+
+Verificacion del usuario (la persona que atiende la visita manifiesta ser):
+   - Opcion 'Otro': no marcada
+
+Correcciones del formulario 1:
+
+Direccion (Excel, hoja y Kobo):
+   * DIRECCIÓN: 'Casa 782' -> 'CASA 782'
+
+Datos del Excel:
+   ? Nombre: se deja 'MARÍA IRLANDA SEGURA' de Kobo (quien atendio es otra persona; el Excel y la hoja tienen al usuario inicial). Excel: 'DILIA MONTAÑO DE SEGURA', hoja: 'DILIA MONTAÑO DE SEGURA' -> decide en la ventana del navegador...
+   - Nombre: decidido en la ventana -> 'MARÍA IRLANDA SEGURA'
+   * NOMBRE: 'María Irlanda Segura ' -> 'MARÍA IRLANDA SEGURA'
+   ? Nombre: se deja 'MARÍA IRLANDA SEGURA' de Kobo (quien atendio es otra persona; el Excel y la hoja tienen al usuario inicial). Excel: 'DILIA MONTAÑO DE SEGURA', hoja: 'DILIA MONTAÑO DE SEGURA' -> decide en la ventana del navegador...
+   - Nombre: decidido en la ventana -> 'MARÍA IRLANDA SEGURA'
+   * NOMBRE: 'María Irlanda Segura ' -> 'MARÍA IRLANDA SEGURA'
+
+Mayusculas:
+   * RESPOSANBLE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   * BARRIO: 'La libertad sector 1 ' -> 'LA LIBERTAD SECTOR 1'
+
+Valores fijos:
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   - DOCUMENTO: ya tiene el valor correcto (59122110)
+
+Firma del responsable contratista:
+   - Firma anterior borrada
+   * Firma dibujada (11 trazos)
+
+Documentos anexos:
+   ? SOPORTE DE PROPIEDAD SOBRE EL INMUEBLE: 1790959989478.jpg -> esperando tu decision en el navegador...
+   - SOPORTE DE PROPIEDAD SOBRE EL INMUEBLE: se conserva (1790959989478.jpg)
+
+8 cambio(s) aplicado(s).
+
+Guardando PDF en 656_MARÍA IRLANDA SEGURA...
+   PDF guardado: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL\656_MARÍA IRLANDA SEGURA\1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA.pdf
+   (0.4 MB | 0 foto(s) reducida(s) | fotos 0s, imprimir 2s, guardar 0s)
+
+Enviando formulario a Kobo...
+   Formulario actualizado en Kobo. (Kobo confirmo el envio: https://ee-eu.kobotoolbox.org/thanks?taken=1791791959071)
+Excel: fila 32, columna L (nombre final) = 'MARÍA IRLANDA SEGURA'
+Excel: fila 32, columna M (casa final) = 'CASA 782'
+Excel: fila 32, columna J (documento anexo) = 'Si'
+   Tiempos: abrir datos 3s | buscar 3s | abrir edicion 4s | correcciones 31s | PDF 2s | envio 2s | cerrar 0s | total 45s
+Formulario 1 terminado.
+Excel: fila 32, columna D = 'Si'
+
+--- Formulario 2: 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN ---
+Abriendo datos de: 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN
+Esperando que cargue la tabla de datos...
+   Columna para DOCUMENTO: [14] DECLARACIÓN DE CONSENTIMIENTO Y AUTORIZACIÓN DEL USUARIO / Cédula de ciudadanía No.
+   Columna para CASA: [16] DECLARACIÓN DE CONSENTIMIENTO Y AUTORIZACIÓN DEL USUARIO / Dirección
+   Columna para USUARIO: [15] DECLARACIÓN DE CONSENTIMIENTO Y AUTORIZACIÓN DEL USUARIO / No. Usuario
+   Columna para NOMBRE: [13] DECLARACIÓN DE CONSENTIMIENTO Y AUTORIZACIÓN DEL USUARIO / Nombre completo del usuario
+
+Intento 1: buscar '59678852' por DOCUMENTO
+   1 fila(s) en la tabla, 1 con valor exacto '59678852'.
+   [1] María Irlanda Segura | Casa 782 | nombre 58% | documento coincide | usuario coincide | casa exacta
+   Elegido: María Irlanda Segura | Casa 782 (el que mas coincide con el Excel)
+   Usuario encontrado en la fila 1.
+Abriendo edicion de la fila 1...
+Esperando que cargue el formulario de edicion...
+Formulario de edicion abierto: https://ee-eu.kobotoolbox.org/edit/uhX8CEb9?instance_id=60aa3933-4593-4a36-bfe0-eb865aa2c710&return_url=false
+   Inventario de 34 campos guardado en C:\Users\felip\Documents\Proyectos\Tumaco\salida\debug\formulario2_campos.txt
+
+Correcciones del formulario 2:
+
+Direccion (Excel, hoja y Kobo):
+   * DIRECCIÓN: 'Casa 782' -> 'CASA 782'
+
+Datos del Excel:
+   * NOMBRE COMPLETO DEL USUARIO: 'María Irlanda Segura ' -> 'MARÍA IRLANDA SEGURA'
+   * NOMBRE: 'María Irlanda Segura ' -> 'MARÍA IRLANDA SEGURA'
+
+Mayusculas:
+   * BARRIO: 'La libertad sector 1 ' -> 'LA LIBERTAD SECTOR 1'
+
+Valores fijos:
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   - DOCUMENTO: ya tiene el valor correcto (59122110)
+
+Firma del responsable contratista:
+   - Firma anterior borrada
+   * Firma dibujada (11 trazos)
+
+Fotos de la cedula:
+   - Cedula cara: descargando 1790960268098.jpg...
+   ? Cedula cara: marca las 4 esquinas en la ventana del navegador...
+   ? Cedula cara: revisa el recorte con las esquinas que marcaste -> revisa la ventana en el navegador...
+   * Cedula cara: recortada y enderezada (ajustada a mano)
+   - Cedula reverso: descargando 1790960275740.jpg...
+   ? Cedula reverso: marca las 4 esquinas en la ventana del navegador...
+   ? Cedula reverso: revisa el recorte con las esquinas que marcaste -> revisa la ventana en el navegador...
+   * Cedula reverso: recortada y enderezada (ajustada a mano)
+
+9 cambio(s) aplicado(s).
+
+Guardando DOCUMENTO.pdf en 656_MARÍA IRLANDA SEGURA...
+   Cedula guardada en un solo PDF: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL\656_MARÍA IRLANDA SEGURA\DOCUMENTO.pdf
+
+Guardando PDF en 656_MARÍA IRLANDA SEGURA...
+   PDF guardado: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL\656_MARÍA IRLANDA SEGURA\2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN PARA LA PARTICIPACIÓN EN EL PROYECTO.pdf
+   (0.3 MB | 0 foto(s) reducida(s) | fotos 0s, imprimir 2s, guardar 0s)
+
+Enviando formulario a Kobo...
+   Formulario actualizado en Kobo. (Kobo confirmo el envio: https://ee-eu.kobotoolbox.org/thanks?taken=1791792031524)
+   Tiempos: abrir datos 2s | buscar 2s | abrir edicion 4s | correcciones 59s | PDF 2s | envio 3s | cerrar 0s | total 72s
+Formulario 2 terminado.
+Excel: fila 32, columna E = 'Si'
+
+--- Formulario 3: 3. ENCUESTA DE CARACTERIZACIÓN SOCIOECONÓMICA ---
+Abriendo datos de: 3. ENCUESTA DE CARACTERIZACIÓN SOCIOECONÓMICA
+Esperando que cargue la tabla de datos...
+   Columna para DOCUMENTO: [13] (no existe)
+   Columna para CASA: [15] (no existe)
+   Columna para USUARIO: [14] (no existe)
+   Columna para NOMBRE: [12] (no existe)
+
+Intento 1: buscar '59678852' por DOCUMENTO
+   No encontre la caja de filtro de esa columna.
+
+Intento 2: buscar '782' por CASA
+   No encontre la caja de filtro de esa columna.
+
+Intento 3: buscar '656' por USUARIO
+   No encontre la caja de filtro de esa columna.
+
+Intento 4: buscar 'MONTANO' por NOMBRE
+   No encontre la caja de filtro de esa columna.
+
+No encontrado en Kobo por documento, casa, usuario, nombre
+Excel: fila 32, columna F = 'No encontrado en Kobo por documento, casa, usuario, nombre'
+
+======================================================================
+[5/5] Usuario: TEOTISTA SANCHEZ ARBOLEDA | USUARIO 672 | CASA 821 (fila 33)
+======================================================================
+
+--- Formulario 1: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA ---
+Abriendo datos de: 1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA
+Esperando que cargue la tabla de datos...
+
+Intento 1: buscar '672' por USUARIO
+   1 fila(s) en la tabla, 1 con valor exacto '672'.
+   [1] Teotista Sánchez | Casa 821 | nombre 100% | usuario coincide | casa exacta
+   Elegido: Teotista Sánchez | Casa 821 (el que mas coincide con el Excel)
+   Usuario encontrado en la fila 1.
+Abriendo edicion de la fila 1...
+Esperando que cargue el formulario de edicion...
+Formulario de edicion abierto: https://ee-eu.kobotoolbox.org/edit/0tu8aU1q?instance_id=70368f66-e908-4ddb-80b2-5ff019d67260&return_url=false
+   Inventario de 76 campos guardado en C:\Users\felip\Documents\Proyectos\Tumaco\salida\debug\formulario1_campos.txt
+Excel: fila 33, columna H (propietario) = 'Si' (Propietario(a) del inmueble)
+Excel: fila 33, columna I (documento) = '59669548'
+
+Verificacion del usuario (la persona que atiende la visita manifiesta ser):
+   - Opcion 'Otro': no marcada
+
+Correcciones del formulario 1:
+
+Direccion (Excel, hoja y Kobo):
+   * DIRECCIÓN: 'Casa 821' -> 'CASA 821'
+
+Datos del Excel:
+   * NOMBRE: 'Teotista Sánchez ' -> 'TEOTISTA SANCHEZ ARBOLEDA'
+   * NOMBRE: 'Teotista Sánchez ' -> 'TEOTISTA SANCHEZ ARBOLEDA'
+
+Mayusculas:
+   * RESPOSANBLE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   * BARRIO: 'La libertad sector 1 ' -> 'LA LIBERTAD SECTOR 1'
+
+Valores fijos:
+   * NOMBRE: 'Adriana Muñoz ' -> 'ADRIANA MUÑOZ'
+   - DOCUMENTO: ya tiene el valor correcto (59122110)
+
+Firma del responsable contratista:
+   - Firma anterior borrada
+   * Firma dibujada (11 trazos)
+
+Documentos anexos:
+   ? SOPORTE DE PROPIEDAD SOBRE EL INMUEBLE: 1790972055609.jpg -> esperando tu decision en el navegador...
+   - SOPORTE DE PROPIEDAD SOBRE EL INMUEBLE: se conserva (1790972055609.jpg)
+
+8 cambio(s) aplicado(s).
+
+Guardando PDF en 672_TEOTISTA SANCHEZ ARBOLEDA...
+   PDF guardado: C:\Users\felip\Documents\Proyectos\Tumaco\CONTINGENCIAL\672_TEOTISTA SANCHEZ ARBOLEDA\1. FORMATO REGISTRO DE VISITA PUERTA A PUERTA.pdf
+   (0.7 MB | 1 foto(s) reducida(s) | fotos 0s, imprimir 2s, guardar 0s)
+
+Enviando formulario a Kobo...
+   Formulario actualizado en Kobo. (Kobo confirmo el envio: https://ee-eu.kobotoolbox.org/thanks?taken=1791792058832)
+Excel: fila 33, columna M (casa final) = 'CASA 821'
+Excel: fila 33, columna J (documento anexo) = 'Si'
+   Tiempos: abrir datos 3s | buscar 2s | abrir edicion 5s | correcciones 13s | PDF 2s | envio 2s | cerrar 0s | total 26s
+Formulario 1 terminado.
+Excel: fila 33, columna D = 'Si'
+
+--- Formulario 2: 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN ---
+Abriendo datos de: 2. MANIFESTACIÓN DE VOLUNTAD Y AUTORIZACIÓN
+Esperando que cargue la tabla de datos...
+   Columna para DOCUMENTO: [14] (no existe)
+   Columna para CASA: [16] (no existe)
+   Columna para USUARIO: [15] (no existe)
+   Columna para NOMBRE: [13] (no existe)
+
+Intento 1: buscar '59669548' por DOCUMENTO
+   No encontre la caja de filtro de esa columna.
+
+Intento 2: buscar '821' por CASA
+   No encontre la caja de filtro de esa columna.
+
+Intento 3: buscar '672' por USUARIO
+   No encontre la caja de filtro de esa columna.
+
+Intento 4: buscar 'ARBOLEDA' por NOMBRE
+   No encontre la caja de filtro de esa columna.
+
+No encontrado en Kobo por documento, casa, usuario, nombre
+Excel: fila 33, columna E = 'No encontrado en Kobo por documento, casa, usuario, nombre'
+
+======================================================================
+Con todos los formularios enviados: 1 | Con opcion 'Otro': 0 | Enviados con algo a mano: 0 | No encontrados o dudosos: 4 | Sin formulario 4 en Kobo: 1 | Pendientes: 0 | Hoja de Google pendiente: 0
+   - fila 30: 654 EULALIA HURTADO ANGULO (formulario 1: No encontrado en Kobo por usuario, casa, nombre)
+   - fila 31: 645 YESICA JENNY GARCES VALENCIA (formulario 2: No encontrado en Kobo por documento, casa, usuario, nombre)
+   - fila 32: 656 DILIA MONTAÑO DE SEGURA (formulario 3: No encontrado en Kobo por documento, casa, usuario, nombre)
+   - fila 33: 672 TEOTISTA SANCHEZ ARBOLEDA (formulario 2: No encontrado en Kobo por documento, casa, usuario, nombre)
+   - fila 29: 676 ANGELA FILOMENA PALACIOS (sin formulario 4 en Kobo)
+
+Registro de casos:
+   Casos por resolver: 30 (Sin formulario 4: 9, No encontrado: 7, Verificar casa: 4, Registro duplicado: 3, Dudoso: 2, Registro ajeno: 2, Revisar a mano: 2, Verificar nombre: 1) -> CASOS.xlsx
