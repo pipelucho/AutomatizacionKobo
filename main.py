@@ -1,7 +1,7 @@
 import sys
 import time
 
-from tumaco import casos, config, correcciones, excel, firmas, pdf, registro, sheets, ventanas
+from tumaco import casos, config, correcciones, excel, firmas, hoja_local, pdf, registro, sheets, ventanas
 from tumaco.browser import abrir_navegador
 from tumaco.kobo import Kobo
 from tumaco.texto import digitos
@@ -48,12 +48,18 @@ def guardar_datos_formulario(edicion, usuario: excel.Usuario, numero: int):
               f"'{documento or 'vacio'}'")
 
 
+def nombre_hoja() -> str:
+    return f"Hoja local ({config.HOJA_LOCAL.name})" if config.HOJA_LOCAL else "Hoja de Google"
+
+
 def llenar_hoja(hoja: sheets.Hoja, usuario: excel.Usuario, retirado: bool = False) -> bool:
     """Ultimo paso de cada persona: su fila en la hoja de Google (F a K). Marca la columna K del Excel.
     retirado=True: vivienda inexistente, la fila queda RETIRADO."""
-    print("\nHoja de Google:")
+    print(f"\n{nombre_hoja()}:")
     try:
-        ok = sheets.actualizar_usuario(hoja.pestana(), usuario, retirado=retirado)
+        # Procesamiento aparte: la hoja de Google no se toca, la fila queda en la hoja local
+        ok = (hoja_local.actualizar_usuario(usuario, retirado=retirado) if config.HOJA_LOCAL
+              else sheets.actualizar_usuario(hoja.pestana(), usuario, retirado=retirado))
     except Exception as e:  # sin la ventana de la hoja no se detiene la corrida
         print(f"   [!] {e}")
         ok = False
@@ -86,9 +92,9 @@ def cargar_referencias(page, hoja: sheets.Hoja, usuarios: list[excel.Usuario], t
     (nombre y sector) y para decidir nombre y casa. Antes se revisa que el No. de usuario del Excel sea de
     esa persona en la hoja; si no, se propone el correcto en una ventana."""
     try:
-        refs = sheets.referencias(sheets.leer_filas(hoja.pestana()))
+        refs = hoja_local.referencias() if config.HOJA_LOCAL else sheets.referencias(sheets.leer_filas(hoja.pestana()))
     except Exception as e:
-        print(f"[!] No se pudo leer la hoja de Google ({e}).\n"
+        print(f"[!] No se pudo leer la {nombre_hoja().lower()} ({e}).\n"
               f"    Sin ella, el bot no cambia nombres ni casas que no coincidan: los deja y avisa.")
         return
     for u in usuarios:
@@ -97,7 +103,7 @@ def cargar_referencias(page, hoja: sheets.Hoja, usuarios: list[excel.Usuario], t
             ref = revisar_numero(page, u, refs, todos)
         if ref:
             u.ref_nombre, u.ref_direccion = ref["nombre"], ref["direccion"]
-    print(f"Hoja de Google: datos iniciales de {sum(1 for u in usuarios if u.ref_nombre)} de {len(usuarios)} "
+    print(f"{nombre_hoja()}: datos iniciales de {sum(1 for u in usuarios if u.ref_nombre)} de {len(usuarios)} "
           f"usuario(s) para buscar en Kobo y comparar nombre y casa.")
 
 
@@ -125,7 +131,7 @@ def revisar_numero(page, usuario: excel.Usuario, refs: dict, todos: list[excel.U
         return None
     print("    ? Decide en la ventana del navegador...")
     elegidos = ventanas.revisar_cambios(
-        page, f"No. de usuario de {usuario.nombre}: el Excel y la hoja de Google no coinciden",
+        page, f"No. de usuario de {usuario.nombre}: el Excel y la {nombre_hoja().lower()} no coinciden",
         [f"Excel (fila {usuario.fila}): {usuario.nombre} | usuario {usuario.usuario} | casa {usuario.casa}",
          f"Hoja: {en_hoja}", *(lineas or ["En la hoja no hay otra fila con un nombre parecido."])],
         [{"id": "u", "campo": "No. de usuario", "actual": usuario.usuario,
@@ -292,6 +298,15 @@ def _limite() -> int | None:
     return None
 
 
+def _usuarios() -> set[str]:
+    """No. de usuario de '--usuarios 733,785' en la linea de comando (vacio = todos)."""
+    if "--usuarios" in sys.argv:
+        i = sys.argv.index("--usuarios")
+        if i + 1 < len(sys.argv):
+            return {x.strip() for x in sys.argv[i + 1].split(",") if x.strip()}
+    return set()
+
+
 def actualizar_casos():
     """Al final de la corrida: CASOS.xlsx con lo que quedo por resolver (relee el Excel ya marcado)."""
     print("\nRegistro de casos:")
@@ -306,6 +321,9 @@ def main():
     tabla = excel.cargar_tabla()
     por_procesar = excel.pendientes(tabla)
     print(f"{config.EXCEL_PATH.name}: {len(tabla)} fila(s), {len(por_procesar)} con formularios pendientes.")
+    if solo := _usuarios():  # ej. main.py --usuarios 733,785: solo esas personas
+        por_procesar = [u for u in por_procesar if u.usuario in solo]
+        print(f"Solo los usuarios pedidos: " + ", ".join(f"{u.usuario} {u.nombre}" for u in por_procesar))
     if limite := _limite():  # ej. main.py --limite 5: una prueba con pocas personas
         por_procesar = por_procesar[:limite]
         print(f"Prueba: solo las primeras {len(por_procesar)}: "
@@ -421,7 +439,7 @@ def main():
         for u, numero in pendientes:
             print(f"   - fila {u.fila}: {u.usuario} {u.nombre} (falta formulario {numero})")
         for u in hoja_pendiente:
-            print(f"   - fila {u.fila}: {u.usuario} {u.nombre} (falta llenar la hoja de Google)")
+            print(f"   - fila {u.fila}: {u.usuario} {u.nombre} (falta llenar la {nombre_hoja().lower()})")
         excel.guardar_pendientes(esperar=True)  # lo que no se pudo guardar con el Excel abierto
         actualizar_casos()
         input("\nSe procesaron todos los pendientes. Presiona Enter para cerrar el navegador...")

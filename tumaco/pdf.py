@@ -83,6 +83,7 @@ def guardar_pdf(page: Page, carpeta: Path) -> Path:
     # Fotos de celular a tamaño de impresion (solo para el PDF; despues se restauran): en carta se ven
     # igual y el PDF pasa de decenas de MB y minutos a pocos MB y segundos. En Kobo no cambia nada.
     reducidas = page.evaluate(_JS_REDUCIR_FOTOS, config.FOTOS_PDF_MAX) if config.FOTOS_PDF_MAX > 0 else 0
+    preparar_impresion(page)
     t_fotos = time.monotonic()
 
     # Activar el modo impresion para que el formulario acomode su diseño como con Ctrl+P
@@ -120,6 +121,28 @@ def guardar_pdf(page: Page, carpeta: Path) -> Path:
     print(f"   ({len(contenido) / 1e6:.1f} MB | {reducidas} foto(s) reducida(s) | fotos {t_fotos - t0:.0f}s, imprimir {t_imprimir - t_fotos:.0f}s, "
           f"guardar {time.monotonic() - t_imprimir:.0f}s)")
     return destino
+
+
+def preparar_impresion(page: Page) -> bool:
+    """Lo mismo que hace la persona antes de Ctrl+P: boton de impresora del formulario > Modo carta > Modo retrato >
+    Preparar. Enketo acomoda el formulario a la hoja carta y llama a window.print(), que aqui no abre el dialogo del
+    navegador (el PDF lo hace guardar_pdf). False si el formulario no tiene ese boton o no se pudo."""
+    boton = page.locator(".form-header__button--print").first
+    if not boton.count() or not boton.is_visible():
+        return False
+    page.evaluate("() => { window.__tumacoImpreso = 0; window.print = () => { window.__tumacoImpreso++; }; }")
+    try:
+        boton.click()
+        dialogo = page.locator(".vex-dialog-form").first
+        dialogo.wait_for(timeout=10_000)
+        dialogo.locator("input[name=format][value=Letter]").check()
+        dialogo.locator("input[name=orientation][value=portrait]").check()
+        dialogo.locator("button[type=submit]").click()
+        page.wait_for_function("() => window.__tumacoImpreso > 0", timeout=30_000)
+    except Exception as e:
+        print(f"   (no se pudo preparar la impresion en Modo carta: {str(e).splitlines()[0]})")
+        return False
+    return True
 
 
 def _ruta_larga(ruta: Path) -> Path:

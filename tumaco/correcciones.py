@@ -261,6 +261,13 @@ def aplicar(page: Page, numero_formulario: int, usuario=None, firma_actual: byte
     if numero_formulario in CEDULAS:
         print("\nFotos de la cedula:")
         for selector, lado in CEDULAS[numero_formulario]:
+            # Procesamiento aparte: la cedula entregada reemplaza la de Kobo (ya viene derecha, no se recorta)
+            dada = reemplazar_con_entrada(page, page.locator(selector).first, usuario, f"CEDULA_{lado.upper()}.jpg",
+                                          f"cedula_{lado}-ajustada.jpg")
+            if dada:
+                cambios.append(f"Cedula {lado}: reemplazada por la entregada")
+                resultado.cedulas[lado] = dada
+                continue
             cambio, jpg, problema = ajustar_cedula(page, selector, lado, usuario)
             if cambio:
                 cambios.append(cambio)
@@ -271,6 +278,10 @@ def aplicar(page: Page, numero_formulario: int, usuario=None, firma_actual: byte
                 resultado.revisar.append(problema)
     if numero_formulario in DOCUMENTOS:
         print("\nDocumentos anexos:")
+        # Procesamiento aparte: la factura entregada reemplaza el soporte de Kobo (luego se confirma en la ventana)
+        soporte = page.locator(DOCUMENTOS[numero_formulario]).locator("label:has(input[type=file])").first
+        if reemplazar_con_entrada(page, soporte, usuario, "FACTURA.jpg", "factura.jpg", ancho_maximo=2200):
+            cambios.append("Soporte de propiedad: reemplazado por la factura entregada")
         documentos = revisar_documentos(page, DOCUMENTOS[numero_formulario])
         for doc in documentos:
             cambios.append(f"{doc['pregunta']}: {doc['archivo']} -> {doc['decision']}")
@@ -672,16 +683,38 @@ def rehacer_firma(page: Page, selector_seccion: str, archivo_trazos: str) -> boo
     lienzo.evaluate("el => el.scrollIntoView({block: 'center'})")
     pausa(page, 0.2, 0.4)
 
-    # 1. Borrar la firma actual
-    clic(pregunta.locator("div.draw-widget__footer > button").first)
-    confirmar = page.locator(CONFIRMAR_ELIMINAR)
-    try:
-        confirmar.wait_for(timeout=5_000)
-        clic(confirmar)
-        confirmar.wait_for(state="detached", timeout=10_000)
-        print("   - Firma anterior borrada")
-    except TimeoutError:
-        print("   - No habia firma para borrar")
+    # 1. Borrar la firma actual. Antes, que el lienzo termine de pintarla (Kobo la pinta ~2 s despues de abrir):
+    #    si se borraba antes de que apareciera, la vieja salia despues y la nueva quedaba encima (visto el 12-oct)
+    if pregunta.evaluate("q => !!q.querySelector('[data-loaded-file-name]')?.dataset.loadedFileName"):
+        try:
+            page.wait_for_function(_JS_LIENZO_CON_TINTA, arg=lienzo.element_handle(), timeout=20_000, polling=300)
+        except TimeoutError:
+            print("   [!] La firma anterior no termino de aparecer en el lienzo")
+
+    def borrar() -> bool:
+        clic(pregunta.locator("div.draw-widget__footer > button").first)
+        confirmar = page.locator(CONFIRMAR_ELIMINAR)
+        try:
+            confirmar.wait_for(timeout=5_000)
+            clic(confirmar)
+            confirmar.wait_for(state="detached", timeout=10_000)
+            return True
+        except TimeoutError:
+            return False
+
+    habia = lienzo.evaluate(_JS_LIENZO_CON_TINTA)
+    if habia is None:  # el navegador no deja leer el lienzo: se borra una vez, como antes
+        print("   - Firma anterior borrada" if borrar() else "   - No habia firma para borrar")
+    else:
+        for _ in range(3):
+            if not lienzo.evaluate(_JS_LIENZO_CON_TINTA):
+                break
+            borrar()
+            pausa(page, 0.8, 1.2)  # que no vuelva a aparecer
+        if lienzo.evaluate(_JS_LIENZO_CON_TINTA):
+            print("   [!] No se pudo borrar la firma anterior: no se dibuja encima")
+            return False
+        print("   - Firma anterior borrada" if habia else "   - No habia firma para borrar")
 
     # 2. Dibujarla centrada en el lienzo, ocupando hasta el 80% del espacio
     lienzo.evaluate("el => el.scrollIntoView({block: 'center'})")
@@ -694,10 +727,30 @@ def rehacer_firma(page: Page, selector_seccion: str, archivo_trazos: str) -> boo
     def punto(p):
         return x0 + p[0] * firma["ancho"] * escala, y0 + p[1] * firma["alto"] * escala
 
-    _dibujar(page, [[punto(p) for p in trazo] for trazo in firma["trazos"]])
-    pausa(page, 0.2, 0.4)  # que el lienzo guarde la firma
-    print(f"   * Firma dibujada ({len(firma['trazos'])} trazos)")
-    return True
+    # 3. Lo que quedo en el lienzo tiene que ser solo la firma del bot (no dos firmas encimadas): si no, se
+    #    borra y se repite una vez; si sigue mal se deja el lienzo vacio y no se da por firmado
+    for intento in range(2):
+        _dibujar(page, [[punto(p) for p in trazo] for trazo in firma["trazos"]])
+        pausa(page, 0.8, 1.2)  # que el lienzo guarde la firma (y que aparezca cualquier cosa que cargara tarde)
+        try:
+            png = base64.b64decode(lienzo.evaluate("c => c.toDataURL('image/png')").split(",", 1)[1])
+            bien, como = firmas.es_la_del_bot(png, archivo_trazos)
+        except Exception:  # lienzo que no se deja leer: queda como antes, sin esta revision
+            bien, como = True, "sin revisar"
+        if bien:
+            print(f"   * Firma dibujada ({len(firma['trazos'])} trazos)")
+            return True
+        print(f"   [!] El lienzo no quedo solo con la firma del bot ({como}): se borra"
+              + (" y se repite" if intento == 0 else ""))
+        borrar()
+        pausa(page, 0.8, 1.2)
+    print("   [!] No se pudo dejar la firma bien: queda sin firma para hacerla a mano")
+    return False
+
+
+# True si el lienzo tiene algo dibujado (null si el navegador no deja leerlo)
+_JS_LIENZO_CON_TINTA = """c => { try { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+  for (let i = 3; i < d.length; i += 16) if (d[i] > 0) return true; return false; } catch (e) { return null; } }"""
 
 
 # ---------- Fotos de la cedula ----------
@@ -942,6 +995,31 @@ def esperar_imagen(page: Page, pregunta: Locator, timeout_ms: int = 30_000) -> b
     except TimeoutError:
         print("   (la vista previa de la imagen no termino de cargar)")
         return False
+
+
+def reemplazar_con_entrada(page: Page, pregunta: Locator, usuario, archivo: str, nombre: str,
+                           ancho_maximo: int = cedula.ANCHO_MAXIMO) -> bytes | None:
+    """Procesamiento aparte: si ENTRADA_DIR/<usuario>/<archivo> existe, lo sube en la pregunta en lugar de lo que
+    tenga Kobo (como '<usuario>_<nombre>'). Devuelve el JPG subido, o None si no hay archivo o no se pudo."""
+    if not (config.ENTRADA_DIR and usuario):
+        return None
+    ruta = config.ENTRADA_DIR / str(usuario.usuario) / archivo
+    if not ruta.exists():
+        return None
+    if not pregunta.count() or not pregunta.is_visible():
+        print(f"   [!] {archivo}: la pregunta no esta visible en este registro; no se subio")
+        return None
+    foto = cedula.leer(ruta.read_bytes())
+    if foto is None:
+        print(f"   [!] {ruta} no es una imagen valida; no se subio")
+        return None
+    jpg = cedula.a_jpg(foto, ancho_maximo=ancho_maximo)
+    pregunta.scroll_into_view_if_needed()
+    if not reemplazar_archivo(page, pregunta, f"{usuario.usuario}_{nombre}", jpg):
+        print(f"   [!] {archivo}: no se pudo subir")
+        return None
+    print(f"   * {archivo}: subido en lugar del que tenia Kobo ({usuario.usuario}_{nombre})")
+    return jpg
 
 
 def reemplazar_archivo(page: Page, pregunta: Locator, nombre: str, datos: bytes) -> bool:

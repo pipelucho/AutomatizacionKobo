@@ -54,8 +54,9 @@ TERMINADOS_DIR = CONTINGENCIAL_DIR / os.getenv("TERMINADOS_DIR", "TERMINADOS")
 LISTOS_DIR = TERMINADOS_DIR / os.getenv("LISTOS_DIR", "LISTOS POR CARGAR")
 # Personas procesadas con algo que corregir aparte (para no confundirlas con las listas para cargar)
 POR_CORREGIR_DIR = CONTINGENCIAL_DIR / os.getenv("POR_CORREGIR_DIR", "POR CORREGIR")
-# Fecha/titulo arriba y direccion/pagina abajo en el PDF, como Ctrl+P en Chrome (1 = si, 0 = no)
-PDF_ENCABEZADOS = os.getenv("PDF_ENCABEZADOS", "1") == "1"
+# Fecha/titulo arriba y direccion/pagina abajo en el PDF ('Encabezado y pie de pagina' de Ctrl+P). Se entregan
+# sin ellos (0); 1 los pone
+PDF_ENCABEZADOS = os.getenv("PDF_ENCABEZADOS", "0") == "1"
 
 # Hoja de calculo de Google que se actualiza al final (la sesion de Google queda en el perfil del navegador)
 GOOGLE_SHEET_URL = os.getenv(
@@ -68,6 +69,12 @@ CHROME_DEPURACION_URL = os.getenv("CHROME_DEPURACION_URL", "http://127.0.0.1:922
 
 # Registro de casos por resolver (no encontrados, dudosos, sin formulario 4...), se actualiza en cada corrida
 CASOS_PATH = ROOT / os.getenv("CASOS_PATH", "CASOS.xlsx")
+
+# Procesamiento aparte (aparte.py): sin la hoja de Google. HOJA_LOCAL es un Excel con las columnas de la hoja donde
+# queda lo que iria en ella (RESPONSABLE en blanco); ENTRADA_DIR/<usuario>/ trae archivos que reemplazan los de
+# Kobo: CEDULA_CARA.jpg y CEDULA_REVERSO.jpg (formulario 2) y FACTURA.jpg (soporte de propiedad del formulario 1)
+HOJA_LOCAL = ROOT / os.getenv("HOJA_LOCAL") if os.getenv("HOJA_LOCAL") else None
+ENTRADA_DIR = ROOT / os.getenv("ENTRADA_DIR") if os.getenv("ENTRADA_DIR") else None
 
 # Cuando Kobo, el Excel y la hoja no coinciden en nombre o casa: 1 = preguntar en una ventana en el
 # momento (no quedan correcciones para despues); 0 = aplicar la regla y dejar aviso en CASOS.xlsx
